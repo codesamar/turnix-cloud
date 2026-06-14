@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import type { CloudProvider } from "@/lib/types/database";
 import { getAdapter } from "@/lib/adapters/registry";
 import { OAUTH_PROVIDERS } from "@/lib/adapters/config";
+import { buildOAuthReturnUrl } from "@/lib/oauth/popup";
 import { resolveOAuthConfig } from "@/lib/services/provider-config";
 
 const PROVIDER_PARAM_MAP: Record<string, CloudProvider> = {
@@ -16,9 +17,10 @@ interface RouteParams {
   params: Promise<{ provider: string }>;
 }
 
-export async function GET(_request: Request, { params }: RouteParams) {
+export async function GET(request: Request, { params }: RouteParams) {
   const { provider: providerParam } = await params;
   const provider = PROVIDER_PARAM_MAP[providerParam];
+  const isPopup = new URL(request.url).searchParams.get("popup") === "1";
 
   if (!provider || !OAUTH_PROVIDERS.includes(provider)) {
     return NextResponse.json({ error: "Invalid provider" }, { status: 400 });
@@ -26,9 +28,11 @@ export async function GET(_request: Request, { params }: RouteParams) {
 
   const oauthConfig = await resolveOAuthConfig(provider);
   if (!oauthConfig) {
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
     return NextResponse.redirect(
-      `${appUrl}/quota?error=provider_not_configured&provider=${provider}`
+      buildOAuthReturnUrl(
+        { error: "provider_not_configured", provider },
+        isPopup
+      )
     );
   }
 
@@ -43,6 +47,16 @@ export async function GET(_request: Request, { params }: RouteParams) {
     maxAge: 600,
     path: "/",
   });
+
+  if (isPopup) {
+    cookieStore.set("oauth_popup", "1", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 600,
+      path: "/",
+    });
+  }
 
   const authUrl = adapter.getAuthUrl(state, oauthConfig);
   return NextResponse.redirect(authUrl);

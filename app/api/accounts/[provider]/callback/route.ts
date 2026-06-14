@@ -5,6 +5,7 @@ import { getAdapter } from "@/lib/adapters/registry";
 import { saveAccount } from "@/lib/services/accounts";
 import { createClient } from "@/lib/supabase/server";
 import { syncUserAccounts } from "@/lib/services/sync";
+import { buildOAuthReturnUrl } from "@/lib/oauth/popup";
 import { resolveOAuthConfig } from "@/lib/services/provider-config";
 
 const PROVIDER_PARAM_MAP: Record<string, CloudProvider> = {
@@ -18,14 +19,19 @@ interface RouteParams {
   params: Promise<{ provider: string }>;
 }
 
+function oauthRedirect(params: Record<string, string>, isPopup: boolean) {
+  return NextResponse.redirect(buildOAuthReturnUrl(params, isPopup));
+}
+
 export async function GET(request: Request, { params }: RouteParams) {
   const { provider: providerParam } = await params;
   const provider = PROVIDER_PARAM_MAP[providerParam];
 
+  const cookieStore = await cookies();
+  const isPopup = cookieStore.get("oauth_popup")?.value === "1";
+
   if (!provider) {
-    return NextResponse.redirect(
-      `${process.env.NEXT_PUBLIC_APP_URL}/quota?error=invalid_provider`
-    );
+    return oauthRedirect({ error: "invalid_provider" }, isPopup);
   }
 
   const { searchParams } = new URL(request.url);
@@ -34,21 +40,19 @@ export async function GET(request: Request, { params }: RouteParams) {
   const error = searchParams.get("error");
 
   if (error || !code || !state) {
-    return NextResponse.redirect(
-      `${process.env.NEXT_PUBLIC_APP_URL}/quota?error=oauth_denied`
-    );
+    cookieStore.delete("oauth_popup");
+    return oauthRedirect({ error: "oauth_denied" }, isPopup);
   }
 
-  const cookieStore = await cookies();
   const savedState = cookieStore.get(`oauth_state_${provider}`)?.value;
 
   if (!savedState || savedState !== state) {
-    return NextResponse.redirect(
-      `${process.env.NEXT_PUBLIC_APP_URL}/quota?error=invalid_state`
-    );
+    cookieStore.delete("oauth_popup");
+    return oauthRedirect({ error: "invalid_state" }, isPopup);
   }
 
   cookieStore.delete(`oauth_state_${provider}`);
+  cookieStore.delete("oauth_popup");
 
   const supabase = await createClient();
   const {
@@ -56,16 +60,16 @@ export async function GET(request: Request, { params }: RouteParams) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.redirect(
-      `${process.env.NEXT_PUBLIC_APP_URL}/login`
-    );
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+    return NextResponse.redirect(`${appUrl}/login`);
   }
 
   try {
     const oauthConfig = await resolveOAuthConfig(provider);
     if (!oauthConfig) {
-      return NextResponse.redirect(
-        `${process.env.NEXT_PUBLIC_APP_URL}/quota?error=provider_not_configured&provider=${provider}`
+      return oauthRedirect(
+        { error: "provider_not_configured", provider },
+        isPopup
       );
     }
 
@@ -75,13 +79,9 @@ export async function GET(request: Request, { params }: RouteParams) {
 
     syncUserAccounts(supabase, user.id, account.id).catch(() => {});
 
-    return NextResponse.redirect(
-      `${process.env.NEXT_PUBLIC_APP_URL}/quota?connected=${provider}`
-    );
+    return oauthRedirect({ connected: provider }, isPopup);
   } catch (err) {
     const message = err instanceof Error ? err.message : "connection_failed";
-    return NextResponse.redirect(
-      `${process.env.NEXT_PUBLIC_APP_URL}/quota?error=${encodeURIComponent(message)}`
-    );
+    return oauthRedirect({ error: message }, isPopup);
   }
 }
