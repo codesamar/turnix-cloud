@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Select,
   SelectContent,
@@ -19,14 +20,25 @@ import {
 } from "@/components/ui/select";
 import type { AllocationStrategy, CloudAccount } from "@/lib/types/database";
 import { PROVIDER_LABELS } from "@/lib/adapters/config";
+import { useLanguage } from "@/components/providers/language-provider";
+import type { TranslationKey } from "@/lib/i18n/types";
+import { getAccountDisplayName } from "@/lib/utils/account-display";
 
-const STRATEGIES: { value: AllocationStrategy; label: string; description: string }[] = [
-  { value: "round_robin", label: "Round Robin", description: "Rotate uploads across accounts evenly" },
-  { value: "weighted_round_robin", label: "Weighted Round Robin", description: "Rotate based on assigned weights" },
-  { value: "least_used", label: "Least Used", description: "Prefer account with lowest usage" },
-  { value: "most_free", label: "Most Free Space", description: "Prefer account with most available space" },
-  { value: "manual", label: "Manual Order", description: "Use accounts in specified order" },
+const STRATEGIES: AllocationStrategy[] = [
+  "round_robin",
+  "weighted_round_robin",
+  "least_used",
+  "most_free",
+  "manual",
 ];
+
+function strategyLabelKey(strategy: AllocationStrategy): TranslationKey {
+  return `allocation.strategy.${strategy}.label`;
+}
+
+function strategyDescKey(strategy: AllocationStrategy): TranslationKey {
+  return `allocation.strategy.${strategy}.desc`;
+}
 
 async function fetchAllocation() {
   const response = await fetch("/api/allocation");
@@ -40,12 +52,15 @@ interface AllocationSettingsProps {
 }
 
 export function AllocationSettings({ accounts }: AllocationSettingsProps) {
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
 
   const { data: config } = useQuery({
     queryKey: ["allocation"],
     queryFn: fetchAllocation,
   });
+
+  const strategy: AllocationStrategy = config?.strategy ?? "round_robin";
 
   const updateMutation = useMutation({
     mutationFn: async (updates: Record<string, unknown>) => {
@@ -58,13 +73,13 @@ export function AllocationSettings({ accounts }: AllocationSettingsProps) {
       return response.json();
     },
     onSuccess: () => {
-      toast.success("Allocation settings updated");
+      toast.success(t("allocation.saved"));
       queryClient.invalidateQueries({ queryKey: ["allocation"] });
     },
   });
 
-  function handleStrategyChange(strategy: AllocationStrategy) {
-    updateMutation.mutate({ strategy });
+  function handleStrategyChange(nextStrategy: AllocationStrategy) {
+    updateMutation.mutate({ strategy: nextStrategy });
   }
 
   function handleManualOrderChange(accountId: string, index: number) {
@@ -77,16 +92,22 @@ export function AllocationSettings({ accounts }: AllocationSettingsProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Upload Allocation</CardTitle>
-        <CardDescription>
-          Choose how uploads are distributed across connected accounts
-        </CardDescription>
+        <CardTitle>{t("allocation.title")}</CardTitle>
+        <CardDescription>{t("allocation.desc")}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
+        <Alert>
+          <AlertDescription>{t("allocation.note")}</AlertDescription>
+        </Alert>
+
+        {accounts.length <= 1 && (
+          <p className="text-xs text-muted-foreground">{t("allocation.singleAccount")}</p>
+        )}
+
         <div className="space-y-2">
-          <Label>Strategy</Label>
+          <Label>{t("allocation.strategyLabel")}</Label>
           <Select
-            value={config?.strategy ?? "round_robin"}
+            value={strategy}
             onValueChange={(v) => handleStrategyChange(v as AllocationStrategy)}
           >
             <SelectTrigger>
@@ -94,20 +115,19 @@ export function AllocationSettings({ accounts }: AllocationSettingsProps) {
             </SelectTrigger>
             <SelectContent>
               {STRATEGIES.map((s) => (
-                <SelectItem key={s.value} value={s.value}>
-                  {s.label}
+                <SelectItem key={s} value={s}>
+                  {t(strategyLabelKey(s))}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
-          <p className="text-xs text-muted-foreground">
-            {STRATEGIES.find((s) => s.value === config?.strategy)?.description}
-          </p>
+          <p className="text-xs text-muted-foreground">{t(strategyDescKey(strategy))}</p>
         </div>
 
-        {config?.strategy === "manual" && accounts.length > 0 && (
+        {strategy === "manual" && accounts.length > 0 && (
           <div className="space-y-2">
-            <Label>Manual Priority Order</Label>
+            <Label>{t("allocation.manualOrderLabel")}</Label>
+            <p className="text-xs text-muted-foreground">{t("allocation.manualOrderDesc")}</p>
             {accounts.map((_, index) => (
               <Select
                 key={index}
@@ -115,12 +135,12 @@ export function AllocationSettings({ accounts }: AllocationSettingsProps) {
                 onValueChange={(v) => handleManualOrderChange(v, index)}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder={`Priority ${index + 1}`} />
+                  <SelectValue placeholder={`${t("allocation.priority")} ${index + 1}`} />
                 </SelectTrigger>
                 <SelectContent>
                   {accounts.map((account) => (
                     <SelectItem key={account.id} value={account.id}>
-                      {account.label} ({PROVIDER_LABELS[account.provider]})
+                      {getAccountDisplayName(account)} ({PROVIDER_LABELS[account.provider]})
                     </SelectItem>
                   ))}
                 </SelectContent>
