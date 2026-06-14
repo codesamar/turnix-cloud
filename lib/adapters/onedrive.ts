@@ -1,9 +1,9 @@
 import type {
   CloudAdapter,
   NormalizedFile,
+  OAuthProviderConfig,
   ProviderCredentials,
 } from "@/lib/adapters/types";
-import { getAppUrl } from "@/lib/adapters/config";
 
 const SCOPES = [
   "offline_access",
@@ -11,18 +11,12 @@ const SCOPES = [
   "User.Read",
 ];
 
-function getConfig() {
-  const clientId = process.env.ONEDRIVE_CLIENT_ID;
-  const clientSecret = process.env.ONEDRIVE_CLIENT_SECRET;
-  const tenantId = process.env.ONEDRIVE_TENANT_ID ?? "common";
-  if (!clientId || !clientSecret) {
-    throw new Error("OneDrive OAuth credentials not configured");
-  }
+function getConfig(config: OAuthProviderConfig) {
   return {
-    clientId,
-    clientSecret,
-    tenantId,
-    redirectUri: `${getAppUrl()}/api/accounts/onedrive/callback`,
+    clientId: config.clientId,
+    clientSecret: config.clientSecret,
+    tenantId: config.extra?.tenantId ?? "common",
+    redirectUri: config.redirectUri,
   };
 }
 
@@ -68,8 +62,8 @@ async function graphFetch(
 export const oneDriveAdapter: CloudAdapter = {
   provider: "onedrive",
 
-  getAuthUrl(state: string) {
-    const { clientId, redirectUri, tenantId } = getConfig();
+  getAuthUrl(state: string, config: OAuthProviderConfig) {
+    const { clientId, redirectUri, tenantId } = getConfig(config);
     const params = new URLSearchParams({
       client_id: clientId,
       redirect_uri: redirectUri,
@@ -80,8 +74,8 @@ export const oneDriveAdapter: CloudAdapter = {
     return `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/authorize?${params}`;
   },
 
-  async exchangeCode(code: string) {
-    const { clientId, clientSecret, redirectUri, tenantId } = getConfig();
+  async exchangeCode(code: string, config: OAuthProviderConfig) {
+    const { clientId, clientSecret, redirectUri, tenantId } = getConfig(config);
     const response = await fetch(
       `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token`,
       {
@@ -116,11 +110,11 @@ export const oneDriveAdapter: CloudAdapter = {
     };
   },
 
-  async refreshToken(credentials) {
+  async refreshToken(credentials: ProviderCredentials, config: OAuthProviderConfig) {
     if (!credentials.refreshToken) {
       throw new Error("No refresh token available");
     }
-    const { clientId, clientSecret, redirectUri, tenantId } = getConfig();
+    const { clientId, clientSecret, redirectUri, tenantId } = getConfig(config);
     const response = await fetch(
       `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token`,
       {

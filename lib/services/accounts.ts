@@ -2,10 +2,12 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { CloudAccount, CloudProvider } from "@/lib/types/database";
 import type { ProviderCredentials } from "@/lib/adapters/types";
 import { getAdapter } from "@/lib/adapters/registry";
+import { OAUTH_PROVIDERS } from "@/lib/adapters/config";
 import {
   decryptCredentials,
   encryptCredentials,
 } from "@/lib/services/crypto";
+import { resolveOAuthConfig } from "@/lib/services/provider-config";
 
 type Supabase = SupabaseClient;
 
@@ -31,7 +33,10 @@ export async function getAccountCredentials(
 
   const adapter = getAdapter(account.provider);
   if (credentials.expiresAt && credentials.expiresAt < Date.now() + 60_000) {
-    credentials = await adapter.refreshToken(credentials);
+    const oauthConfig = OAUTH_PROVIDERS.includes(account.provider)
+      ? await resolveOAuthConfig(account.provider)
+      : null;
+    credentials = await adapter.refreshToken(credentials, oauthConfig ?? undefined);
     await supabase
       .from("cloud_accounts")
       .update({

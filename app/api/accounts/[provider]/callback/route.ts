@@ -5,6 +5,7 @@ import { getAdapter } from "@/lib/adapters/registry";
 import { saveAccount } from "@/lib/services/accounts";
 import { createClient } from "@/lib/supabase/server";
 import { syncUserAccounts } from "@/lib/services/sync";
+import { resolveOAuthConfig } from "@/lib/services/provider-config";
 
 const PROVIDER_PARAM_MAP: Record<string, CloudProvider> = {
   google_drive: "google_drive",
@@ -61,8 +62,15 @@ export async function GET(request: Request, { params }: RouteParams) {
   }
 
   try {
+    const oauthConfig = await resolveOAuthConfig(provider);
+    if (!oauthConfig) {
+      return NextResponse.redirect(
+        `${process.env.NEXT_PUBLIC_APP_URL}/quota?error=provider_not_configured&provider=${provider}`
+      );
+    }
+
     const adapter = getAdapter(provider);
-    const credentials = await adapter.exchangeCode(code);
+    const credentials = await adapter.exchangeCode(code, oauthConfig);
     const account = await saveAccount(supabase, user.id, provider, credentials);
 
     syncUserAccounts(supabase, user.id, account.id).catch(() => {});

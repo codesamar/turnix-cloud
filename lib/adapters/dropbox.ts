@@ -1,21 +1,12 @@
 import type {
   CloudAdapter,
   NormalizedFile,
+  OAuthProviderConfig,
   ProviderCredentials,
 } from "@/lib/adapters/types";
-import { getAppUrl } from "@/lib/adapters/config";
 
-function getConfig() {
-  const clientId = process.env.DROPBOX_CLIENT_ID;
-  const clientSecret = process.env.DROPBOX_CLIENT_SECRET;
-  if (!clientId || !clientSecret) {
-    throw new Error("Dropbox OAuth credentials not configured");
-  }
-  return {
-    clientId,
-    clientSecret,
-    redirectUri: `${getAppUrl()}/api/accounts/dropbox/callback`,
-  };
+function getConfig(config: OAuthProviderConfig) {
+  return config;
 }
 
 function normalizeEntry(entry: Record<string, unknown>): NormalizedFile {
@@ -62,8 +53,8 @@ async function dropboxRpc(
 export const dropboxAdapter: CloudAdapter = {
   provider: "dropbox",
 
-  getAuthUrl(state: string) {
-    const { clientId, redirectUri } = getConfig();
+  getAuthUrl(state: string, config: OAuthProviderConfig) {
+    const { clientId, redirectUri } = getConfig(config);
     const params = new URLSearchParams({
       client_id: clientId,
       redirect_uri: redirectUri,
@@ -74,8 +65,8 @@ export const dropboxAdapter: CloudAdapter = {
     return `https://www.dropbox.com/oauth2/authorize?${params}`;
   },
 
-  async exchangeCode(code: string) {
-    const { clientId, clientSecret, redirectUri } = getConfig();
+  async exchangeCode(code: string, config: OAuthProviderConfig) {
+    const { clientId, clientSecret, redirectUri } = getConfig(config);
     const response = await fetch("https://api.dropboxapi.com/oauth2/token", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -111,11 +102,11 @@ export const dropboxAdapter: CloudAdapter = {
     };
   },
 
-  async refreshToken(credentials) {
-    if (!credentials.refreshToken) {
+  async refreshToken(credentials: ProviderCredentials, config?: OAuthProviderConfig) {
+    if (!credentials.refreshToken || !config) {
       throw new Error("No refresh token available");
     }
-    const { clientId, clientSecret } = getConfig();
+    const { clientId, clientSecret } = getConfig(config);
     const response = await fetch("https://api.dropboxapi.com/oauth2/token", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },

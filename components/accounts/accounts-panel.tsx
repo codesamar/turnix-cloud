@@ -2,7 +2,6 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  Cloud,
   HardDrive,
   RefreshCw,
   Trash2,
@@ -18,11 +17,12 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { PROVIDER_LABELS, OAUTH_PROVIDERS } from "@/lib/adapters/config";
-import type { CloudAccount, CloudProvider } from "@/lib/types/database";
+import { PROVIDER_LABELS } from "@/lib/adapters/config";
+import type { CloudAccount } from "@/lib/types/database";
 import { formatBytes } from "@/lib/utils/format";
 import { AllocationSettings } from "@/components/settings/allocation-settings";
-import { ConnectS3Dialog } from "@/components/accounts/connect-s3-dialog";
+import { ConnectAccountDialog } from "@/components/accounts/connect-account-dialog";
+import { ProviderConfigPanel } from "@/components/accounts/provider-config-panel";
 import { useLanguage } from "@/components/providers/language-provider";
 
 async function fetchAccounts() {
@@ -31,12 +31,6 @@ async function fetchAccounts() {
   const data = await response.json();
   return data.accounts as CloudAccount[];
 }
-
-const providerIcons: Record<string, string> = {
-  google_drive: "🔵",
-  onedrive: "🟦",
-  dropbox: "🔷",
-};
 
 export function AccountsPanel() {
   const queryClient = useQueryClient();
@@ -73,43 +67,20 @@ export function AccountsPanel() {
     }
   }
 
-  function handleConnect(provider: CloudProvider) {
-    window.location.href = `/api/accounts/${provider}/connect`;
-  }
-
-  const connectedProviders = new Set(accounts.map((a) => a.provider));
-
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-semibold tracking-tight">{t("accounts.title")}</h2>
-        <p className="text-muted-foreground text-sm mt-1">{t("accounts.subtitle")}</p>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-2xl font-semibold tracking-tight">{t("accounts.title")}</h2>
+          <p className="text-muted-foreground text-sm mt-1">{t("accounts.subtitle")}</p>
+        </div>
+        <ConnectAccountDialog
+          accounts={accounts}
+          onConnected={() => queryClient.invalidateQueries({ queryKey: ["accounts"] })}
+        />
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Cloud className="size-5" />
-            {t("accounts.connect")}
-          </CardTitle>
-          <CardDescription>{t("accounts.connectDesc")}</CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-wrap gap-2">
-          {OAUTH_PROVIDERS.map((provider) => (
-            <Button
-              key={provider}
-              variant={connectedProviders.has(provider) ? "secondary" : "default"}
-              onClick={() => handleConnect(provider)}
-            >
-              {providerIcons[provider] ?? "☁️"} {PROVIDER_LABELS[provider]}
-              {connectedProviders.has(provider) && " ✓"}
-            </Button>
-          ))}
-          <ConnectS3Dialog
-            onConnected={() => queryClient.invalidateQueries({ queryKey: ["accounts"] })}
-          />
-        </CardContent>
-      </Card>
+      <ProviderConfigPanel />
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">

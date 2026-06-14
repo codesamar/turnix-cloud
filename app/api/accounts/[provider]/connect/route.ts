@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import type { CloudProvider } from "@/lib/types/database";
 import { getAdapter } from "@/lib/adapters/registry";
 import { OAUTH_PROVIDERS } from "@/lib/adapters/config";
+import { resolveOAuthConfig } from "@/lib/services/provider-config";
 
 const PROVIDER_PARAM_MAP: Record<string, CloudProvider> = {
   google_drive: "google_drive",
@@ -23,6 +24,14 @@ export async function GET(_request: Request, { params }: RouteParams) {
     return NextResponse.json({ error: "Invalid provider" }, { status: 400 });
   }
 
+  const oauthConfig = await resolveOAuthConfig(provider);
+  if (!oauthConfig) {
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+    return NextResponse.redirect(
+      `${appUrl}/quota?error=provider_not_configured&provider=${provider}`
+    );
+  }
+
   const adapter = getAdapter(provider);
   const state = crypto.randomUUID();
 
@@ -35,6 +44,6 @@ export async function GET(_request: Request, { params }: RouteParams) {
     path: "/",
   });
 
-  const authUrl = adapter.getAuthUrl(state);
+  const authUrl = adapter.getAuthUrl(state, oauthConfig);
   return NextResponse.redirect(authUrl);
 }

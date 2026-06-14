@@ -1,6 +1,7 @@
 import type {
   CloudAdapter,
   NormalizedFile,
+  OAuthProviderConfig,
   ProviderCredentials,
 } from "@/lib/adapters/types";
 
@@ -37,11 +38,11 @@ function normalizeKey(key: string, name: string, size: number, isFolder: boolean
 export const s3Adapter: CloudAdapter = {
   provider: "s3",
 
-  getAuthUrl() {
+  getAuthUrl(_state: string, _config: OAuthProviderConfig) {
     throw new Error("S3 uses access key connection, not OAuth");
   },
 
-  async exchangeCode() {
+  async exchangeCode(_code: string, _config: OAuthProviderConfig) {
     throw new Error("S3 uses access key connection, not OAuth");
   },
 

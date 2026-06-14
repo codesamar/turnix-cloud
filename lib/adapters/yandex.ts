@@ -1,17 +1,11 @@
-import type { CloudAdapter, ProviderCredentials } from "@/lib/adapters/types";
-import { getAppUrl } from "@/lib/adapters/config";
+import type {
+  CloudAdapter,
+  OAuthProviderConfig,
+  ProviderCredentials,
+} from "@/lib/adapters/types";
 
-function getConfig() {
-  const clientId = process.env.YANDEX_CLIENT_ID;
-  const clientSecret = process.env.YANDEX_CLIENT_SECRET;
-  if (!clientId || !clientSecret) {
-    throw new Error("Yandex OAuth credentials not configured");
-  }
-  return {
-    clientId,
-    clientSecret,
-    redirectUri: `${getAppUrl()}/api/accounts/yandex/callback`,
-  };
+function getConfig(config: OAuthProviderConfig) {
+  return config;
 }
 
 function normalizeItem(item: Record<string, unknown>) {
@@ -50,8 +44,8 @@ async function yandexFetch(
 export const yandexAdapter: CloudAdapter = {
   provider: "yandex",
 
-  getAuthUrl(state: string) {
-    const { clientId, redirectUri } = getConfig();
+  getAuthUrl(state: string, config: OAuthProviderConfig) {
+    const { clientId, redirectUri } = getConfig(config);
     const params = new URLSearchParams({
       response_type: "code",
       client_id: clientId,
@@ -61,8 +55,8 @@ export const yandexAdapter: CloudAdapter = {
     return `https://oauth.yandex.com/authorize?${params}`;
   },
 
-  async exchangeCode(code: string) {
-    const { clientId, clientSecret } = getConfig();
+  async exchangeCode(code: string, config: OAuthProviderConfig) {
+    const { clientId, clientSecret } = getConfig(config);
     const response = await fetch("https://oauth.yandex.com/token", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -82,9 +76,9 @@ export const yandexAdapter: CloudAdapter = {
     };
   },
 
-  async refreshToken(credentials) {
-    if (!credentials.refreshToken) throw new Error("No refresh token");
-    const { clientId, clientSecret } = getConfig();
+  async refreshToken(credentials: ProviderCredentials, config?: OAuthProviderConfig) {
+    if (!credentials.refreshToken || !config) throw new Error("No refresh token");
+    const { clientId, clientSecret } = getConfig(config);
     const response = await fetch("https://oauth.yandex.com/token", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },

@@ -1,27 +1,18 @@
 import type {
   CloudAdapter,
   NormalizedFile,
+  OAuthProviderConfig,
   ProviderCredentials,
   QuotaInfo,
 } from "@/lib/adapters/types";
-import { getAppUrl } from "@/lib/adapters/config";
 
 const SCOPES = [
   "https://www.googleapis.com/auth/drive",
   "https://www.googleapis.com/auth/userinfo.email",
 ];
 
-function getConfig() {
-  const clientId = process.env.GOOGLE_CLIENT_ID;
-  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
-  if (!clientId || !clientSecret) {
-    throw new Error("Google OAuth credentials not configured");
-  }
-  return {
-    clientId,
-    clientSecret,
-    redirectUri: `${getAppUrl()}/api/accounts/google_drive/callback`,
-  };
+function getConfig(config: OAuthProviderConfig) {
+  return config;
 }
 
 function normalizeFile(item: Record<string, unknown>): NormalizedFile {
@@ -66,8 +57,8 @@ async function driveFetch(
 export const googleDriveAdapter: CloudAdapter = {
   provider: "google_drive",
 
-  getAuthUrl(state: string) {
-    const { clientId, redirectUri } = getConfig();
+  getAuthUrl(state: string, config: OAuthProviderConfig) {
+    const { clientId, redirectUri } = getConfig(config);
     const params = new URLSearchParams({
       client_id: clientId,
       redirect_uri: redirectUri,
@@ -80,8 +71,8 @@ export const googleDriveAdapter: CloudAdapter = {
     return `https://accounts.google.com/o/oauth2/v2/auth?${params}`;
   },
 
-  async exchangeCode(code: string) {
-    const { clientId, clientSecret, redirectUri } = getConfig();
+  async exchangeCode(code: string, config: OAuthProviderConfig) {
+    const { clientId, clientSecret, redirectUri } = getConfig(config);
     const response = await fetch("https://oauth2.googleapis.com/token", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -113,11 +104,11 @@ export const googleDriveAdapter: CloudAdapter = {
     };
   },
 
-  async refreshToken(credentials: ProviderCredentials) {
+  async refreshToken(credentials: ProviderCredentials, config: OAuthProviderConfig) {
     if (!credentials.refreshToken) {
       throw new Error("No refresh token available");
     }
-    const { clientId, clientSecret } = getConfig();
+    const { clientId, clientSecret } = getConfig(config);
     const response = await fetch("https://oauth2.googleapis.com/token", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },

@@ -61,13 +61,17 @@ export interface CloudAdapter {
     onProgress?: (progress: number) => void
   ): Promise<NormalizedFile>;
   getQuota(credentials: ProviderCredentials): Promise<QuotaInfo>;
-  refreshToken(credentials: ProviderCredentials): Promise<ProviderCredentials>;
-  getAuthUrl(state: string): string;
-  exchangeCode(code: string): Promise<ProviderCredentials>;
+  refreshToken(
+    credentials: ProviderCredentials,
+    config?: OAuthProviderConfig
+  ): Promise<ProviderCredentials>;
+  getAuthUrl(state: string, config: OAuthProviderConfig): string;
+  exchangeCode(code: string, config: OAuthProviderConfig): Promise<ProviderCredentials>;
 }
 
 export interface OAuthProviderConfig {
   clientId: string;
   clientSecret: string;
   redirectUri: string;
+  extra?: Record<string, string>;
 }

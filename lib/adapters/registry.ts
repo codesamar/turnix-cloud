@@ -12,8 +12,12 @@ function createStubAdapter(provider: "mega" | "pcloud"): CloudAdapter {
 
   return {
     provider,
-    getAuthUrl: notImplemented,
-    exchangeCode: notImplemented,
+    getAuthUrl: (_state, _config) => {
+      throw new Error(`${provider} adapter is not yet implemented`);
+    },
+    exchangeCode: (_code, _config) => {
+      throw new Error(`${provider} adapter is not yet implemented`);
+    },
     refreshToken: async (c) => c,
     listFiles: notImplemented,
     getFile: notImplemented,
