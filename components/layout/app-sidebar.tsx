@@ -8,6 +8,7 @@ import {
   HardDrive,
   Home,
   LogOut,
+  Settings,
   Share2,
   Star,
   User,
@@ -37,6 +38,7 @@ const navItems = [
   { title: "Starred", href: "/starred", icon: Star },
   { title: "Shared with Me", href: "/shared-with-me", icon: Share2 },
   { title: "Storage & Accounts", href: "/quota", icon: Cloud },
+  { title: "Settings", href: "/settings", icon: Settings },
 ];
 
 interface AppSidebarProps {
