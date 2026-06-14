@@ -148,6 +148,8 @@ TurnixCloud punya **dua langkah terpisah** untuk Google Drive:
 
 Badge **Configured** saja **belum** menampilkan file Drive.
 
+> Panduan interaktif juga tersedia di dashboard: sidebar **Help → How to Connect** (`/connect-guide`).
+
 ---
 
 ### Bagian A — Setup Google Cloud Console

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  BookOpen,
   Clock,
   Cloud,
   HardDrive,
@@ -42,17 +43,23 @@ const navItems = [
   { titleKey: "nav.settings" as const, href: "/settings", icon: Settings },
 ];
 
+const helpNavItems = [
+  { titleKey: "nav.connectGuide" as const, href: "/connect-guide", icon: BookOpen },
+];
+
+type SidebarNavItem = (typeof navItems | typeof helpNavItems)[number];
+
 interface AppSidebarProps {
   userEmail?: string | null;
 }
 
-function AppSidebarNav() {
+function AppSidebarNav({ items }: { items: SidebarNavItem[] }) {
   const pathname = usePathname();
   const { t } = useLanguage();
 
   return (
     <SidebarMenu>
-      {navItems.map((item) => (
+      {items.map((item) => (
         <SidebarMenuItem key={item.href}>
           <SidebarMenuButton asChild isActive={pathname === item.href}>
             <Link href={item.href}>
@@ -98,7 +105,13 @@ export function AppSidebar({ userEmail }: AppSidebarProps) {
         <SidebarGroup>
           <SidebarGroupLabel>{t("nav.workspace")}</SidebarGroupLabel>
           <SidebarGroupContent>
-            <AppSidebarNav />
+            <AppSidebarNav items={navItems} />
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>{t("nav.help")}</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <AppSidebarNav items={helpNavItems} />
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
