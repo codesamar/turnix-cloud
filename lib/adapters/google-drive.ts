@@ -15,6 +15,28 @@ function getConfig(config: OAuthProviderConfig) {
   return config;
 }
 
+const GOOGLE_EXPORT_MIMES: Record<string, string> = {
+  "application/vnd.google-apps.document": "application/pdf",
+  "application/vnd.google-apps.spreadsheet": "application/pdf",
+  "application/vnd.google-apps.presentation": "application/pdf",
+  "application/vnd.google-apps.drawing": "image/png",
+};
+
+function getGoogleExportMime(mimeType: string | null | undefined): string | null {
+  if (!mimeType) return null;
+  return GOOGLE_EXPORT_MIMES[mimeType] ?? null;
+}
+
+function appendExtension(name: string, mimeType: string): string {
+  if (mimeType === "application/pdf" && !name.toLowerCase().endsWith(".pdf")) {
+    return `${name}.pdf`;
+  }
+  if (mimeType === "image/png" && !name.toLowerCase().endsWith(".png")) {
+    return `${name}.png`;
+  }
+  return name;
+}
+
 function normalizeFile(item: Record<string, unknown>): NormalizedFile {
   const parents = item.parents as string[] | undefined;
   return {
@@ -182,6 +204,23 @@ export const googleDriveAdapter: CloudAdapter = {
 
   async download(credentials, fileId) {
     const meta = await this.getFile(credentials, fileId);
+    const googleExportMime = getGoogleExportMime(meta.mimeType);
+
+    if (googleExportMime) {
+      const response = await fetch(
+        `https://www.googleapis.com/drive/v3/files/${fileId}/export?mimeType=${encodeURIComponent(googleExportMime)}`,
+        { headers: { Authorization: `Bearer ${credentials.accessToken}` } }
+      );
+      if (!response.ok || !response.body) {
+        throw new Error("Failed to export Google Drive file");
+      }
+      return {
+        stream: response.body,
+        mimeType: googleExportMime,
+        name: appendExtension(meta.name, googleExportMime),
+      };
+    }
+
     const response = await fetch(
       `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
       { headers: { Authorization: `Bearer ${credentials.accessToken}` } }

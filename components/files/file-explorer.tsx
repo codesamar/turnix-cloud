@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import {
   Download,
+  Eye,
   File,
   Folder,
   MoreHorizontal,
@@ -30,6 +31,7 @@ import {
 import { formatBytes } from "@/lib/utils/format";
 import type { FileMetadata, FileMetadataWithAccount } from "@/lib/types/database";
 import { getFileAccountLabel } from "@/lib/utils/account-display";
+import { FilePreviewDialog } from "@/components/files/file-preview-dialog";
 
 interface FileExplorerProps {
   queryKey: string;
@@ -58,6 +60,8 @@ export function FileExplorer({
   onBreadcrumbClick,
 }: FileExplorerProps) {
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [previewFile, setPreviewFile] = useState<FileMetadata | null>(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
 
   const { data: files = [], isLoading, refetch } = useQuery({
     queryKey: [queryKey, fetchUrl],
@@ -102,8 +106,21 @@ export function FileExplorer({
   function handleRowClick(file: FileMetadata) {
     if (file.is_folder && onNavigate) {
       onNavigate(file);
+      return;
+    }
+
+    if (!file.is_folder) {
+      setPreviewFile(file);
+      setPreviewOpen(true);
     }
   }
+
+  function handlePreview(file: FileMetadata) {
+    setPreviewFile(file);
+    setPreviewOpen(true);
+  }
+
+  const columnCount = showProvider ? 6 : 5;
 
   return (
     <div className="space-y-4">
@@ -152,20 +169,20 @@ export function FileExplorer({
               {showProvider && <TableHead>Account</TableHead>}
               <TableHead>Size</TableHead>
               <TableHead>Modified</TableHead>
-              <TableHead className="w-10" />
+              <TableHead className="w-28 text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading && (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={columnCount} className="text-center py-8 text-muted-foreground">
                   Loading files...
                 </TableCell>
               </TableRow>
             )}
             {!isLoading && files.length === 0 && (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={columnCount} className="text-center py-8 text-muted-foreground">
                   {emptyMessage}
                 </TableCell>
               </TableRow>
@@ -209,40 +226,78 @@ export function FileExplorer({
                     : "—"}
                 </TableCell>
                 <TableCell onClick={(e) => e.stopPropagation()}>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="size-8">
-                        <MoreHorizontal className="size-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => handleStar(file)}>
-                        <Star className="size-4 mr-2" />
-                        {file.is_starred ? "Unstar" : "Star"}
-                      </DropdownMenuItem>
-                      {!file.is_folder && (
-                        <DropdownMenuItem asChild>
+                  <div className="flex items-center justify-end gap-1">
+                    {!file.is_folder && (
+                      <>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="size-8"
+                          title="View file"
+                          onClick={() => handlePreview(file)}
+                        >
+                          <Eye className="size-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="size-8"
+                          title="Download"
+                          asChild
+                        >
                           <a href={`/api/files/${file.id}/download`}>
-                            <Download className="size-4 mr-2" />
-                            Download
+                            <Download className="size-4" />
                           </a>
+                        </Button>
+                      </>
+                    )}
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="size-8">
+                          <MoreHorizontal className="size-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        {!file.is_folder && (
+                          <DropdownMenuItem onClick={() => handlePreview(file)}>
+                            <Eye className="size-4 mr-2" />
+                            View
+                          </DropdownMenuItem>
+                        )}
+                        <DropdownMenuItem onClick={() => handleStar(file)}>
+                          <Star className="size-4 mr-2" />
+                          {file.is_starred ? "Unstar" : "Star"}
                         </DropdownMenuItem>
-                      )}
-                      <DropdownMenuItem
-                        className="text-destructive"
-                        onClick={() => handleDelete(file)}
-                      >
-                        <Trash2 className="size-4 mr-2" />
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                        {!file.is_folder && (
+                          <DropdownMenuItem asChild>
+                            <a href={`/api/files/${file.id}/download`}>
+                              <Download className="size-4 mr-2" />
+                              Download
+                            </a>
+                          </DropdownMenuItem>
+                        )}
+                        <DropdownMenuItem
+                          className="text-destructive"
+                          onClick={() => handleDelete(file)}
+                        >
+                          <Trash2 className="size-4 mr-2" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </div>
+
+      <FilePreviewDialog
+        file={previewFile}
+        open={previewOpen}
+        onOpenChange={setPreviewOpen}
+      />
     </div>
   );
 }
