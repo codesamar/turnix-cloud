@@ -21,7 +21,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { FileExplorer } from "@/components/files/file-explorer";
-import { PROVIDER_LABELS } from "@/lib/adapters/config";
+import { getAccountDisplayName } from "@/lib/utils/account-display";
 import type { CloudAccount } from "@/lib/types/database";
 import { formatBytes } from "@/lib/utils/format";
 
@@ -42,7 +42,7 @@ export function HomeDashboard() {
   const totalCapacity = accounts.reduce((sum, a) => sum + a.quota_total, 0);
 
   const chartData = accounts.map((account) => ({
-    name: PROVIDER_LABELS[account.provider],
+    name: getAccountDisplayName(account),
     used: Math.round(account.quota_used / (1024 * 1024 * 1024) * 10) / 10,
     total: Math.round(account.quota_total / (1024 * 1024 * 1024) * 10) / 10,
   }));

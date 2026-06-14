@@ -50,6 +50,7 @@ export const yandexAdapter: CloudAdapter = {
       response_type: "code",
       client_id: clientId,
       redirect_uri: redirectUri,
+      force_confirm: "yes",
       state,
     });
     return `https://oauth.yandex.com/authorize?${params}`;

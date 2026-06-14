@@ -69,6 +69,7 @@ export const oneDriveAdapter: CloudAdapter = {
       redirect_uri: redirectUri,
       response_type: "code",
       scope: SCOPES.join(" "),
+      prompt: "select_account",
       state,
     });
     return `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/authorize?${params}`;

@@ -41,7 +41,7 @@ interface ProviderFormState {
   tenantId: string;
 }
 
-export function ProviderConfigPanel() {
+export function ProviderConfigPanel({ stepLabel }: { stepLabel?: string }) {
   const { t } = useLanguage();
   const queryClient = useQueryClient();
 
@@ -98,10 +98,13 @@ export function ProviderConfigPanel() {
   return (
     <Card id="provider-config">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Settings2 className="size-5" />
-          {t("providers.configTitle")}
-        </CardTitle>
+        <div className="flex items-center gap-2">
+          {stepLabel && <Badge variant="outline">{stepLabel}</Badge>}
+          <CardTitle className="flex items-center gap-2">
+            <Settings2 className="size-5" />
+            {t("providers.configTitle")}
+          </CardTitle>
+        </div>
         <CardDescription>{t("providers.configDesc")}</CardDescription>
       </CardHeader>
       <CardContent>
@@ -146,6 +149,10 @@ function ProviderConfigItem({
     clientSecret: "",
     tenantId: provider.extra?.tenantId ?? "common",
   });
+
+  const canSave =
+    form.clientId.trim().length > 0 &&
+    (provider.configured || form.clientSecret.trim().length > 0);
 
   return (
     <AccordionItem value={provider.provider}>
@@ -221,7 +228,7 @@ function ProviderConfigItem({
 
         <Button
           onClick={() => onSave(provider.provider, form, provider.configured)}
-          disabled={isSaving}
+          disabled={isSaving || !canSave}
         >
           {t("providers.saveConfig")}
         </Button>

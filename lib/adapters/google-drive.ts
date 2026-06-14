@@ -65,7 +65,7 @@ export const googleDriveAdapter: CloudAdapter = {
       response_type: "code",
       scope: SCOPES.join(" "),
       access_type: "offline",
-      prompt: "consent",
+      prompt: "consent select_account",
       state,
     });
     return `https://accounts.google.com/o/oauth2/v2/auth?${params}`;

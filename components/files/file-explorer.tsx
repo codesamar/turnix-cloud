@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/table";
 import { formatBytes } from "@/lib/utils/format";
 import type { FileMetadata, FileMetadataWithAccount } from "@/lib/types/database";
-import { PROVIDER_LABELS } from "@/lib/adapters/config";
+import { getFileAccountLabel } from "@/lib/utils/account-display";
 
 interface FileExplorerProps {
   queryKey: string;
@@ -149,7 +149,7 @@ export function FileExplorer({
             <TableRow>
               <TableHead className="w-10" />
               <TableHead>Name</TableHead>
-              {showProvider && <TableHead>Provider</TableHead>}
+              {showProvider && <TableHead>Account</TableHead>}
               <TableHead>Size</TableHead>
               <TableHead>Modified</TableHead>
               <TableHead className="w-10" />
@@ -196,10 +196,8 @@ export function FileExplorer({
                   </div>
                 </TableCell>
                 {showProvider && (
-                  <TableCell className="text-muted-foreground text-sm">
-                    {file.cloud_accounts?.provider
-                      ? PROVIDER_LABELS[file.cloud_accounts.provider]
-                      : "—"}
+                  <TableCell className="text-muted-foreground text-sm max-w-[220px] truncate">
+                    {getFileAccountLabel(file.cloud_accounts)}
                   </TableCell>
                 )}
                 <TableCell className="text-muted-foreground text-sm">

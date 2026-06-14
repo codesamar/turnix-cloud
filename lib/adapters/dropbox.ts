@@ -60,6 +60,7 @@ export const dropboxAdapter: CloudAdapter = {
       redirect_uri: redirectUri,
       response_type: "code",
       token_access_type: "offline",
+      force_reauthentication: "true",
       state,
     });
     return `https://www.dropbox.com/oauth2/authorize?${params}`;

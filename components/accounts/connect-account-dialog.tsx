@@ -18,6 +18,7 @@ import type { CloudAccount, CloudProvider } from "@/lib/types/database";
 import type { ProviderStatus } from "@/lib/services/provider-config";
 import { useLanguage } from "@/components/providers/language-provider";
 import { ConnectS3Form } from "@/components/accounts/connect-s3-form";
+import { getAccountDisplayName } from "@/lib/utils/account-display";
 
 const providerIcons: Record<string, string> = {
   google_drive: "🔵",
@@ -37,9 +38,16 @@ async function fetchProviders() {
 interface ConnectAccountDialogProps {
   accounts: CloudAccount[];
   onConnected: () => void;
+  disabled?: boolean;
+  disabledReason?: string;
 }
 
-export function ConnectAccountDialog({ accounts, onConnected }: ConnectAccountDialogProps) {
+export function ConnectAccountDialog({
+  accounts,
+  onConnected,
+  disabled = false,
+  disabledReason,
+}: ConnectAccountDialogProps) {
   const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   const [s3Open, setS3Open] = useState(false);
@@ -50,7 +58,14 @@ export function ConnectAccountDialog({ accounts, onConnected }: ConnectAccountDi
     enabled: open,
   });
 
-  const connectedProviders = new Set(accounts.map((a) => a.provider));
+  const accountsByProvider = accounts.reduce<Map<CloudProvider, CloudAccount[]>>(
+    (map, account) => {
+      const existing = map.get(account.provider) ?? [];
+      map.set(account.provider, [...existing, account]);
+      return map;
+    },
+    new Map()
+  );
 
   function handleOAuthConnect(provider: CloudProvider) {
     window.location.href = `/api/accounts/${provider}/connect`;
@@ -68,7 +83,7 @@ export function ConnectAccountDialog({ accounts, onConnected }: ConnectAccountDi
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button disabled={disabled} title={disabled ? disabledReason : undefined}>
           <Plus className="size-4 mr-2" />
           {t("providers.addAccount")}
         </Button>
@@ -83,32 +98,44 @@ export function ConnectAccountDialog({ accounts, onConnected }: ConnectAccountDi
           <div className="space-y-3">
             {connectableProviders.map((provider) => {
               const isOAuth = OAUTH_PROVIDERS.includes(provider.provider);
-              const isConnected = connectedProviders.has(provider.provider);
+              const providerAccounts = accountsByProvider.get(provider.provider) ?? [];
+              const connectedCount = providerAccounts.length;
               const canConnect = provider.provider === "s3" || provider.configured;
 
               return (
                 <div
                   key={provider.provider}
-                  className="flex items-center justify-between rounded-lg border p-4"
+                  className="flex items-start justify-between gap-4 rounded-lg border p-4"
                 >
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
+                  <div className="space-y-1 min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
                       <span>{providerIcons[provider.provider] ?? "☁️"}</span>
                       <span className="font-medium">
                         {PROVIDER_LABELS[provider.provider]}
                       </span>
-                      {isConnected && (
-                        <Badge variant="secondary">{t("providers.connected")}</Badge>
+                      {connectedCount > 0 && (
+                        <Badge variant="secondary">
+                          {connectedCount} {t("providers.connected")}
+                        </Badge>
                       )}
                       {!canConnect && isOAuth && (
                         <Badge variant="outline">{t("providers.notConfigured")}</Badge>
                       )}
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      {isOAuth ? t("providers.oauthDesc") : t("providers.s3Desc")}
+                      {isOAuth ? t("providers.oauthDescMultiple") : t("providers.s3Desc")}
                     </p>
+                    {connectedCount > 0 && (
+                      <ul className="text-xs text-muted-foreground space-y-0.5 pt-1">
+                        {providerAccounts.map((account) => (
+                          <li key={account.id} className="truncate">
+                            {getAccountDisplayName(account)}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex shrink-0 gap-2">
                     {!canConnect && isOAuth && (
                       <Button variant="outline" size="sm" onClick={scrollToConfig}>
                         {t("providers.configure")}
@@ -116,12 +143,16 @@ export function ConnectAccountDialog({ accounts, onConnected }: ConnectAccountDi
                     )}
                     {canConnect && provider.provider === "s3" && (
                       <Button size="sm" onClick={() => setS3Open(true)}>
-                        {t("providers.connectAccount")}
+                        {connectedCount > 0
+                          ? t("providers.addAnother")
+                          : t("providers.connectAccount")}
                       </Button>
                     )}
                     {canConnect && isOAuth && (
                       <Button size="sm" onClick={() => handleOAuthConnect(provider.provider)}>
-                        {t("providers.connectAccount")}
+                        {connectedCount > 0
+                          ? t("providers.addAnother")
+                          : t("providers.connectAccount")}
                       </Button>
                     )}
                   </div>

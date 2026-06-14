@@ -17,19 +17,29 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { PROVIDER_LABELS } from "@/lib/adapters/config";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { OAUTH_PROVIDERS, PROVIDER_LABELS } from "@/lib/adapters/config";
+import { getAccountDisplayName } from "@/lib/utils/account-display";
 import type { CloudAccount } from "@/lib/types/database";
 import { formatBytes } from "@/lib/utils/format";
 import { AllocationSettings } from "@/components/settings/allocation-settings";
 import { ConnectAccountDialog } from "@/components/accounts/connect-account-dialog";
 import { ProviderConfigPanel } from "@/components/accounts/provider-config-panel";
 import { useLanguage } from "@/components/providers/language-provider";
+import type { ProviderStatus } from "@/lib/services/provider-config";
 
 async function fetchAccounts() {
   const response = await fetch("/api/accounts");
   if (!response.ok) throw new Error("Failed to fetch accounts");
   const data = await response.json();
   return data.accounts as CloudAccount[];
+}
+
+async function fetchProviders() {
+  const response = await fetch("/api/providers");
+  if (!response.ok) throw new Error("Failed to fetch providers");
+  const data = await response.json();
+  return data.providers as ProviderStatus[];
 }
 
 export function AccountsPanel() {
@@ -40,6 +50,17 @@ export function AccountsPanel() {
     queryKey: ["accounts"],
     queryFn: fetchAccounts,
   });
+
+  const { data: providers = [] } = useQuery({
+    queryKey: ["providers"],
+    queryFn: fetchProviders,
+  });
+
+  const hasConfiguredProvider = providers.some(
+    (provider) =>
+      provider.configured &&
+      (provider.provider === "s3" || OAUTH_PROVIDERS.includes(provider.provider))
+  );
 
   const syncMutation = useMutation({
     mutationFn: async (accountId?: string) => {
@@ -69,18 +90,37 @@ export function AccountsPanel() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 className="text-2xl font-semibold tracking-tight">{t("accounts.title")}</h2>
-          <p className="text-muted-foreground text-sm mt-1">{t("accounts.subtitle")}</p>
-        </div>
-        <ConnectAccountDialog
-          accounts={accounts}
-          onConnected={() => queryClient.invalidateQueries({ queryKey: ["accounts"] })}
-        />
+      <div>
+        <h2 className="text-2xl font-semibold tracking-tight">{t("accounts.title")}</h2>
+        <p className="text-muted-foreground text-sm mt-1">{t("accounts.subtitle")}</p>
       </div>
 
-      <ProviderConfigPanel />
+      <ProviderConfigPanel stepLabel={t("providers.stepConfigure")} />
+
+      <Card>
+        <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <Badge variant="outline">{t("providers.stepConnect")}</Badge>
+              <CardTitle>{t("providers.connectSectionTitle")}</CardTitle>
+            </div>
+            <CardDescription>{t("providers.connectSectionDesc")}</CardDescription>
+          </div>
+          <ConnectAccountDialog
+            accounts={accounts}
+            disabled={!hasConfiguredProvider}
+            disabledReason={t("providers.configureRequired")}
+            onConnected={() => queryClient.invalidateQueries({ queryKey: ["accounts"] })}
+          />
+        </CardHeader>
+        {!hasConfiguredProvider && (
+          <CardContent>
+            <Alert>
+              <AlertDescription>{t("providers.configureFirst")}</AlertDescription>
+            </Alert>
+          </CardContent>
+        )}
+      </Card>
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
@@ -125,7 +165,7 @@ export function AccountsPanel() {
               >
                 <div className="space-y-2 flex-1 mr-4">
                   <div className="flex items-center gap-2">
-                    <span className="font-medium">{account.label}</span>
+                    <span className="font-medium">{getAccountDisplayName(account)}</span>
                     <Badge variant="outline">
                       {PROVIDER_LABELS[account.provider]}
                     </Badge>
