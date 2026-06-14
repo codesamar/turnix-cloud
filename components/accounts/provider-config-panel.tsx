@@ -22,6 +22,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { OAUTH_PROVIDERS, PROVIDER_LABELS } from "@/lib/adapters/config";
 import type { CloudProvider } from "@/lib/types/database";
 import { useLanguage } from "@/components/providers/language-provider";
@@ -107,7 +108,10 @@ export function ProviderConfigPanel({ stepLabel }: { stepLabel?: string }) {
         </div>
         <CardDescription>{t("providers.configDesc")}</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
+        <Alert>
+          <AlertDescription>{t("providers.configVsAccounts")}</AlertDescription>
+        </Alert>
         {isLoading && (
           <p className="text-sm text-muted-foreground">{t("providers.loading")}</p>
         )}

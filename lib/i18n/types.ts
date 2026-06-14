@@ -57,6 +57,7 @@ export type TranslationKey =
   | "accounts.disconnectSuccess"
   | "providers.configTitle"
   | "providers.configDesc"
+  | "providers.configVsAccounts"
   | "providers.stepConfigure"
   | "providers.stepConnect"
   | "providers.configureFirst"
