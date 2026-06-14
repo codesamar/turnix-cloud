@@ -255,7 +255,9 @@ export const googleDriveAdapter: CloudAdapter = {
       if (done) break;
       chunks.push(value);
       uploaded += value.length;
-      onProgress?.(Math.round((uploaded / size) * 100));
+      if (size > 0) {
+        onProgress?.(Math.min(95, Math.round((uploaded / size) * 95)));
+      }
     }
 
     const fileData = Buffer.concat(chunks.map((c) => Buffer.from(c)));
@@ -281,6 +283,8 @@ export const googleDriveAdapter: CloudAdapter = {
     if (!response.ok) {
       throw new Error("Failed to upload to Google Drive");
     }
+
+    onProgress?.(100);
 
     return normalizeFile(await response.json());
   },

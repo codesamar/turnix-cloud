@@ -2,6 +2,35 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { initiateUpload, processUpload } from "@/lib/services/upload";
 
+export async function GET(request: Request) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const uploadId = new URL(request.url).searchParams.get("uploadId");
+  if (!uploadId) {
+    return NextResponse.json({ error: "uploadId required" }, { status: 400 });
+  }
+
+  const { data: session, error } = await supabase
+    .from("upload_sessions")
+    .select("id, filename, progress, status, error_message")
+    .eq("id", uploadId)
+    .eq("user_id", user.id)
+    .single();
+
+  if (error || !session) {
+    return NextResponse.json({ error: "Upload session not found" }, { status: 404 });
+  }
+
+  return NextResponse.json({ session });
+}
+
 export async function POST(request: Request) {
   const supabase = await createClient();
   const {

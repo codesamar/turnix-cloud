@@ -68,16 +68,21 @@ export async function processUpload(
   const adapter = getAdapter(account.provider);
 
   try {
+    let lastReportedProgress = -1;
+
     const file = await adapter.upload(
       credentials,
       parentPath,
       uploadSession.filename,
       data,
       size,
-      async (progress) => {
-        await supabase
+      (progress) => {
+        const normalized = Math.max(0, Math.min(100, progress));
+        if (normalized === lastReportedProgress) return;
+        lastReportedProgress = normalized;
+        void supabase
           .from("upload_sessions")
-          .update({ progress })
+          .update({ progress: normalized })
           .eq("id", uploadId);
       }
     );
