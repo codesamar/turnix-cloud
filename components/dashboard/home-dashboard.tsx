@@ -5,6 +5,7 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
+  Legend,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -21,9 +22,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { FileExplorer } from "@/components/files/file-explorer";
+import {
+  StorageChartTooltip,
+  type StorageChartRow,
+} from "@/components/dashboard/storage-chart-tooltip";
 import { getAccountDisplayName } from "@/lib/utils/account-display";
 import type { CloudAccount } from "@/lib/types/database";
 import { formatBytes } from "@/lib/utils/format";
+import { useLanguage } from "@/components/providers/language-provider";
 
 async function fetchAccounts() {
   const response = await fetch("/api/accounts");
@@ -32,7 +38,13 @@ async function fetchAccounts() {
   return data.accounts as CloudAccount[];
 }
 
+function toGb(bytes: number): number {
+  return Math.round((bytes / (1024 * 1024 * 1024)) * 10) / 10;
+}
+
 export function HomeDashboard() {
+  const { t } = useLanguage();
+
   const { data: accounts = [], isLoading } = useQuery({
     queryKey: ["accounts"],
     queryFn: fetchAccounts,
@@ -41,11 +53,20 @@ export function HomeDashboard() {
   const totalUsed = accounts.reduce((sum, a) => sum + a.quota_used, 0);
   const totalCapacity = accounts.reduce((sum, a) => sum + a.quota_total, 0);
 
-  const chartData = accounts.map((account) => ({
-    name: getAccountDisplayName(account),
-    used: Math.round(account.quota_used / (1024 * 1024 * 1024) * 10) / 10,
-    total: Math.round(account.quota_total / (1024 * 1024 * 1024) * 10) / 10,
-  }));
+  const chartData: StorageChartRow[] = accounts.map((account) => {
+    const used = toGb(account.quota_used);
+    const total = toGb(account.quota_total);
+    const free = Math.max(0, Math.round((total - used) * 10) / 10);
+    const usedPercent = total > 0 ? Math.round((used / total) * 100) : 0;
+
+    return {
+      name: getAccountDisplayName(account),
+      used,
+      free,
+      total,
+      usedPercent,
+    };
+  });
 
   return (
     <div className="space-y-6">
@@ -111,18 +132,55 @@ export function HomeDashboard() {
       {accounts.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Storage by Provider</CardTitle>
-            <CardDescription>Usage in GB per connected account</CardDescription>
+            <CardTitle>{t("dashboard.storageChartTitle")}</CardTitle>
+            <CardDescription>{t("dashboard.storageChartDesc")}</CardDescription>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={chartData}>
+            <ResponsiveContainer width="100%" height={280}>
+              <BarChart data={chartData} margin={{ top: 8, right: 8, left: 0, bottom: 48 }}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                <XAxis dataKey="name" className="text-xs" />
-                <YAxis className="text-xs" />
-                <Tooltip />
-                <Bar dataKey="used" fill="hsl(var(--primary))" name="Used (GB)" radius={4} />
-                <Bar dataKey="total" fill="hsl(var(--muted))" name="Total (GB)" radius={4} />
+                <XAxis
+                  dataKey="name"
+                  className="text-xs"
+                  interval={0}
+                  angle={-20}
+                  textAnchor="end"
+                  height={60}
+                  tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }}
+                />
+                <YAxis
+                  className="text-xs"
+                  tick={{ fill: "hsl(var(--muted-foreground))" }}
+                  label={{
+                    value: "GB",
+                    angle: -90,
+                    position: "insideLeft",
+                    style: { fill: "hsl(var(--muted-foreground))", fontSize: 11 },
+                  }}
+                />
+                <Tooltip
+                  content={<StorageChartTooltip />}
+                  cursor={{ fill: "hsl(var(--muted) / 0.35)" }}
+                />
+                <Legend
+                  formatter={(value) =>
+                    value === "used" ? t("dashboard.legendUsed") : t("dashboard.legendFree")
+                  }
+                />
+                <Bar
+                  dataKey="used"
+                  stackId="storage"
+                  fill="hsl(var(--primary))"
+                  name="used"
+                  radius={[0, 0, 0, 0]}
+                />
+                <Bar
+                  dataKey="free"
+                  stackId="storage"
+                  fill="hsl(var(--muted))"
+                  name="free"
+                  radius={[4, 4, 0, 0]}
+                />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
