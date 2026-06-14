@@ -163,6 +163,21 @@ export type TranslationKey =
   | "guide.tip403"
   | "guide.tipEmpty"
   | "guide.tipRedirect"
+  | "move.title"
+  | "move.description"
+  | "move.itemCount"
+  | "move.destinationAccount"
+  | "move.selectAccount"
+  | "move.destinationFolder"
+  | "move.rootFolder"
+  | "move.loadingFolders"
+  | "move.noSubfolders"
+  | "move.folderHint"
+  | "move.cancel"
+  | "move.confirm"
+  | "move.moving"
+  | "move.success"
+  | "move.action"
   | "common.placeholder.name";
 
 export type Dictionary = Record<TranslationKey, string>;

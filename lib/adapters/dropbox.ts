@@ -170,6 +170,19 @@ export const dropboxAdapter: CloudAdapter = {
     });
   },
 
+  async move(credentials, fileId, destinationParentPath) {
+    const meta = await this.getFile(credentials, fileId);
+    const destFolder = destinationParentPath === "/" ? "" : destinationParentPath;
+    const toPath = `${destFolder}/${meta.name}`.replace("//", "/") || `/${meta.name}`;
+    const response = await dropboxRpc(credentials, "files/move_v2", {
+      from_path: meta.path,
+      to_path: toPath,
+      autorename: true,
+    });
+    const data = await response.json();
+    return normalizeEntry(data.metadata);
+  },
+
   async deleteFile(credentials, fileId) {
     await dropboxRpc(credentials, "files/delete_v2", { path: fileId });
   },

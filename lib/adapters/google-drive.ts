@@ -198,6 +198,24 @@ export const googleDriveAdapter: CloudAdapter = {
     });
   },
 
+  async move(credentials, fileId, destinationParentPath) {
+    const parentId = destinationParentPath === "/" ? "root" : destinationParentPath;
+    const current = await this.getFile(credentials, fileId);
+    const removeParents = current.parentProviderId ?? "root";
+    const params = new URLSearchParams({
+      addParents: parentId,
+      removeParents,
+      fields:
+        "id,name,mimeType,size,modifiedTime,starred,shared,parents",
+    });
+    const response = await driveFetch(
+      credentials,
+      `/files/${fileId}?${params}`,
+      { method: "PATCH" }
+    );
+    return normalizeFile(await response.json());
+  },
+
   async deleteFile(credentials, fileId) {
     await driveFetch(credentials, `/files/${fileId}`, { method: "DELETE" });
   },

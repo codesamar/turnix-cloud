@@ -184,6 +184,24 @@ export const oneDriveAdapter: CloudAdapter = {
     });
   },
 
+  async move(credentials, fileId, destinationParentPath) {
+    const body =
+      destinationParentPath === "/"
+        ? { parentReference: { path: "/drive/root" } }
+        : { parentReference: { id: destinationParentPath } };
+
+    const response = await graphFetch(
+      credentials,
+      `/me/drive/items/${fileId}/move`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      }
+    );
+    return normalizeItem(await response.json());
+  },
+
   async deleteFile(credentials, fileId) {
     await graphFetch(credentials, `/me/drive/items/${fileId}`, {
       method: "DELETE",

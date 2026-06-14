@@ -140,6 +140,24 @@ export const yandexAdapter: CloudAdapter = {
     });
   },
 
+  async move(credentials, fileId, destinationParentPath) {
+    const meta = await this.getFile(credentials, fileId);
+    const destBase = destinationParentPath === "/" ? "" : destinationParentPath;
+    const newPath = `${destBase}/${meta.name}`.replace("//", "/") || `/${meta.name}`;
+    const response = await fetch("https://cloud-api.yandex.net/v1/disk/resources/move", {
+      method: "POST",
+      headers: {
+        Authorization: `OAuth ${credentials.accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ from: meta.path, path: newPath }),
+    });
+    if (!response.ok) {
+      throw new Error(`Yandex move failed: ${response.status}`);
+    }
+    return this.getFile(credentials, newPath);
+  },
+
   async deleteFile(credentials, fileId) {
     await yandexFetch(credentials, `?path=${encodeURIComponent(fileId)}`, {
       method: "DELETE",

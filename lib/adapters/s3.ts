@@ -138,6 +138,45 @@ export const s3Adapter: CloudAdapter = {
     await client.send(new DeleteObjectCommand({ Bucket: bucket, Key: fileId }));
   },
 
+  async move(credentials, fileId, destinationParentPath) {
+    const { endpoint, bucket, accessKeyId, secretAccessKey, region } =
+      getS3Extra(credentials);
+    const { S3Client, CopyObjectCommand, DeleteObjectCommand, HeadObjectCommand } =
+      await import("@aws-sdk/client-s3");
+    const client = new S3Client({
+      endpoint,
+      region,
+      credentials: { accessKeyId, secretAccessKey },
+      forcePathStyle: true,
+    });
+
+    const meta = await this.getFile(credentials, fileId);
+    const base =
+      destinationParentPath === "/"
+        ? ""
+        : destinationParentPath.replace(/^\//, "").replace(/\/$/, "");
+    const newKey = `${base}${base ? "/" : ""}${meta.name}${meta.isFolder ? "/" : ""}`;
+
+    await client.send(
+      new CopyObjectCommand({
+        Bucket: bucket,
+        CopySource: `${bucket}/${fileId}`,
+        Key: newKey,
+      })
+    );
+    await client.send(new DeleteObjectCommand({ Bucket: bucket, Key: fileId }));
+
+    let size = meta.size;
+    if (!meta.isFolder) {
+      const head = await client.send(
+        new HeadObjectCommand({ Bucket: bucket, Key: newKey })
+      );
+      size = Number(head.ContentLength ?? 0);
+    }
+
+    return normalizeKey(newKey, meta.name, size, meta.isFolder);
+  },
+
   async deleteFile(credentials, fileId) {
     const { endpoint, bucket, accessKeyId, secretAccessKey, region } =
       getS3Extra(credentials);

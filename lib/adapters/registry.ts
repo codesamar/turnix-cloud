@@ -23,6 +23,7 @@ function createStubAdapter(provider: "mega" | "pcloud"): CloudAdapter {
     getFile: notImplemented,
     createFolder: notImplemented,
     rename: notImplemented,
+    move: notImplemented,
     deleteFile: notImplemented,
     download: notImplemented,
     upload: notImplemented,

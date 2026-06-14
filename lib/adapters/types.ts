@@ -47,6 +47,11 @@ export interface CloudAdapter {
     fileId: string,
     newName: string
   ): Promise<void>;
+  move(
+    credentials: ProviderCredentials,
+    fileId: string,
+    destinationParentPath: string
+  ): Promise<NormalizedFile>;
   deleteFile(credentials: ProviderCredentials, fileId: string): Promise<void>;
   download(
     credentials: ProviderCredentials,

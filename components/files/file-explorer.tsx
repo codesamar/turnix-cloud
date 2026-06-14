@@ -6,6 +6,7 @@ import {
   Eye,
   File,
   Folder,
+  FolderInput,
   MoreHorizontal,
   Star,
   Trash2,
@@ -32,6 +33,8 @@ import { formatBytes } from "@/lib/utils/format";
 import type { FileMetadata, FileMetadataWithAccount } from "@/lib/types/database";
 import { getFileAccountLabel } from "@/lib/utils/account-display";
 import { FilePreviewDialog } from "@/components/files/file-preview-dialog";
+import { MoveFileDialog } from "@/components/files/move-file-dialog";
+import { useLanguage } from "@/components/providers/language-provider";
 
 interface FileExplorerProps {
   queryKey: string;
@@ -59,9 +62,12 @@ export function FileExplorer({
   breadcrumbs,
   onBreadcrumbClick,
 }: FileExplorerProps) {
+  const { t } = useLanguage();
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [previewFile, setPreviewFile] = useState<FileMetadata | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [moveOpen, setMoveOpen] = useState(false);
+  const [moveFiles, setMoveFiles] = useState<FileMetadata[]>([]);
 
   const { data: files = [], isLoading, refetch } = useQuery({
     queryKey: [queryKey, fetchUrl],
@@ -100,6 +106,16 @@ export function FileExplorer({
     });
     setSelected(new Set());
     toast.success("Deleted selected files");
+    refetch();
+  }
+
+  function openMoveDialog(items: FileMetadata[]) {
+    setMoveFiles(items);
+    setMoveOpen(true);
+  }
+
+  function handleMoveComplete() {
+    setSelected(new Set());
     refetch();
   }
 
@@ -153,6 +169,16 @@ export function FileExplorer({
           <span className="text-sm text-muted-foreground">
             {selected.size} selected
           </span>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() =>
+              openMoveDialog(files.filter((file) => selected.has(file.id)))
+            }
+          >
+            <FolderInput className="size-4 mr-1" />
+            {t("move.action")}
+          </Button>
           <Button variant="destructive" size="sm" onClick={handleBulkDelete}>
             <Trash2 className="size-4 mr-1" />
             Delete
@@ -268,6 +294,10 @@ export function FileExplorer({
                           <Star className="size-4 mr-2" />
                           {file.is_starred ? "Unstar" : "Star"}
                         </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => openMoveDialog([file])}>
+                          <FolderInput className="size-4 mr-2" />
+                          {t("move.action")}
+                        </DropdownMenuItem>
                         {!file.is_folder && (
                           <DropdownMenuItem asChild>
                             <a href={`/api/files/${file.id}/download`}>
@@ -297,6 +327,13 @@ export function FileExplorer({
         file={previewFile}
         open={previewOpen}
         onOpenChange={setPreviewOpen}
+      />
+
+      <MoveFileDialog
+        open={moveOpen}
+        onOpenChange={setMoveOpen}
+        files={moveFiles}
+        onMoved={handleMoveComplete}
       />
     </div>
   );
