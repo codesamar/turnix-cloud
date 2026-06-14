@@ -30,15 +30,16 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
+import { useLanguage } from "@/components/providers/language-provider";
 
 const navItems = [
-  { title: "Home", href: "/", icon: Home },
-  { title: "My Drive", href: "/my-drive", icon: HardDrive },
-  { title: "Recent", href: "/recent", icon: Clock },
-  { title: "Starred", href: "/starred", icon: Star },
-  { title: "Shared with Me", href: "/shared-with-me", icon: Share2 },
-  { title: "Storage & Accounts", href: "/quota", icon: Cloud },
-  { title: "Settings", href: "/settings", icon: Settings },
+  { titleKey: "nav.home" as const, href: "/", icon: Home },
+  { titleKey: "nav.myDrive" as const, href: "/my-drive", icon: HardDrive },
+  { titleKey: "nav.recent" as const, href: "/recent", icon: Clock },
+  { titleKey: "nav.starred" as const, href: "/starred", icon: Star },
+  { titleKey: "nav.shared" as const, href: "/shared-with-me", icon: Share2 },
+  { titleKey: "nav.storage" as const, href: "/quota", icon: Cloud },
+  { titleKey: "nav.settings" as const, href: "/settings", icon: Settings },
 ];
 
 interface AppSidebarProps {
@@ -47,6 +48,7 @@ interface AppSidebarProps {
 
 function AppSidebarNav() {
   const pathname = usePathname();
+  const { t } = useLanguage();
 
   return (
     <SidebarMenu>
@@ -55,7 +57,7 @@ function AppSidebarNav() {
           <SidebarMenuButton asChild isActive={pathname === item.href}>
             <Link href={item.href}>
               <item.icon className="size-4" />
-              <span>{item.title}</span>
+              <span>{t(item.titleKey)}</span>
             </Link>
           </SidebarMenuButton>
         </SidebarMenuItem>
@@ -65,6 +67,8 @@ function AppSidebarNav() {
 }
 
 function SignOutButton() {
+  const { t } = useLanguage();
+
   async function handleSignOut() {
     const supabase = createClient();
     await supabase.auth.signOut();
@@ -74,12 +78,14 @@ function SignOutButton() {
   return (
     <Button variant="ghost" size="sm" className="w-full justify-start" onClick={handleSignOut}>
       <LogOut className="size-4 mr-2" />
-      Sign out
+      {t("nav.signOut")}
     </Button>
   );
 }
 
 export function AppSidebar({ userEmail }: AppSidebarProps) {
+  const { t } = useLanguage();
+
   return (
     <Sidebar>
       <SidebarHeader className="p-4">
@@ -90,7 +96,7 @@ export function AppSidebar({ userEmail }: AppSidebarProps) {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Workspace</SidebarGroupLabel>
+          <SidebarGroupLabel>{t("nav.workspace")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <AppSidebarNav />
           </SidebarGroupContent>
@@ -115,6 +121,8 @@ interface DashboardShellProps {
 }
 
 export function DashboardShell({ children, userEmail }: DashboardShellProps) {
+  const { t } = useLanguage();
+
   return (
     <SidebarProvider>
       <AppSidebar userEmail={userEmail} />
@@ -122,7 +130,7 @@ export function DashboardShell({ children, userEmail }: DashboardShellProps) {
         <header className="flex h-14 items-center gap-2 border-b px-4">
           <SidebarTrigger />
           <Separator orientation="vertical" className="h-4" />
-          <span className="text-sm text-muted-foreground">Unified Cloud Workspace</span>
+          <span className="text-sm text-muted-foreground">{t("header.subtitle")}</span>
         </header>
         <div className="flex-1 p-4 md:p-6">{children}</div>
       </main>

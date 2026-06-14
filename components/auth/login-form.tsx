@@ -15,9 +15,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/client";
+import { useLanguage } from "@/components/providers/language-provider";
 
 export function LoginForm() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -47,10 +49,8 @@ export function LoginForm() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle>Sign in to TurnixCloud</CardTitle>
-        <CardDescription>
-          Access your unified cloud workspace
-        </CardDescription>
+        <CardTitle>{t("auth.login.title")}</CardTitle>
+        <CardDescription>{t("auth.login.subtitle")}</CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
@@ -58,7 +58,7 @@ export function LoginForm() {
             <p className="text-sm text-destructive">{error}</p>
           )}
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t("auth.email")}</Label>
             <Input
               id="email"
               type="email"
@@ -69,7 +69,7 @@ export function LoginForm() {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">{t("auth.password")}</Label>
             <Input
               id="password"
               type="password"
@@ -81,12 +81,12 @@ export function LoginForm() {
         </CardContent>
         <CardFooter className="flex flex-col gap-4">
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Signing in..." : "Sign in"}
+            {isLoading ? t("auth.login.loading") : t("auth.login.submit")}
           </Button>
           <p className="text-sm text-muted-foreground">
-            Don&apos;t have an account?{" "}
+            {t("auth.login.noAccount")}{" "}
             <Link href="/register" className="text-primary underline-offset-4 hover:underline">
-              Register
+              {t("auth.login.register")}
             </Link>
           </p>
         </CardFooter>

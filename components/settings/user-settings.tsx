@@ -20,6 +20,8 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/components/providers/language-provider";
+import type { Language } from "@/lib/i18n/types";
 
 async function fetchSettings() {
   const response = await fetch("/api/settings");
@@ -30,6 +32,7 @@ async function fetchSettings() {
 
 export function UserSettings() {
   const { theme, setTheme } = useTheme();
+  const { language, setLanguage, t } = useLanguage();
   const queryClient = useQueryClient();
 
   const { data: settings } = useQuery({
@@ -48,25 +51,31 @@ export function UserSettings() {
       return response.json();
     },
     onSuccess: () => {
-      toast.success("Settings saved");
+      toast.success(t("settings.saved"));
       queryClient.invalidateQueries({ queryKey: ["settings"] });
     },
   });
 
+  async function handleLanguageChange(nextLanguage: Language) {
+    await setLanguage(nextLanguage);
+    toast.success(t("settings.saved"));
+    queryClient.invalidateQueries({ queryKey: ["settings"] });
+  }
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Preferences</CardTitle>
-        <CardDescription>Customize your TurnixCloud experience</CardDescription>
+        <CardTitle>{t("settings.preferences")}</CardTitle>
+        <CardDescription>{t("settings.preferencesDesc")}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <Label>Display Name</Label>
+          <Label>{t("settings.displayName")}</Label>
           <div className="flex gap-2">
             <Input
               defaultValue={settings?.display_name ?? ""}
               id="displayName"
-              placeholder="Your name"
+              placeholder={t("common.placeholder.name")}
             />
             <Button
               variant="outline"
@@ -75,13 +84,13 @@ export function UserSettings() {
                 updateMutation.mutate({ display_name: input.value });
               }}
             >
-              Save
+              {t("settings.save")}
             </Button>
           </div>
         </div>
 
         <div className="space-y-2">
-          <Label>Theme</Label>
+          <Label>{t("settings.theme")}</Label>
           <Select
             value={theme ?? settings?.theme ?? "system"}
             onValueChange={(v) => {
@@ -93,25 +102,22 @@ export function UserSettings() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="light">Light</SelectItem>
-              <SelectItem value="dark">Dark</SelectItem>
-              <SelectItem value="system">System</SelectItem>
+              <SelectItem value="light">{t("settings.theme.light")}</SelectItem>
+              <SelectItem value="dark">{t("settings.theme.dark")}</SelectItem>
+              <SelectItem value="system">{t("settings.theme.system")}</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div className="space-y-2">
-          <Label>Language</Label>
-          <Select
-            value={settings?.language ?? "en"}
-            onValueChange={(v) => updateMutation.mutate({ language: v })}
-          >
+          <Label>{t("settings.language")}</Label>
+          <Select value={language} onValueChange={(v) => handleLanguageChange(v as Language)}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="en">English</SelectItem>
-              <SelectItem value="id">Bahasa Indonesia</SelectItem>
+              <SelectItem value="en">{t("settings.language.en")}</SelectItem>
+              <SelectItem value="id">{t("settings.language.id")}</SelectItem>
             </SelectContent>
           </Select>
         </div>

@@ -15,9 +15,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/client";
+import { useLanguage } from "@/components/providers/language-provider";
 
 export function RegisterForm() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -51,10 +53,8 @@ export function RegisterForm() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle>Create your account</CardTitle>
-        <CardDescription>
-          Start managing all your cloud storage in one place
-        </CardDescription>
+        <CardTitle>{t("auth.register.title")}</CardTitle>
+        <CardDescription>{t("auth.register.subtitle")}</CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
@@ -62,17 +62,17 @@ export function RegisterForm() {
             <p className="text-sm text-destructive">{error}</p>
           )}
           <div className="space-y-2">
-            <Label htmlFor="displayName">Display name</Label>
+            <Label htmlFor="displayName">{t("auth.displayName")}</Label>
             <Input
               id="displayName"
-              placeholder="Your name"
+              placeholder={t("common.placeholder.name")}
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
               required
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t("auth.email")}</Label>
             <Input
               id="email"
               type="email"
@@ -83,13 +83,12 @@ export function RegisterForm() {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">{t("auth.password")}</Label>
             <Input
               id="password"
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)
-              }
+              onChange={(e) => setPassword(e.target.value)}
               minLength={6}
               required
             />
@@ -97,12 +96,12 @@ export function RegisterForm() {
         </CardContent>
         <CardFooter className="flex flex-col gap-4">
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Creating account..." : "Create account"}
+            {isLoading ? t("auth.register.loading") : t("auth.register.submit")}
           </Button>
           <p className="text-sm text-muted-foreground">
-            Already have an account?{" "}
+            {t("auth.register.hasAccount")}{" "}
             <Link href="/login" className="text-primary underline-offset-4 hover:underline">
-              Sign in
+              {t("auth.register.signIn")}
             </Link>
           </p>
         </CardFooter>

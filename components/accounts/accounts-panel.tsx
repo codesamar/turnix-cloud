@@ -23,6 +23,7 @@ import type { CloudAccount, CloudProvider } from "@/lib/types/database";
 import { formatBytes } from "@/lib/utils/format";
 import { AllocationSettings } from "@/components/settings/allocation-settings";
 import { ConnectS3Dialog } from "@/components/accounts/connect-s3-dialog";
+import { useLanguage } from "@/components/providers/language-provider";
 
 async function fetchAccounts() {
   const response = await fetch("/api/accounts");
@@ -39,6 +40,7 @@ const providerIcons: Record<string, string> = {
 
 export function AccountsPanel() {
   const queryClient = useQueryClient();
+  const { t, language } = useLanguage();
 
   const { data: accounts = [], isLoading } = useQuery({
     queryKey: ["accounts"],
@@ -56,17 +58,17 @@ export function AccountsPanel() {
       return response.json();
     },
     onSuccess: () => {
-      toast.success("Sync completed");
+      toast.success(t("accounts.syncSuccess"));
       queryClient.invalidateQueries({ queryKey: ["accounts"] });
       queryClient.invalidateQueries({ queryKey: ["files"] });
     },
-    onError: () => toast.error("Sync failed"),
+    onError: () => toast.error(t("accounts.syncFailed")),
   });
 
   async function handleDisconnect(id: string) {
     const response = await fetch(`/api/accounts?id=${id}`, { method: "DELETE" });
     if (response.ok) {
-      toast.success("Account disconnected");
+      toast.success(t("accounts.disconnectSuccess"));
       queryClient.invalidateQueries({ queryKey: ["accounts"] });
     }
   }
@@ -80,21 +82,17 @@ export function AccountsPanel() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-semibold tracking-tight">Storage & Accounts</h2>
-        <p className="text-muted-foreground text-sm mt-1">
-          Connect cloud accounts and configure upload allocation
-        </p>
+        <h2 className="text-2xl font-semibold tracking-tight">{t("accounts.title")}</h2>
+        <p className="text-muted-foreground text-sm mt-1">{t("accounts.subtitle")}</p>
       </div>
 
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Cloud className="size-5" />
-            Connect Account
+            {t("accounts.connect")}
           </CardTitle>
-          <CardDescription>
-            Link your cloud storage providers via OAuth
-          </CardDescription>
+          <CardDescription>{t("accounts.connectDesc")}</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-2">
           {OAUTH_PROVIDERS.map((provider) => (
@@ -118,10 +116,12 @@ export function AccountsPanel() {
           <div>
             <CardTitle className="flex items-center gap-2">
               <HardDrive className="size-5" />
-              Connected Accounts
+              {t("accounts.connected")}
             </CardTitle>
             <CardDescription>
-              {accounts.length} account{accounts.length !== 1 ? "s" : ""} connected
+              {language === "id"
+                ? `${accounts.length} ${t("accounts.connectedDesc")}`
+                : `${accounts.length} account${accounts.length !== 1 ? "s" : ""} connected`}
             </CardDescription>
           </div>
           <Button
@@ -131,17 +131,15 @@ export function AccountsPanel() {
             disabled={syncMutation.isPending || accounts.length === 0}
           >
             <RefreshCw className={`size-4 mr-1 ${syncMutation.isPending ? "animate-spin" : ""}`} />
-            Sync All
+            {t("accounts.syncAll")}
           </Button>
         </CardHeader>
         <CardContent className="space-y-4">
           {isLoading && (
-            <p className="text-sm text-muted-foreground">Loading accounts...</p>
+            <p className="text-sm text-muted-foreground">{t("accounts.loading")}</p>
           )}
           {!isLoading && accounts.length === 0 && (
-            <p className="text-sm text-muted-foreground">
-              No accounts connected yet. Connect a provider above to get started.
-            </p>
+            <p className="text-sm text-muted-foreground">{t("accounts.empty")}</p>
           )}
           {accounts.map((account) => {
             const usagePercent =
@@ -180,7 +178,7 @@ export function AccountsPanel() {
                   </div>
                   {account.last_synced_at && (
                     <p className="text-xs text-muted-foreground">
-                      Last synced: {new Date(account.last_synced_at).toLocaleString()}
+                      {t("accounts.lastSynced")}: {new Date(account.last_synced_at).toLocaleString()}
                     </p>
                   )}
                 </div>

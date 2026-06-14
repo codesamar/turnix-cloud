@@ -3,6 +3,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import { useState } from "react";
+import { LanguageProvider } from "@/components/providers/language-provider";
 import { Toaster } from "@/components/ui/sonner";
 
 interface ProvidersProps {
@@ -25,8 +26,10 @@ export function Providers({ children }: ProvidersProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        {children}
-        <Toaster />
+        <LanguageProvider>
+          {children}
+          <Toaster />
+        </LanguageProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );
