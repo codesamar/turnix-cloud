@@ -173,7 +173,9 @@ Badge **Configured** saja **belum** menampilkan file Drive.
 
 #### A3. Tambah Test users (wajib untuk mode Testing)
 
-1. Buka tab **Audience** di **Google Auth platform**  
+> Mode **Production** (tanpa Test users): lihat [docs/google-oauth-production.md](docs/google-oauth-production.md)
+
+1. Buka tab **Audience** di **Google Auth platform**
    Link langsung: `https://console.cloud.google.com/auth/audience`
 2. Pastikan **Publishing status** = **Testing**
 3. Scroll ke **Test users** → **Add users**
@@ -314,6 +316,8 @@ Pastikan `NEXT_PUBLIC_APP_URL` di `.env.local` sesuai port yang dipakai.
 
 ## Deploy ke Production (Vercel + Supabase)
 
+> **Google Drive OAuth production** (connect tanpa Test users): lihat [docs/google-oauth-production.md](docs/google-oauth-production.md)
+
 ### Vercel
 
 1. Push repo ke GitHub
@@ -415,8 +419,10 @@ Host Supabase direct connection (`db.xxx.supabase.co`) sering hanya IPv6. Solusi
 ### Google OAuth: Error 403 access_denied
 
 - App masih **Testing** → tambahkan email di **Google Auth platform → Audience → Test users**
+- Setiap Gmail baru perlu ditambah sendiri saat masih Testing
 - Email connect harus **sama persis** dengan yang ada di test users list
 - Token test user expire **7 hari** → connect ulang jika sudah lewat
+- **Production:** publish app + App Verification — lihat [docs/google-oauth-production.md](docs/google-oauth-production.md)
 
 ### Google Drive "Configured" tapi file tidak tampil
 
