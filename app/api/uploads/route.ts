@@ -62,6 +62,11 @@ export async function POST(request: Request) {
       uploadId: session.id,
       accountId: account.id,
       provider: account.provider,
+      account: {
+        label: account.label,
+        email: account.email,
+        provider: account.provider,
+      },
     });
   }
 

@@ -1,12 +1,21 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Upload } from "lucide-react";
+import Link from "next/link";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Cloud, FolderOpen, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { Progress } from "@/components/ui/progress";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { PROVIDER_LABELS } from "@/lib/adapters/config";
+import type { AllocationStrategy, CloudProvider } from "@/lib/types/database";
+import { useLanguage } from "@/components/providers/language-provider";
+import type { TranslationKey } from "@/lib/i18n/types";
+import { getAccountDisplayName } from "@/lib/utils/account-display";
 
 interface UploadDropzoneProps {
   parentPath?: string;
+  folderName?: string | null;
   onComplete?: () => void;
 }
 
@@ -15,12 +24,45 @@ interface ActiveUpload {
   filename: string;
   progress: number;
   status: string;
+  accountLabel?: string;
+  provider?: CloudProvider;
 }
 
 interface UploadSessionStatus {
   progress: number;
   status: string;
   error_message?: string | null;
+}
+
+interface UploadDestination {
+  account: {
+    id: string;
+    label: string;
+    email: string | null;
+    provider: CloudProvider;
+    providerLabel: string;
+  };
+  folderName: string | null;
+  parentPath: string;
+  isRoot: boolean;
+  strategy: AllocationStrategy;
+}
+
+function strategyLabelKey(strategy: AllocationStrategy): TranslationKey {
+  return `allocation.strategy.${strategy}.label`;
+}
+
+async function fetchUploadDestination(
+  parentPath: string,
+  folderName: string | null
+): Promise<UploadDestination | null> {
+  const params = new URLSearchParams({ parentPath });
+  if (folderName) params.set("folderName", folderName);
+
+  const response = await fetch(`/api/uploads/destination?${params}`);
+  if (!response.ok) return null;
+  const data = await response.json();
+  return data.destination as UploadDestination;
 }
 
 async function fetchUploadStatus(uploadId: string): Promise<UploadSessionStatus | null> {
@@ -45,8 +87,7 @@ function uploadFileWithProgress(
 
     xhr.upload.addEventListener("progress", (event) => {
       if (!event.lengthComputable || event.total <= 0) return;
-      const sentProgress = Math.round((event.loaded / event.total) * 45);
-      onProgress(sentProgress);
+      onProgress(Math.round((event.loaded / event.total) * 45));
     });
 
     xhr.addEventListener("load", () => {
@@ -60,7 +101,7 @@ function uploadFileWithProgress(
         const body = JSON.parse(xhr.responseText) as { error?: string };
         if (body.error) message = body.error;
       } catch {
-        // ignore parse errors
+        // ignore
       }
       reject(new Error(message));
     });
@@ -72,10 +113,84 @@ function uploadFileWithProgress(
   });
 }
 
-export function UploadDropzone({ parentPath = "/", onComplete }: UploadDropzoneProps) {
+function UploadDestinationPreview({
+  destination,
+  folderName,
+}: {
+  destination: UploadDestination | null | undefined;
+  folderName: string | null;
+}) {
+  const { t } = useLanguage();
+
+  if (destination === undefined) {
+    return (
+      <p className="text-xs text-muted-foreground mt-3 animate-pulse">
+        {t("upload.destinationTitle")}...
+      </p>
+    );
+  }
+
+  if (!destination) {
+    return (
+      <Alert className="mt-3 text-left">
+        <AlertDescription>{t("upload.noAccount")}</AlertDescription>
+      </Alert>
+    );
+  }
+
+  const accountName = getAccountDisplayName(destination.account);
+  const folderLabel = destination.isRoot
+    ? t("upload.destinationRoot")
+    : folderName ?? destination.folderName ?? t("upload.destinationRoot");
+
+  return (
+    <div className="mt-3 w-full rounded-md border bg-muted/40 p-3 text-left text-xs space-y-2">
+      <p className="font-medium text-foreground">{t("upload.destinationTitle")}</p>
+      <div className="flex items-start gap-2 text-muted-foreground">
+        <Cloud className="size-3.5 mt-0.5 shrink-0" />
+        <div>
+          <span className="text-foreground/80">{t("upload.destinationAccount")}: </span>
+          {accountName}
+          <span className="text-muted-foreground">
+            {" "}
+            · {PROVIDER_LABELS[destination.account.provider]}
+          </span>
+        </div>
+      </div>
+      <div className="flex items-start gap-2 text-muted-foreground">
+        <FolderOpen className="size-3.5 mt-0.5 shrink-0" />
+        <div>
+          <span className="text-foreground/80">{t("upload.destinationFolder")}: </span>
+          <span className="text-foreground">{folderLabel}</span>
+        </div>
+      </div>
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-muted-foreground">
+        <span>
+          {t("upload.destinationStrategy")}: {t(strategyLabelKey(destination.strategy))}
+        </span>
+        <Link href="/quota" className="text-primary hover:underline">
+          {t("upload.changeAllocation")}
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+export function UploadDropzone({
+  parentPath = "/",
+  folderName = null,
+  onComplete,
+}: UploadDropzoneProps) {
+  const { t } = useLanguage();
+  const queryClient = useQueryClient();
   const [isDragging, setIsDragging] = useState(false);
   const [uploads, setUploads] = useState<ActiveUpload[]>([]);
   const pollTimersRef = useRef<Map<string, number>>(new Map());
+
+  const { data: destination, isLoading: isDestinationLoading } = useQuery({
+    queryKey: ["upload-destination", parentPath, folderName],
+    queryFn: () => fetchUploadDestination(parentPath, folderName),
+  });
 
   const updateUpload = useCallback((uploadId: string, patch: Partial<ActiveUpload>) => {
     setUploads((prev) =>
@@ -127,6 +242,11 @@ export function UploadDropzone({ parentPath = "/", onComplete }: UploadDropzoneP
 
   const uploadFile = useCallback(
     async (file: File) => {
+      if (!destination) {
+        toast.error(t("upload.noAccount"));
+        return;
+      }
+
       const initResponse = await fetch("/api/uploads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -145,41 +265,56 @@ export function UploadDropzone({ parentPath = "/", onComplete }: UploadDropzoneP
         return;
       }
 
-      const { uploadId } = (await initResponse.json()) as { uploadId: string };
+      const initData = (await initResponse.json()) as {
+        uploadId: string;
+        account?: { label: string; email: string | null; provider: CloudProvider };
+      };
+
+      const accountLabel = initData.account
+        ? getAccountDisplayName(initData.account)
+        : getAccountDisplayName(destination.account);
 
       setUploads((prev) => [
         ...prev,
-        { id: uploadId, filename: file.name, progress: 0, status: "pending" },
+        {
+          id: initData.uploadId,
+          filename: file.name,
+          progress: 0,
+          status: "pending",
+          accountLabel,
+          provider: initData.account?.provider ?? destination.account.provider,
+        },
       ]);
 
-      startPolling(uploadId);
+      startPolling(initData.uploadId);
 
       try {
-        await uploadFileWithProgress(uploadId, file, parentPath, (progress) => {
-          updateUpload(uploadId, { progress, status: "uploading" });
+        await uploadFileWithProgress(initData.uploadId, file, parentPath, (progress) => {
+          updateUpload(initData.uploadId, { progress, status: "uploading" });
         });
 
-        const session = await fetchUploadStatus(uploadId);
+        const session = await fetchUploadStatus(initData.uploadId);
         if (session?.status === "failed") {
           throw new Error(session.error_message ?? "Upload failed");
         }
 
-        updateUpload(uploadId, { progress: 100, status: "completed" });
-        stopPolling(uploadId);
+        updateUpload(initData.uploadId, { progress: 100, status: "completed" });
+        stopPolling(initData.uploadId);
         toast.success(`Uploaded ${file.name}`);
         onComplete?.();
+        void queryClient.invalidateQueries({ queryKey: ["upload-destination"] });
 
         window.setTimeout(() => {
-          setUploads((prev) => prev.filter((upload) => upload.id !== uploadId));
+          setUploads((prev) => prev.filter((upload) => upload.id !== initData.uploadId));
         }, 3000);
       } catch (err) {
-        stopPolling(uploadId);
+        stopPolling(initData.uploadId);
         const message = err instanceof Error ? err.message : "Upload failed";
-        updateUpload(uploadId, { status: "failed", progress: 0 });
+        updateUpload(initData.uploadId, { status: "failed", progress: 0 });
         toast.error(`${file.name}: ${message}`);
       }
     },
-    [onComplete, parentPath, startPolling, stopPolling, updateUpload]
+    [destination, onComplete, parentPath, queryClient, startPolling, stopPolling, t, updateUpload]
   );
 
   const handleFiles = useCallback(
@@ -216,40 +351,55 @@ export function UploadDropzone({ parentPath = "/", onComplete }: UploadDropzoneP
     };
   }, [handleFiles]);
 
+  const canUpload = Boolean(destination);
+
   return (
     <div className="space-y-3">
       <label
         className={`flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-6 transition-colors ${
-          isDragging
-            ? "border-primary bg-primary/5"
-            : "border-muted-foreground/25 hover:border-primary/50"
+          !canUpload
+            ? "cursor-not-allowed opacity-60"
+            : isDragging
+              ? "border-primary bg-primary/5"
+              : "border-muted-foreground/25 hover:border-primary/50"
         }`}
       >
         <Upload className="size-8 text-muted-foreground mb-2" />
-        <p className="text-sm font-medium">Drop files here or click to upload</p>
-        <p className="text-xs text-muted-foreground mt-1">
-          Files are allocated across your connected accounts
+        <p className="text-sm font-medium">{t("upload.dropTitle")}</p>
+        <p className="text-xs text-muted-foreground mt-1 text-center px-2">
+          {t("upload.dropHint")}
         </p>
+        <UploadDestinationPreview
+          destination={isDestinationLoading ? undefined : destination}
+          folderName={folderName}
+        />
         <input
           type="file"
           multiple
           className="hidden"
+          disabled={!canUpload}
           onChange={(e) => handleFiles(e.target.files)}
         />
       </label>
 
       {uploads.map((upload) => (
-        <div key={upload.id} className="space-y-1">
+        <div key={upload.id} className="space-y-1 rounded-md border p-3">
           <div className="flex justify-between text-sm gap-2">
-            <span className="truncate">{upload.filename}</span>
+            <span className="truncate font-medium">{upload.filename}</span>
             <span className="text-muted-foreground shrink-0">
               {upload.status === "failed"
-                ? "Failed"
+                ? t("upload.statusFailed")
                 : upload.status === "completed"
-                  ? "Done"
+                  ? t("upload.statusDone")
                   : `${upload.progress}%`}
             </span>
           </div>
+          {upload.accountLabel && (
+            <p className="text-xs text-muted-foreground truncate">
+              {t("upload.uploadingTo")}: {upload.accountLabel}
+              {upload.provider ? ` · ${PROVIDER_LABELS[upload.provider]}` : ""}
+            </p>
+          )}
           <Progress
             value={upload.status === "completed" ? 100 : upload.progress}
             className={upload.status === "failed" ? "opacity-50" : undefined}

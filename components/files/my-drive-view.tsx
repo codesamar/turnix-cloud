@@ -47,6 +47,7 @@ export function MyDriveView() {
       </div>
       <UploadDropzone
         parentPath={currentFolder?.provider_file_id ?? "/"}
+        folderName={currentFolder?.name ?? null}
         onComplete={handleUploadComplete}
       />
       <FileExplorer
