@@ -26,17 +26,93 @@ const googleSteps: TranslationKey[] = [
   "guide.googleStep6",
 ];
 
-function getGoogleRedirectUri() {
-  const base = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-  return `${base}/api/accounts/google_drive/callback`;
+const dropboxSteps: TranslationKey[] = [
+  "guide.dropboxStep1",
+  "guide.dropboxStep2",
+  "guide.dropboxStep3",
+  "guide.dropboxStep4",
+  "guide.dropboxStep5",
+  "guide.dropboxStep6",
+  "guide.dropboxStep7",
+];
+
+function getAppUrl() {
+  return process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+}
+
+function getProviderRedirectUri(provider: "google_drive" | "dropbox") {
+  return `${getAppUrl()}/api/accounts/${provider}/callback`;
+}
+
+interface ProviderSetupCardProps {
+  title: string;
+  steps: TranslationKey[];
+  redirectLabel: string;
+  redirectUri: string;
+  onCopyRedirect: () => void;
+  externalLink?: { href: string; label: string };
+}
+
+function ProviderSetupCard({
+  title,
+  steps,
+  redirectLabel,
+  redirectUri,
+  onCopyRedirect,
+  externalLink,
+}: ProviderSetupCardProps) {
+  const { t } = useLanguage();
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{t("guide.subtitle")}</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <ol className="space-y-3 list-decimal list-inside text-sm">
+          {steps.map((key) => (
+            <li key={key} className="text-muted-foreground">
+              <span className="text-foreground">{t(key)}</span>
+            </li>
+          ))}
+        </ol>
+
+        <div className="space-y-2">
+          <Label>{redirectLabel}</Label>
+          <div className="flex gap-2">
+            <Input value={redirectUri} readOnly className="font-mono text-xs" />
+            <Button type="button" variant="outline" size="icon" onClick={onCopyRedirect}>
+              <Copy className="size-4" />
+            </Button>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          {externalLink ? (
+            <Button asChild variant="outline" size="sm">
+              <a href={externalLink.href} target="_blank" rel="noreferrer">
+                {externalLink.label}
+                <ExternalLink className="size-3 ml-2" />
+              </a>
+            </Button>
+          ) : null}
+          <Button asChild size="sm">
+            <Link href="/quota">{t("guide.openQuota")}</Link>
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
 }
 
 export function ConnectGuideContent() {
   const { t } = useLanguage();
-  const redirectUri = getGoogleRedirectUri();
+  const googleRedirectUri = getProviderRedirectUri("google_drive");
+  const dropboxRedirectUri = getProviderRedirectUri("dropbox");
 
-  function copyRedirectUri() {
-    navigator.clipboard.writeText(redirectUri);
+  function copyRedirectUri(uri: string) {
+    navigator.clipboard.writeText(uri);
     toast.success(t("providers.redirectCopied"));
   }
 
@@ -46,7 +122,13 @@ export function ConnectGuideContent() {
     { title: t("guide.syncTitle"), desc: t("guide.syncDesc") },
   ];
 
-  const tips = [t("guide.tip403"), t("guide.tipEmpty"), t("guide.tipRedirect")];
+  const googleTips = [t("guide.tip403"), t("guide.tipRedirect")];
+  const dropboxTips = [
+    t("guide.tipDropboxScope"),
+    t("guide.tipDropboxDevUsers"),
+    t("guide.tipDropboxRedirect"),
+  ];
+  const sharedTips = [t("guide.tipEmpty")];
 
   return (
     <div className="space-y-6 max-w-3xl">
@@ -76,58 +158,59 @@ export function ConnectGuideContent() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("guide.googleTitle")}</CardTitle>
-          <CardDescription>{t("guide.subtitle")}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <ol className="space-y-3 list-decimal list-inside text-sm">
-            {googleSteps.map((key) => (
-              <li key={key} className="text-muted-foreground">
-                <span className="text-foreground">{t(key)}</span>
-              </li>
-            ))}
-          </ol>
+      <ProviderSetupCard
+        title={t("guide.googleTitle")}
+        steps={googleSteps}
+        redirectLabel={t("guide.redirectLabel")}
+        redirectUri={googleRedirectUri}
+        onCopyRedirect={() => copyRedirectUri(googleRedirectUri)}
+        externalLink={{
+          href: "https://console.cloud.google.com/auth/audience",
+          label: "Google Auth platform",
+        }}
+      />
 
-          <div className="space-y-2">
-            <Label>{t("guide.redirectLabel")}</Label>
-            <div className="flex gap-2">
-              <Input value={redirectUri} readOnly className="font-mono text-xs" />
-              <Button type="button" variant="outline" size="icon" onClick={copyRedirectUri}>
-                <Copy className="size-4" />
-              </Button>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap gap-2">
-            <Button asChild variant="outline" size="sm">
-              <a
-                href="https://console.cloud.google.com/auth/audience"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Google Auth platform
-                <ExternalLink className="size-3 ml-2" />
-              </a>
-            </Button>
-            <Button asChild size="sm">
-              <Link href="/quota">{t("guide.openQuota")}</Link>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <ProviderSetupCard
+        title={t("guide.dropboxTitle")}
+        steps={dropboxSteps}
+        redirectLabel={t("guide.dropboxRedirectLabel")}
+        redirectUri={dropboxRedirectUri}
+        onCopyRedirect={() => copyRedirectUri(dropboxRedirectUri)}
+        externalLink={{
+          href: "https://www.dropbox.com/developers/apps",
+          label: "Dropbox App Console",
+        }}
+      />
 
       <Card>
         <CardHeader>
           <CardTitle>{t("guide.troubleshootTitle")}</CardTitle>
         </CardHeader>
-        <CardContent>
-          <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
-            {tips.map((tip) => (
-              <li key={tip}>{tip}</li>
-            ))}
-          </ul>
+        <CardContent className="space-y-4">
+          <div>
+            <p className="text-sm font-medium mb-2">{t("guide.troubleshootGoogle")}</p>
+            <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+              {googleTips.map((tip) => (
+                <li key={tip}>{tip}</li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p className="text-sm font-medium mb-2">{t("guide.troubleshootDropbox")}</p>
+            <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+              {dropboxTips.map((tip) => (
+                <li key={tip}>{tip}</li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p className="text-sm font-medium mb-2">{t("guide.troubleshootGeneral")}</p>
+            <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+              {sharedTips.map((tip) => (
+                <li key={tip}>{tip}</li>
+              ))}
+            </ul>
+          </div>
         </CardContent>
       </Card>
     </div>

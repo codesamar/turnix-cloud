@@ -272,9 +272,16 @@ Selain Google Drive, provider OAuth lain bisa dikonfigurasi lewat dashboard (`/q
 
 #### Dropbox
 
-1. [Dropbox App Console](https://www.dropbox.com/developers/apps) → Create app
-2. Redirect URI dari dashboard TurnixCloud
-3. Simpan Client ID & Secret di dashboard
+> Panduan lengkap: [docs/dropbox-setup.md](docs/dropbox-setup.md)
+
+1. [Dropbox App Console](https://www.dropbox.com/developers/apps) → Create app (**Scoped access**)
+2. Tab **Permissions** → aktifkan `account_info.read`, `files.metadata.read/write`, `files.content.read/write` → **Submit**
+3. Tab **Settings** → copy **App key** & **App secret**; tambah Redirect URI:
+   ```
+   {NEXT_PUBLIC_APP_URL}/api/accounts/dropbox/callback
+   ```
+4. Simpan di dashboard `/quota`: Client ID (= App key), Client Secret (= App secret)
+5. **Add Account → Connect** → **Sync All**
 
 #### Yandex Disk
 
@@ -316,7 +323,8 @@ Pastikan `NEXT_PUBLIC_APP_URL` di `.env.local` sesuai port yang dipakai.
 
 ## Deploy ke Production (Vercel + Supabase)
 
-> **Google Drive OAuth production** (connect tanpa Test users): lihat [docs/google-oauth-production.md](docs/google-oauth-production.md)
+> **Google Drive OAuth production** (connect tanpa Test users): lihat [docs/google-oauth-production.md](docs/google-oauth-production.md)  
+> **Dropbox setup lengkap**: lihat [docs/dropbox-setup.md](docs/dropbox-setup.md)
 
 ### Vercel
 
