@@ -10,6 +10,7 @@ const PROVIDER_PARAM_MAP: Record<string, CloudProvider> = {
   dropbox: "dropbox",
   yandex: "yandex",
   s3: "s3",
+  terabox: "terabox",
   mega: "mega",
   pcloud: "pcloud",
 };

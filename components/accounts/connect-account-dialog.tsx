@@ -14,11 +14,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { OAUTH_PROVIDERS, PROVIDER_LABELS } from "@/lib/adapters/config";
+import { OAUTH_PROVIDERS, PROVIDER_LABELS, CREDENTIALS_PROVIDERS } from "@/lib/adapters/config";
 import type { CloudAccount, CloudProvider } from "@/lib/types/database";
 import type { ProviderStatus } from "@/lib/services/provider-config";
 import { useLanguage } from "@/components/providers/language-provider";
 import { ConnectS3Form } from "@/components/accounts/connect-s3-form";
+import { ConnectTeraboxForm } from "@/components/accounts/connect-terabox-form";
 import { getAccountDisplayName } from "@/lib/utils/account-display";
 import { isOAuthMessage, openOAuthPopup } from "@/lib/oauth/popup";
 
@@ -28,6 +29,7 @@ const providerIcons: Record<string, string> = {
   dropbox: "🔷",
   yandex: "🟡",
   s3: "🟠",
+  terabox: "📦",
 };
 
 async function fetchProviders() {
@@ -52,7 +54,8 @@ export function ConnectAccountDialog({
 }: ConnectAccountDialogProps) {
   const { t } = useLanguage();
   const [open, setOpen] = useState(false);
-  const [s3Open, setS3Open] = useState(false);
+  const [credentialsProvider, setCredentialsProvider] =
+    useState<CloudProvider | null>(null);
   const [connectingProvider, setConnectingProvider] = useState<CloudProvider | null>(null);
   const popupPollRef = useRef<number | null>(null);
 
@@ -155,13 +158,16 @@ export function ConnectAccountDialog({
           </DialogDescription>
         </DialogHeader>
 
-        {!s3Open ? (
+        {!credentialsProvider ? (
           <div className="space-y-3">
             {connectableProviders.map((provider) => {
               const isOAuth = OAUTH_PROVIDERS.includes(provider.provider);
               const providerAccounts = accountsByProvider.get(provider.provider) ?? [];
               const connectedCount = providerAccounts.length;
-              const canConnect = provider.provider === "s3" || provider.configured;
+              const canConnect =
+                CREDENTIALS_PROVIDERS.includes(provider.provider) ||
+                provider.configured;
+              const isCredentials = CREDENTIALS_PROVIDERS.includes(provider.provider);
 
               return (
                 <div
@@ -184,7 +190,11 @@ export function ConnectAccountDialog({
                       )}
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      {isOAuth ? t("providers.oauthDescMultiple") : t("providers.s3Desc")}
+                      {isOAuth
+                        ? t("providers.oauthDescMultiple")
+                        : provider.provider === "terabox"
+                          ? t("providers.teraboxDesc")
+                          : t("providers.s3Desc")}
                     </p>
                     {connectedCount > 0 && (
                       <ul className="text-xs text-muted-foreground space-y-0.5 pt-1">
@@ -202,8 +212,11 @@ export function ConnectAccountDialog({
                         {t("providers.configure")}
                       </Button>
                     )}
-                    {canConnect && provider.provider === "s3" && (
-                      <Button size="sm" onClick={() => setS3Open(true)}>
+                    {canConnect && isCredentials && (
+                      <Button
+                        size="sm"
+                        onClick={() => setCredentialsProvider(provider.provider)}
+                      >
                         {connectedCount > 0
                           ? t("providers.addAnother")
                           : t("providers.connectAccount")}
@@ -234,15 +247,26 @@ export function ConnectAccountDialog({
           </div>
         ) : (
           <div className="space-y-4">
-            <h3 className="font-medium">{PROVIDER_LABELS.s3}</h3>
-            <ConnectS3Form
-              onConnected={() => {
-                setS3Open(false);
-                setOpen(false);
-                onConnected();
-              }}
-              onCancel={() => setS3Open(false)}
-            />
+            <h3 className="font-medium">{PROVIDER_LABELS[credentialsProvider]}</h3>
+            {credentialsProvider === "s3" ? (
+              <ConnectS3Form
+                onConnected={() => {
+                  setCredentialsProvider(null);
+                  setOpen(false);
+                  onConnected();
+                }}
+                onCancel={() => setCredentialsProvider(null)}
+              />
+            ) : (
+              <ConnectTeraboxForm
+                onConnected={() => {
+                  setCredentialsProvider(null);
+                  setOpen(false);
+                  onConnected();
+                }}
+                onCancel={() => setCredentialsProvider(null)}
+              />
+            )}
           </div>
         )}
       </DialogContent>

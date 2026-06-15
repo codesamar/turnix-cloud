@@ -55,6 +55,7 @@ const ENV_MAP: Record<
   mega: {},
   pcloud: {},
   s3: {},
+  terabox: {},
 };
 
 export function getProviderRedirectUri(provider: CloudProvider): string {
@@ -135,6 +136,7 @@ export async function listProviderStatuses(): Promise<ProviderStatus[]> {
     "mega",
     "pcloud",
     "s3",
+    "terabox",
   ];
 
   return allProviders.map((provider) => {
@@ -152,7 +154,11 @@ export async function listProviderStatuses(): Promise<ProviderStatus[]> {
     return {
       provider,
       enabled: row?.enabled ?? envConfigured,
-      configured: dbConfigured || envConfigured || provider === "s3",
+      configured:
+        dbConfigured ||
+        envConfigured ||
+        provider === "s3" ||
+        provider === "terabox",
       redirectUri,
       clientId: row?.client_id ?? envConfig?.clientId ?? null,
       extra: (row?.extra as Record<string, string>) ?? envConfig?.extra ?? {},

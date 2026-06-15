@@ -36,6 +36,14 @@ const dropboxSteps: TranslationKey[] = [
   "guide.dropboxStep7",
 ];
 
+const teraboxSteps: TranslationKey[] = [
+  "guide.teraboxStep1",
+  "guide.teraboxStep2",
+  "guide.teraboxStep3",
+  "guide.teraboxStep4",
+  "guide.teraboxStep5",
+];
+
 function getAppUrl() {
   return process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 }
@@ -47,10 +55,11 @@ function getProviderRedirectUri(provider: "google_drive" | "dropbox") {
 interface ProviderSetupCardProps {
   title: string;
   steps: TranslationKey[];
-  redirectLabel: string;
-  redirectUri: string;
-  onCopyRedirect: () => void;
+  redirectLabel?: string;
+  redirectUri?: string;
+  onCopyRedirect?: () => void;
   externalLink?: { href: string; label: string };
+  showRedirect?: boolean;
 }
 
 function ProviderSetupCard({
@@ -60,6 +69,7 @@ function ProviderSetupCard({
   redirectUri,
   onCopyRedirect,
   externalLink,
+  showRedirect = true,
 }: ProviderSetupCardProps) {
   const { t } = useLanguage();
 
@@ -78,15 +88,17 @@ function ProviderSetupCard({
           ))}
         </ol>
 
-        <div className="space-y-2">
-          <Label>{redirectLabel}</Label>
-          <div className="flex gap-2">
-            <Input value={redirectUri} readOnly className="font-mono text-xs" />
-            <Button type="button" variant="outline" size="icon" onClick={onCopyRedirect}>
-              <Copy className="size-4" />
-            </Button>
+        {showRedirect && redirectLabel && redirectUri && onCopyRedirect ? (
+          <div className="space-y-2">
+            <Label>{redirectLabel}</Label>
+            <div className="flex gap-2">
+              <Input value={redirectUri} readOnly className="font-mono text-xs" />
+              <Button type="button" variant="outline" size="icon" onClick={onCopyRedirect}>
+                <Copy className="size-4" />
+              </Button>
+            </div>
           </div>
-        </div>
+        ) : null}
 
         <div className="flex flex-wrap gap-2">
           {externalLink ? (
@@ -128,6 +140,7 @@ export function ConnectGuideContent() {
     t("guide.tipDropboxDevUsers"),
     t("guide.tipDropboxRedirect"),
   ];
+  const teraboxTips = [t("guide.tipTeraboxSession"), t("guide.tipTeraboxUnofficial")];
   const sharedTips = [t("guide.tipEmpty")];
 
   return (
@@ -182,6 +195,16 @@ export function ConnectGuideContent() {
         }}
       />
 
+      <ProviderSetupCard
+        title={t("guide.teraboxTitle")}
+        steps={teraboxSteps}
+        showRedirect={false}
+        externalLink={{
+          href: "https://www.terabox.com",
+          label: "TeraBox",
+        }}
+      />
+
       <Card>
         <CardHeader>
           <CardTitle>{t("guide.troubleshootTitle")}</CardTitle>
@@ -199,6 +222,14 @@ export function ConnectGuideContent() {
             <p className="text-sm font-medium mb-2">{t("guide.troubleshootDropbox")}</p>
             <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
               {dropboxTips.map((tip) => (
+                <li key={tip}>{tip}</li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p className="text-sm font-medium mb-2">{t("guide.troubleshootTerabox")}</p>
+            <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+              {teraboxTips.map((tip) => (
                 <li key={tip}>{tip}</li>
               ))}
             </ul>

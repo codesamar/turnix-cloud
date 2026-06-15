@@ -4,6 +4,7 @@ import { oneDriveAdapter } from "@/lib/adapters/onedrive";
 import { dropboxAdapter } from "@/lib/adapters/dropbox";
 import { yandexAdapter } from "@/lib/adapters/yandex";
 import { s3Adapter } from "@/lib/adapters/s3";
+import { teraboxAdapter } from "@/lib/adapters/terabox";
 
 function createStubAdapter(provider: "mega" | "pcloud"): CloudAdapter {
   const notImplemented = () => {
@@ -37,6 +38,7 @@ const adapters: Record<string, CloudAdapter> = {
   dropbox: dropboxAdapter,
   yandex: yandexAdapter,
   s3: s3Adapter,
+  terabox: teraboxAdapter,
   mega: createStubAdapter("mega"),
   pcloud: createStubAdapter("pcloud"),
 };

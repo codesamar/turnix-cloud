@@ -6,6 +6,7 @@ process.env.TZ = "Asia/Jakarta";
 const nextConfig = {
   reactStrictMode: true,
   output: "standalone",
+  serverExternalPackages: ["terabox-api"],
 };
 
 export default nextConfig;

@@ -5,7 +5,8 @@ export type CloudProvider =
   | "yandex"
   | "mega"
   | "pcloud"
-  | "s3";
+  | "s3"
+  | "terabox";
 
 export type AccountStatus = "active" | "error" | "disconnected";
 export type UploadStatus = "pending" | "uploading" | "completed" | "failed";

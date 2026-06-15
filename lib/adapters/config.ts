@@ -19,7 +19,10 @@ export const PROVIDER_LABELS: Record<CloudProvider, string> = {
   mega: "MEGA",
   pcloud: "pCloud",
   s3: "S3 Compatible",
+  terabox: "TeraBox",
 };
+
+export const CREDENTIALS_PROVIDERS: CloudProvider[] = ["s3", "terabox"];
 
 export const OAUTH_PROVIDERS: CloudProvider[] = [
   "google_drive",

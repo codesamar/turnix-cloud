@@ -59,7 +59,9 @@ export function AccountsPanel() {
   const hasConfiguredProvider = providers.some(
     (provider) =>
       provider.configured &&
-      (provider.provider === "s3" || OAUTH_PROVIDERS.includes(provider.provider))
+      (provider.provider === "s3" ||
+        provider.provider === "terabox" ||
+        OAUTH_PROVIDERS.includes(provider.provider))
   );
 
   const syncMutation = useMutation({
