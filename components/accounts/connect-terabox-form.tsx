@@ -42,7 +42,12 @@ export function ConnectTeraboxForm({ onConnected, onCancel }: ConnectTeraboxForm
         throw new Error(data.error ?? "Connection failed");
       }
 
-      toast.success(t("providers.connectSuccess"));
+      const data = await response.json();
+      if (data.syncError) {
+        toast.warning(`${t("providers.terabox.syncFailed")}: ${data.syncError}`);
+      } else {
+        toast.success(t("providers.connectSuccess"));
+      }
       onConnected();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : t("providers.connectFailed"));

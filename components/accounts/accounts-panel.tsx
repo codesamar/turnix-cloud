@@ -26,6 +26,7 @@ import { AllocationSettings } from "@/components/settings/allocation-settings";
 import { ConnectAccountDialog } from "@/components/accounts/connect-account-dialog";
 import { ProviderConfigPanel } from "@/components/accounts/provider-config-panel";
 import { useLanguage } from "@/components/providers/language-provider";
+import { invalidateFileQueries } from "@/lib/utils/invalidate-file-queries";
 import type { ProviderStatus } from "@/lib/services/provider-config";
 
 async function fetchAccounts() {
@@ -74,10 +75,17 @@ export function AccountsPanel() {
       if (!response.ok) throw new Error("Sync failed");
       return response.json();
     },
-    onSuccess: () => {
-      toast.success(t("accounts.syncSuccess"));
+    onSuccess: (data: { results?: Array<{ provider: string; filesSynced: number; error?: string }> }) => {
+      const errors = (data.results ?? []).filter((result) => result.error);
+      if (errors.length > 0) {
+        toast.error(
+          errors.map((result) => `${result.provider}: ${result.error}`).join(" · ")
+        );
+      } else {
+        toast.success(t("accounts.syncSuccess"));
+      }
       queryClient.invalidateQueries({ queryKey: ["accounts"] });
-      queryClient.invalidateQueries({ queryKey: ["files"] });
+      invalidateFileQueries(queryClient);
     },
     onError: () => toast.error(t("accounts.syncFailed")),
   });
@@ -112,7 +120,10 @@ export function AccountsPanel() {
             accounts={accounts}
             disabled={!hasConfiguredProvider}
             disabledReason={t("providers.configureRequired")}
-            onConnected={() => queryClient.invalidateQueries({ queryKey: ["accounts"] })}
+            onConnected={() => {
+              queryClient.invalidateQueries({ queryKey: ["accounts"] });
+              invalidateFileQueries(queryClient);
+            }}
           />
         </CardHeader>
         {!hasConfiguredProvider && (

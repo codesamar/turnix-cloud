@@ -87,7 +87,13 @@ export const teraboxAdapter: CloudAdapter = {
 
   async listFiles(credentials, path) {
     const app = await createTeraboxApp(credentials);
-    const response = await app.getRemoteDir(toRemoteDir(path));
+    const remoteDir = toRemoteDir(path);
+    let response = await app.getRemoteDir(remoteDir);
+
+    if (response.errno !== 0 && remoteDir === "/") {
+      response = await app.getRemoteDir("");
+    }
+
     assertOk(response.errno, "list files");
     return (response.list ?? []).map(normalizeEntry);
   },

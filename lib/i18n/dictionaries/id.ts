@@ -150,6 +150,7 @@ export const id: Dictionary = {
   "providers.terabox.baseUrl": "Base URL (opsional)",
   "providers.terabox.sessionWarning":
     "Integrasi tidak resmi — token session kadaluarsa saat logout dari TeraBox. Connect ulang untuk refresh.",
+  "providers.terabox.syncFailed": "Terhubung tapi sinkronisasi file gagal",
   "guide.title": "Cara Connect Cloud Storage",
   "guide.subtitle": "Panduan langkah demi langkah konfigurasi provider dan hubungkan akun Anda",
   "guide.flowTitle": "Ringkasan tiga langkah",

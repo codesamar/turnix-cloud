@@ -150,6 +150,7 @@ export const en: Dictionary = {
   "providers.terabox.baseUrl": "Base URL (optional)",
   "providers.terabox.sessionWarning":
     "Unofficial integration — session tokens expire when you log out of TeraBox. Reconnect to refresh.",
+  "providers.terabox.syncFailed": "Connected but file sync failed",
   "guide.title": "How to Connect Cloud Storage",
   "guide.subtitle": "Step-by-step guide to configure providers and connect your accounts",
   "guide.flowTitle": "Three steps overview",

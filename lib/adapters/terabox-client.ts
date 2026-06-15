@@ -4,6 +4,7 @@ import type { TeraBoxApp } from "terabox-api";
 export interface TeraboxSessionExtra {
   ndusToken: string;
   baseUrl?: string;
+  apiHost?: string;
 }
 
 export const DEFAULT_TERABOX_BASE_URL = "https://www.terabox.com";
@@ -28,9 +29,9 @@ export async function createTeraboxApp(
   const { TeraBoxApp } = await import("terabox-api");
   const app = new TeraBoxApp(ndusToken);
 
-  const baseUrl = extra?.baseUrl?.trim();
-  if (baseUrl) {
-    app.params.whost = baseUrl.replace(/\/$/, "");
+  const savedHost = extra?.apiHost?.trim() || extra?.baseUrl?.trim();
+  if (savedHost) {
+    app.params.whost = savedHost.replace(/\/$/, "");
   }
 
   await app.updateAppData();
@@ -41,6 +42,10 @@ export async function createTeraboxApp(
   }
 
   return app;
+}
+
+export function getTeraboxApiHost(app: TeraBoxApp): string {
+  return app.params.whost;
 }
 
 export async function buildTeraboxCredentials(input: {
@@ -71,6 +76,11 @@ export async function buildTeraboxCredentials(input: {
 
   return {
     ...credentials,
+    extra: {
+      ndusToken,
+      baseUrl: input.baseUrl?.trim() || DEFAULT_TERABOX_BASE_URL,
+      apiHost: getTeraboxApiHost(app),
+    },
     email,
     accountId: String(login.uk),
   };

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { buildTeraboxCredentials } from "@/lib/adapters/terabox-client";
 import { saveAccount } from "@/lib/services/accounts";
+import { syncUserAccounts } from "@/lib/services/sync";
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -29,7 +30,11 @@ export async function POST(request: Request) {
       credentials,
       label ?? credentials.email ?? "TeraBox"
     );
-    return NextResponse.json({ account });
+
+    const syncResults = await syncUserAccounts(supabase, user.id, account.id);
+    const syncError = syncResults[0]?.error;
+
+    return NextResponse.json({ account, syncResults, syncError });
   } catch (err) {
     return NextResponse.json(
       { error: err instanceof Error ? err.message : "Connection failed" },

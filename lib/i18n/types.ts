@@ -148,6 +148,7 @@ export type TranslationKey =
   | "providers.terabox.ndusTokenHint"
   | "providers.terabox.baseUrl"
   | "providers.terabox.sessionWarning"
+  | "providers.terabox.syncFailed"
   | "guide.title"
   | "guide.subtitle"
   | "guide.flowTitle"
