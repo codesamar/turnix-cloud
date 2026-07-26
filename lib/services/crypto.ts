@@ -5,10 +5,12 @@ const IV_LENGTH = 16;
 const AUTH_TAG_LENGTH = 16;
 
 function getKey(): Buffer {
-  const secret = process.env.TURNIX_SECRET_KEY;
+  const secret =
+    process.env.SAMAR_SECRET_KEY || process.env.TURNIX_SECRET_KEY;
   if (!secret) {
-    throw new Error("TURNIX_SECRET_KEY is not configured");
+    throw new Error("SAMAR_SECRET_KEY is not configured");
   }
+  // Salt kept for compatibility with credentials encrypted under the previous brand name.
   return scryptSync(secret, "turnix-salt", 32);
 }
 

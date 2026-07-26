@@ -200,8 +200,8 @@
     "semantic_hash": ""
   },
   "components/auth/login-form.tsx": {
-    "mtime": 1785041072.8137789,
-    "ast_hash": "5d2b2ecc9c23f22572ce4bafa780053b",
+    "mtime": 1785041132.6784265,
+    "ast_hash": "00b106799bfec6a79bd98c1f1197af5e",
     "semantic_hash": ""
   },
   "components/auth/register-form.tsx": {

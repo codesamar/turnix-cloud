@@ -115,8 +115,8 @@
     "semantic_hash": ""
   },
   "app/api/health/route.ts": {
-    "mtime": 1781453416.190308,
-    "ast_hash": "a87bbfb96c43e52d0dfd598457a347c8",
+    "mtime": 1785041289.222306,
+    "ast_hash": "f937c0a951d00189b50e95c93dab7d07",
     "semantic_hash": ""
   },
   "app/api/providers/[provider]/route.ts": {
@@ -155,8 +155,8 @@
     "semantic_hash": ""
   },
   "app/layout.tsx": {
-    "mtime": 1781453413.6478238,
-    "ast_hash": "aa8b3e80a5ebecaa13ec6ddaa2d92cf1",
+    "mtime": 1785041289.2204611,
+    "ast_hash": "a95585cd4f05bbef15c690fa3061f08d",
     "semantic_hash": ""
   },
   "app/oauth/done/page.tsx": {
@@ -190,8 +190,8 @@
     "semantic_hash": ""
   },
   "components/accounts/oauth-done-client.tsx": {
-    "mtime": 1781478589.774763,
-    "ast_hash": "c52919c7e360b2a3bab84fece1a2e9cc",
+    "mtime": 1785041292.1118028,
+    "ast_hash": "5676218bb00fc9376cb51f40425cb397",
     "semantic_hash": ""
   },
   "components/accounts/provider-config-panel.tsx": {
@@ -250,8 +250,8 @@
     "semantic_hash": ""
   },
   "components/layout/app-sidebar.tsx": {
-    "mtime": 1781457480.2712023,
-    "ast_hash": "ab8c31423e6aebdeceb1fc104bdc5730",
+    "mtime": 1785041292.1108522,
+    "ast_hash": "ba62c8db1e522faf62aa0d765ad14c0f",
     "semantic_hash": ""
   },
   "components/providers.tsx": {
@@ -525,8 +525,8 @@
     "semantic_hash": ""
   },
   "lib/adapters/google-drive.ts": {
-    "mtime": 1785035305.7299955,
-    "ast_hash": "ef264635d9910ae687380ee5dde36efc",
+    "mtime": 1785041292.1200294,
+    "ast_hash": "ad44ddeda1494ea3bfaea7ba20cc6228",
     "semantic_hash": ""
   },
   "lib/adapters/onedrive.ts": {
@@ -575,18 +575,18 @@
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/en.ts": {
-    "mtime": 1785035316.4722104,
-    "ast_hash": "afa9dc246edc41bdf242511964526448",
+    "mtime": 1785041292.12218,
+    "ast_hash": "28667bca2fa6420812bde01710c8fc32",
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/id.ts": {
-    "mtime": 1785035317.189603,
-    "ast_hash": "d0f31fed16690b531c63c51ac8011ddd",
+    "mtime": 1785041292.122478,
+    "ast_hash": "919791a189161bb94a31d044730495ce",
     "semantic_hash": ""
   },
   "lib/i18n/index.ts": {
-    "mtime": 1781455731.1307266,
-    "ast_hash": "7b58ca921dcf3bb50c7107c0027e74bf",
+    "mtime": 1785041292.1218126,
+    "ast_hash": "86951399510237c0799c8c706fc7d62a",
     "semantic_hash": ""
   },
   "lib/i18n/types.ts": {
@@ -595,8 +595,8 @@
     "semantic_hash": ""
   },
   "lib/oauth/popup.ts": {
-    "mtime": 1781478589.774652,
-    "ast_hash": "cff7a6ddddcb0801892f8403b959d2f4",
+    "mtime": 1785041292.1144915,
+    "ast_hash": "add68ad37536d91040ea5707fce7704d",
     "semantic_hash": ""
   },
   "lib/services/accounts.ts": {
@@ -610,8 +610,8 @@
     "semantic_hash": ""
   },
   "lib/services/crypto.ts": {
-    "mtime": 1781453386.7275062,
-    "ast_hash": "37508f1c7064934713f82e595179d490",
+    "mtime": 1785041299.8642714,
+    "ast_hash": "2fefd032191864ed02ff7cb8573d239c",
     "semantic_hash": ""
   },
   "lib/services/move.ts": {
@@ -690,8 +690,8 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1781482257.4780543,
-    "ast_hash": "ef2d44685adfda23e86e33602edf4d81",
+    "mtime": 1785041289.2175443,
+    "ast_hash": "00719217589ed12d924d58dacb31f85c",
     "semantic_hash": ""
   },
   "postcss.config.mjs": {
@@ -700,13 +700,13 @@
     "semantic_hash": ""
   },
   "supabase/.temp/linked-project.json": {
-    "mtime": 1781454903.7023787,
-    "ast_hash": "24b11682ba3581ee0afb3a5022eb201c",
+    "mtime": 1785041292.10712,
+    "ast_hash": "366423bf048c55ecefbf2ba28543a5cf",
     "semantic_hash": ""
   },
   "supabase/migrations/001_initial.sql": {
-    "mtime": 1781453355.9740603,
-    "ast_hash": "c84c5373d7d14aa132f6ec0accb6412f",
+    "mtime": 1785041292.1056528,
+    "ast_hash": "93d7f680b845643c41bd6459547d7e3a",
     "semantic_hash": ""
   },
   "supabase/migrations/002_provider_config.sql": {
@@ -740,8 +740,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1785040416.9261162,
-    "ast_hash": "820e0bcb3f578ac4cf9a878df72bd248",
+    "mtime": 1785041289.2133443,
+    "ast_hash": "f31eb029b50e6a2d16ceec5020c3fe64",
     "semantic_hash": ""
   },
   "docker-compose.yaml": {
@@ -750,18 +750,18 @@
     "semantic_hash": ""
   },
   "docs/dropbox-setup.md": {
-    "mtime": 1785040417.4551668,
-    "ast_hash": "9c8719fc96cd507203a32e82db5ed290",
+    "mtime": 1785041291.8917875,
+    "ast_hash": "ad68d4071ab9ca8e9a11337cc68bfc95",
     "semantic_hash": ""
   },
   "docs/google-oauth-production.md": {
-    "mtime": 1785040418.7321303,
-    "ast_hash": "fc381a0c4389b17cd9cc7ffe9b79ac41",
+    "mtime": 1785041291.8909097,
+    "ast_hash": "fe0956542006a3c21971dd1b9e385eba",
     "semantic_hash": ""
   },
   "docs/terabox-setup.md": {
-    "mtime": 1781482407.8671808,
-    "ast_hash": "bebf57acfb26f1e5899ee9945c047426",
+    "mtime": 1785041291.8913746,
+    "ast_hash": "53159570f5ab11d727fd4a31e008209c",
     "semantic_hash": ""
   },
   "image.png": {

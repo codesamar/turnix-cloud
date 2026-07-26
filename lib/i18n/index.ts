@@ -21,4 +21,4 @@ export function detectBrowserLanguage(): Language {
   return navigator.language.toLowerCase().startsWith("id") ? "id" : "en";
 }
 
-export const LANGUAGE_STORAGE_KEY = "turnix-language";
+export const LANGUAGE_STORAGE_KEY = "samar-language";

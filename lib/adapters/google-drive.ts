@@ -263,7 +263,7 @@ export const googleDriveAdapter: CloudAdapter = {
       parents: [parentId],
     };
 
-    const boundary = "turnix_boundary";
+    const boundary = "samar_boundary";
     const metaPart = `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(metadata)}\r\n`;
     const fileHeader = `--${boundary}\r\nContent-Type: application/octet-stream\r\n\r\n`;
 

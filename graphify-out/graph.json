@@ -208,8 +208,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_dashboard_recent_page",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "page.tsx"
     },
     {
@@ -219,8 +219,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "app_dashboard_recent_page_recentpage",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "recentpage()"
     },
     {
@@ -274,8 +274,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_dashboard_starred_page",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "page.tsx"
     },
     {
@@ -285,8 +285,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "app_dashboard_starred_page_starredpage",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "starredpage()"
     },
     {
@@ -1594,8 +1594,8 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "components_files_file_explorer_fetchfiles",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "fetchfiles()"
     },
     {
@@ -1605,8 +1605,8 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "components_files_file_explorer_fileexplorer",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "fileexplorer()"
     },
     {
@@ -1638,8 +1638,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "components_files_file_preview_dialog_filepreviewdialog",
-      "community": 106,
-      "community_name": "file-preview.ts",
+      "community": 11,
+      "community_name": "provider-config.ts",
       "norm_label": "filepreviewdialog()"
     },
     {
@@ -6761,7 +6761,7 @@
       "label": "encryptCredentials()",
       "file_type": "code",
       "source_file": "lib/services/crypto.ts",
-      "source_location": "L15",
+      "source_location": "L17",
       "_origin": "ast",
       "id": "lib_services_crypto_encryptcredentials",
       "community": 13,
@@ -6772,7 +6772,7 @@
       "label": "decryptCredentials()",
       "file_type": "code",
       "source_file": "lib/services/crypto.ts",
-      "source_location": "L28",
+      "source_location": "L30",
       "_origin": "ast",
       "id": "lib_services_crypto_decryptcredentials",
       "community": 13,
@@ -8469,8 +8469,8 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "package_dependencies_class_variance_authority",
-      "community": 22,
-      "community_name": "dependencies",
+      "community": 50,
+      "community_name": "framer-motion",
       "norm_label": "class-variance-authority"
     },
     {
@@ -8480,8 +8480,8 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "class_variance_authority",
-      "community": 22,
-      "community_name": "dependencies",
+      "community": 50,
+      "community_name": "framer-motion",
       "norm_label": "class-variance-authority"
     },
     {
@@ -8601,8 +8601,8 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "package_dependencies_framer_motion",
-      "community": 50,
-      "community_name": "framer-motion",
+      "community": 22,
+      "community_name": "dependencies",
       "norm_label": "framer-motion"
     },
     {
@@ -8612,8 +8612,8 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "framer_motion",
-      "community": 50,
-      "community_name": "framer-motion",
+      "community": 22,
+      "community_name": "dependencies",
       "norm_label": "framer-motion"
     },
     {
@@ -10091,15 +10091,15 @@
       "norm_label": "readme.md"
     },
     {
-      "label": "TurnixCloud",
+      "label": "SamarCloud",
       "file_type": "document",
       "source_file": "README.md",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "readme_turnixcloud",
+      "id": "readme_samarcloud",
       "community": 3,
       "community_name": "TurnixCloud",
-      "norm_label": "turnixcloud"
+      "norm_label": "samarcloud"
     },
     {
       "label": "\u2728 Key features",
@@ -10212,15 +10212,15 @@
       "norm_label": "\ud83c\udfd7\ufe0f project structure"
     },
     {
-      "label": "\ud83d\udd04 How TurnixCloud works",
+      "label": "\ud83d\udd04 How SamarCloud works",
       "file_type": "document",
       "source_file": "README.md",
       "source_location": "L98",
       "_origin": "ast",
-      "id": "readme_how_turnixcloud_works",
+      "id": "readme_how_samarcloud_works",
       "community": 3,
       "community_name": "TurnixCloud",
-      "norm_label": "\ud83d\udd04 how turnixcloud works"
+      "norm_label": "\ud83d\udd04 how samarcloud works"
     },
     {
       "label": "\ud83e\udde9 Current application views",
@@ -10718,26 +10718,26 @@
       "norm_label": "2.1 daftarkan di dropbox"
     },
     {
-      "label": "2.2 Salin dari dashboard TurnixCloud (alternatif)",
+      "label": "2.2 Salin dari dashboard SamarCloud (alternatif)",
       "file_type": "document",
       "source_file": "docs/dropbox-setup.md",
       "source_location": "L129",
       "_origin": "ast",
-      "id": "docs_dropbox_setup_2_2_salin_dari_dashboard_turnixcloud_alternatif",
+      "id": "docs_dropbox_setup_2_2_salin_dari_dashboard_samarcloud_alternatif",
       "community": 14,
       "community_name": "Dropbox \u2014 Setup Lengkap",
-      "norm_label": "2.2 salin dari dashboard turnixcloud (alternatif)"
+      "norm_label": "2.2 salin dari dashboard samarcloud (alternatif)"
     },
     {
-      "label": "Langkah 3 \u2014 Configure di TurnixCloud",
+      "label": "Langkah 3 \u2014 Configure di SamarCloud",
       "file_type": "document",
       "source_file": "docs/dropbox-setup.md",
       "source_location": "L137",
       "_origin": "ast",
-      "id": "docs_dropbox_setup_langkah_3_configure_di_turnixcloud",
+      "id": "docs_dropbox_setup_langkah_3_configure_di_samarcloud",
       "community": 14,
       "community_name": "Dropbox \u2014 Setup Lengkap",
-      "norm_label": "langkah 3 \u2014 configure di turnixcloud"
+      "norm_label": "langkah 3 \u2014 configure di samarcloud"
     },
     {
       "label": "3.1 Lewat dashboard (disarankan)",
@@ -10916,15 +10916,15 @@
       "norm_label": "testing vs production"
     },
     {
-      "label": "Configure vs Connect (TurnixCloud)",
+      "label": "Configure vs Connect (SamarCloud)",
       "file_type": "document",
       "source_file": "docs/google-oauth-production.md",
       "source_location": "L19",
       "_origin": "ast",
-      "id": "docs_google_oauth_production_configure_vs_connect_turnixcloud",
+      "id": "docs_google_oauth_production_configure_vs_connect_samarcloud",
       "community": 4,
       "community_name": "Google OAuth \u2014 Production Setup",
-      "norm_label": "configure vs connect (turnixcloud)"
+      "norm_label": "configure vs connect (samarcloud)"
     },
     {
       "label": "Prasyarat",
@@ -10938,15 +10938,15 @@
       "norm_label": "prasyarat"
     },
     {
-      "label": "Langkah 1 \u2014 Deploy TurnixCloud",
+      "label": "Langkah 1 \u2014 Deploy SamarCloud",
       "file_type": "document",
       "source_file": "docs/google-oauth-production.md",
       "source_location": "L39",
       "_origin": "ast",
-      "id": "docs_google_oauth_production_langkah_1_deploy_turnixcloud",
+      "id": "docs_google_oauth_production_langkah_1_deploy_samarcloud",
       "community": 4,
       "community_name": "Google OAuth \u2014 Production Setup",
-      "norm_label": "langkah 1 \u2014 deploy turnixcloud"
+      "norm_label": "langkah 1 \u2014 deploy samarcloud"
     },
     {
       "label": "1.1 Environment variables (Vercel / hosting)",
@@ -11026,15 +11026,15 @@
       "norm_label": "2.4 publish app (in production)"
     },
     {
-      "label": "Langkah 3 \u2014 Konfigurasi TurnixCloud (production)",
+      "label": "Langkah 3 \u2014 Konfigurasi SamarCloud (production)",
       "file_type": "document",
       "source_file": "docs/google-oauth-production.md",
       "source_location": "L142",
       "_origin": "ast",
-      "id": "docs_google_oauth_production_langkah_3_konfigurasi_turnixcloud_production",
+      "id": "docs_google_oauth_production_langkah_3_konfigurasi_samarcloud_production",
       "community": 4,
       "community_name": "Google OAuth \u2014 Production Setup",
-      "norm_label": "langkah 3 \u2014 konfigurasi turnixcloud (production)"
+      "norm_label": "langkah 3 \u2014 konfigurasi samarcloud (production)"
     },
     {
       "label": "Langkah 4 \u2014 Connect & sync",
@@ -11235,15 +11235,15 @@
       "norm_label": "method b: network tab"
     },
     {
-      "label": "Step 3 \u2014 Connect in TurnixCloud",
+      "label": "Step 3 \u2014 Connect in SamarCloud",
       "file_type": "document",
       "source_file": "docs/terabox-setup.md",
       "source_location": "L42",
       "_origin": "ast",
-      "id": "docs_terabox_setup_step_3_connect_in_turnixcloud",
+      "id": "docs_terabox_setup_step_3_connect_in_samarcloud",
       "community": 4,
       "community_name": "Google OAuth \u2014 Production Setup",
-      "norm_label": "step 3 \u2014 connect in turnixcloud"
+      "norm_label": "step 3 \u2014 connect in samarcloud"
     },
     {
       "label": "Step 4 \u2014 Sync files",
@@ -27966,7 +27966,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "lib/services/crypto.ts",
-      "source_location": "L28",
+      "source_location": "L30",
       "weight": 1.0,
       "_origin": "ast",
       "source": "lib_services_crypto",
@@ -27977,7 +27977,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "lib/services/crypto.ts",
-      "source_location": "L15",
+      "source_location": "L17",
       "weight": 1.0,
       "_origin": "ast",
       "source": "lib_services_crypto",
@@ -28024,7 +28024,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "lib/services/crypto.ts",
-      "source_location": "L29",
+      "source_location": "L31",
       "weight": 1.0,
       "_origin": "ast",
       "source": "lib_services_crypto_decryptcredentials",
@@ -28036,7 +28036,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "lib/services/crypto.ts",
-      "source_location": "L16",
+      "source_location": "L18",
       "weight": 1.0,
       "_origin": "ast",
       "source": "lib_services_crypto_encryptcredentials",
@@ -31961,7 +31961,7 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "readme",
-      "target": "readme_turnixcloud",
+      "target": "readme_samarcloud",
       "confidence_score": 1.0
     },
     {
@@ -31971,7 +31971,7 @@
       "source_location": "L357",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "readme_turnixcloud",
+      "source": "readme_samarcloud",
       "target": "readme_api_overview",
       "confidence_score": 1.0
     },
@@ -31982,7 +31982,7 @@
       "source_location": "L345",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "readme_turnixcloud",
+      "source": "readme_samarcloud",
       "target": "readme_available_scripts",
       "confidence_score": 1.0
     },
@@ -31993,7 +31993,7 @@
       "source_location": "L161",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "readme_turnixcloud",
+      "source": "readme_samarcloud",
       "target": "readme_current_application_views",
       "confidence_score": 1.0
     },
@@ -32004,7 +32004,7 @@
       "source_location": "L400",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "readme_turnixcloud",
+      "source": "readme_samarcloud",
       "target": "readme_data_persistence",
       "confidence_score": 1.0
     },
@@ -32015,7 +32015,7 @@
       "source_location": "L334",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "readme_turnixcloud",
+      "source": "readme_samarcloud",
       "target": "readme_deploy_vercel_supabase",
       "confidence_score": 1.0
     },
@@ -32026,7 +32026,7 @@
       "source_location": "L294",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "readme_turnixcloud",
+      "source": "readme_samarcloud",
       "target": "readme_development",
       "confidence_score": 1.0
     },
@@ -32037,7 +32037,7 @@
       "source_location": "L318",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "readme_turnixcloud",
+      "source": "readme_samarcloud",
       "target": "readme_docker_setup",
       "confidence_score": 1.0
     },
@@ -32048,8 +32048,8 @@
       "source_location": "L98",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "readme_turnixcloud",
-      "target": "readme_how_turnixcloud_works",
+      "source": "readme_samarcloud",
+      "target": "readme_how_samarcloud_works",
       "confidence_score": 1.0
     },
     {
@@ -32059,7 +32059,7 @@
       "source_location": "L9",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "readme_turnixcloud",
+      "source": "readme_samarcloud",
       "target": "readme_key_features",
       "confidence_score": 1.0
     },
@@ -32070,7 +32070,7 @@
       "source_location": "L180",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "readme_turnixcloud",
+      "source": "readme_samarcloud",
       "target": "readme_local_setup",
       "confidence_score": 1.0
     },
@@ -32081,7 +32081,7 @@
       "source_location": "L72",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "readme_turnixcloud",
+      "source": "readme_samarcloud",
       "target": "readme_project_structure",
       "confidence_score": 1.0
     },
@@ -32092,7 +32092,7 @@
       "source_location": "L441",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "readme_turnixcloud",
+      "source": "readme_samarcloud",
       "target": "readme_reference",
       "confidence_score": 1.0
     },
@@ -32103,7 +32103,7 @@
       "source_location": "L173",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "readme_turnixcloud",
+      "source": "readme_samarcloud",
       "target": "readme_requirements",
       "confidence_score": 1.0
     },
@@ -32114,7 +32114,7 @@
       "source_location": "L411",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "readme_turnixcloud",
+      "source": "readme_samarcloud",
       "target": "readme_security_notes",
       "confidence_score": 1.0
     },
@@ -32125,7 +32125,7 @@
       "source_location": "L391",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "readme_turnixcloud",
+      "source": "readme_samarcloud",
       "target": "readme_storage_allocation_behavior",
       "confidence_score": 1.0
     },
@@ -32136,7 +32136,7 @@
       "source_location": "L53",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "readme_turnixcloud",
+      "source": "readme_samarcloud",
       "target": "readme_supported_providers",
       "confidence_score": 1.0
     },
@@ -32147,7 +32147,7 @@
       "source_location": "L419",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "readme_turnixcloud",
+      "source": "readme_samarcloud",
       "target": "readme_troubleshooting",
       "confidence_score": 1.0
     },
@@ -32522,7 +32522,7 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "docs_dropbox_setup_dropbox_setup_lengkap",
-      "target": "docs_dropbox_setup_langkah_3_configure_di_turnixcloud",
+      "target": "docs_dropbox_setup_langkah_3_configure_di_samarcloud",
       "confidence_score": 1.0
     },
     {
@@ -32665,7 +32665,7 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "docs_dropbox_setup_langkah_2_set_redirect_uri",
-      "target": "docs_dropbox_setup_2_2_salin_dari_dashboard_turnixcloud_alternatif",
+      "target": "docs_dropbox_setup_2_2_salin_dari_dashboard_samarcloud_alternatif",
       "confidence_score": 1.0
     },
     {
@@ -32675,7 +32675,7 @@
       "source_location": "L139",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "docs_dropbox_setup_langkah_3_configure_di_turnixcloud",
+      "source": "docs_dropbox_setup_langkah_3_configure_di_samarcloud",
       "target": "docs_dropbox_setup_3_1_lewat_dashboard_disarankan",
       "confidence_score": 1.0
     },
@@ -32686,7 +32686,7 @@
       "source_location": "L150",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "docs_dropbox_setup_langkah_3_configure_di_turnixcloud",
+      "source": "docs_dropbox_setup_langkah_3_configure_di_samarcloud",
       "target": "docs_dropbox_setup_3_2_lewat_env_local_fallback",
       "confidence_score": 1.0
     },
@@ -32786,7 +32786,7 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "docs_google_oauth_production_google_oauth_production_setup",
-      "target": "docs_google_oauth_production_langkah_1_deploy_turnixcloud",
+      "target": "docs_google_oauth_production_langkah_1_deploy_samarcloud",
       "confidence_score": 1.0
     },
     {
@@ -32808,7 +32808,7 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "docs_google_oauth_production_google_oauth_production_setup",
-      "target": "docs_google_oauth_production_langkah_3_konfigurasi_turnixcloud_production",
+      "target": "docs_google_oauth_production_langkah_3_konfigurasi_samarcloud_production",
       "confidence_score": 1.0
     },
     {
@@ -32863,7 +32863,7 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "docs_google_oauth_production_testing_vs_production",
-      "target": "docs_google_oauth_production_configure_vs_connect_turnixcloud",
+      "target": "docs_google_oauth_production_configure_vs_connect_samarcloud",
       "confidence_score": 1.0
     },
     {
@@ -32873,7 +32873,7 @@
       "source_location": "L41",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "docs_google_oauth_production_langkah_1_deploy_turnixcloud",
+      "source": "docs_google_oauth_production_langkah_1_deploy_samarcloud",
       "target": "docs_google_oauth_production_1_1_environment_variables_vercel_hosting",
       "confidence_score": 1.0
     },
@@ -32884,7 +32884,7 @@
       "source_location": "L65",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "docs_google_oauth_production_langkah_1_deploy_turnixcloud",
+      "source": "docs_google_oauth_production_langkah_1_deploy_samarcloud",
       "target": "docs_google_oauth_production_1_2_supabase_auth_urls",
       "confidence_score": 1.0
     },
@@ -32939,7 +32939,7 @@
       "source_location": "L154",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "docs_google_oauth_production_langkah_3_konfigurasi_turnixcloud_production",
+      "source": "docs_google_oauth_production_langkah_3_konfigurasi_samarcloud_production",
       "target": "docs_google_oauth_production_langkah_4_connect_sync",
       "confidence_score": 1.0
     },
@@ -33083,7 +33083,7 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "docs_terabox_setup_terabox_setup_guide",
-      "target": "docs_terabox_setup_step_3_connect_in_turnixcloud",
+      "target": "docs_terabox_setup_step_3_connect_in_samarcloud",
       "confidence_score": 1.0
     },
     {
@@ -33132,5 +33132,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "fc556e8920ef54af7118b4e8c24be72106ee8736"
+  "built_at_commit": "430a36dd160aaa300ad5ffe5f9b36e3dc9793775"
 }

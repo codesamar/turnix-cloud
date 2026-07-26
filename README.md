@@ -1,10 +1,10 @@
-# TurnixCloud
+# SamarCloud
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/) [![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/) [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/) [![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/) [![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
 
-TurnixCloud is a cloud drive aggregation platform that presents multiple storage providers through a single, consistent workspace. Built with **Next.js 16** and **Supabase** (Auth, Postgres, RLS, Realtime), it lets users browse, upload, download, and manage files across connected cloud accounts from one interface.
+SamarCloud is a cloud drive aggregation platform that presents multiple storage providers through a single, consistent workspace. Built with **Next.js 16** and **Supabase** (Auth, Postgres, RLS, Realtime), it lets users browse, upload, download, and manage files across connected cloud accounts from one interface.
 
-![TurnixCloud Overview](image.png)
+![SamarCloud Overview](image.png)
 
 ## ✨ Key features
 
@@ -72,7 +72,7 @@ TurnixCloud is a cloud drive aggregation platform that presents multiple storage
 ## 🏗️ Project structure
 
 ```text
-turnix-cloud/
+samar-cloud/
 ├─ app/
 │  ├─ (auth)/            # Login & register
 │  ├─ (dashboard)/       # Home, My Drive, Recent, Starred, Quota, Settings
@@ -95,7 +95,7 @@ turnix-cloud/
 └─ README.md
 ```
 
-## 🔄 How TurnixCloud works
+## 🔄 How SamarCloud works
 
 ```mermaid
 flowchart TD
@@ -133,7 +133,7 @@ flowchart TD
     T --> CP
     S --> CP
 
-    API --> N[Normalized Turnix Data Model]
+    API --> N[Normalized Samar Data Model]
     CP --> N
 
     N --> DB[(Supabase Postgres<br/>Metadata Mirror)]
@@ -154,7 +154,7 @@ At a high level:
 
 1. The Next.js app calls API route handlers for auth, accounts, files, uploads, settings, and allocation
 2. The API selects the appropriate provider adapter (`google_drive`, `onedrive`, `dropbox`, `yandex`, `terabox`, `s3`)
-3. Provider responses are normalized into the Turnix data model
+3. Provider responses are normalized into the Samar data model
 4. File metadata is mirrored into Supabase Postgres for fast access
 5. The sync service keeps mirrored metadata aligned with provider state (manual sync from the dashboard)
 
@@ -182,8 +182,8 @@ At a high level:
 ### 1. Clone and install
 
 ```bash
-git clone <repo-url> turnix-cloud
-cd turnix-cloud
+git clone <repo-url> samar-cloud
+cd samar-cloud
 npm install
 ```
 
@@ -237,7 +237,7 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 
 # App
 NEXT_PUBLIC_APP_URL=http://localhost:3000
-TURNIX_SECRET_KEY=replace-with-a-strong-random-secret-at-least-32-chars
+SAMAR_SECRET_KEY=replace-with-a-strong-random-secret-at-least-32-chars
 
 # Optional OAuth fallbacks (can also be set in dashboard → /quota)
 GOOGLE_CLIENT_ID=
@@ -263,7 +263,7 @@ openssl rand -base64 32
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public anon key (safe in browser) |
 | `SUPABASE_SERVICE_ROLE_KEY` | Service role key (server only) |
 | `NEXT_PUBLIC_APP_URL` | App URL used for OAuth redirects |
-| `TURNIX_SECRET_KEY` | Encrypts provider tokens at rest (min. 32 chars) |
+| `SAMAR_SECRET_KEY` | Encrypts provider tokens at rest (min. 32 chars) |
 
 Notes:
 - TeraBox and S3 do not use `.env` OAuth credentials; they are connected from the UI
@@ -282,11 +282,11 @@ Enable email signup. For local development, disable **Confirm email** so you can
 
 ### 6. Connect a provider (example: Google Drive)
 
-TurnixCloud separates **Configure** (OAuth app credentials) from **Connect** (authorize a personal account):
+SamarCloud separates **Configure** (OAuth app credentials) from **Connect** (authorize a personal account):
 
 1. Create a Google Cloud OAuth Web client; enable Google Drive API
 2. Redirect URI must match exactly, e.g. `http://localhost:3000/api/accounts/google_drive/callback`
-3. In TurnixCloud → `/quota` → **Configure Cloud Providers** → save Client ID / Secret
+3. In SamarCloud → `/quota` → **Configure Cloud Providers** → save Client ID / Secret
 4. **Add Account → Connect** → authorize → **Sync All** → open **My Drive**
 
 For Testing-mode Google apps, add your Gmail under **Google Auth platform → Audience → Test users**, or see [docs/google-oauth-production.md](docs/google-oauth-production.md).
@@ -412,7 +412,7 @@ Important data stored in Supabase includes:
 
 - Do not commit `.env.local` or service-role keys
 - Treat OAuth client secrets, refresh tokens, S3 keys, and TeraBox NDUS tokens as sensitive
-- `TURNIX_SECRET_KEY` is used to encrypt provider credentials at rest
+- `SAMAR_SECRET_KEY` is used to encrypt provider credentials at rest
 - `SUPABASE_SERVICE_ROLE_KEY` must never be exposed to the browser
 - Keep OAuth redirect URIs exact-match with `NEXT_PUBLIC_APP_URL`
 

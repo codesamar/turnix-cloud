@@ -1,4 +1,4 @@
--- TurnixCloud initial schema
+-- SamarCloud initial schema
 
 -- Profiles (extends auth.users)
 create table public.profiles (

@@ -6,7 +6,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "TurnixCloud",
+  title: "SamarCloud",
   description: "Unified cloud drive aggregation platform",
 };
 

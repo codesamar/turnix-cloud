@@ -1,7 +1,7 @@
 # Graph Report - turnix-cloud  (2026-07-26)
 
 ## Corpus Check
-- 153 files · ~57,492 words
+- 153 files · ~57,507 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `fc556e89`
+- Built from commit: `430a36dd`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -123,7 +123,7 @@
 5. `CloudAdapter` - 21 edges
 6. `CloudProvider` - 21 edges
 7. `getAccountCredentials()` - 20 edges
-8. `TurnixCloud` - 18 edges
+8. `SamarCloud` - 18 edges
 9. `Button` - 17 edges
 10. `OAUTH_PROVIDERS` - 17 edges
 
@@ -162,7 +162,7 @@ Nodes (45): 1. Clone and install, 2. Create a Supabase project, 3. Run database 
 
 ### Community 4 - "Google OAuth — Production Setup"
 Cohesion: 0.05
-Nodes (36): 1.1 Environment variables (Vercel / hosting), 1.2 Supabase Auth URLs, 2.1 Redirect URI production, 2.2 Branding & kebijakan (wajib verifikasi), 2.3 Submit App Verification, 2.4 Publish app (In Production), Checklist production, Configure vs Connect (TurnixCloud) (+28 more)
+Nodes (36): 1.1 Environment variables (Vercel / hosting), 1.2 Supabase Auth URLs, 2.1 Redirect URI production, 2.2 Branding & kebijakan (wajib verifikasi), 2.3 Submit App Verification, 2.4 Publish app (In Production), Checklist production, Configure vs Connect (SamarCloud) (+28 more)
 
 ### Community 5 - "carousel.tsx"
 Cohesion: 0.15
@@ -189,8 +189,8 @@ Cohesion: 0.12
 Nodes (22): inter, metadata, ProviderSetupCardProps, applyDocumentLanguage(), LanguageContext, LanguageContextValue, LanguageProvider(), readStoredLanguage() (+14 more)
 
 ### Community 11 - "provider-config.ts"
-Cohesion: 0.18
-Nodes (8): fetchAccounts(), HomeDashboard(), toGb(), StorageChartRow, StorageChartTooltip(), fetchFiles(), FileExplorer(), formatBytes()
+Cohesion: 0.27
+Nodes (7): fetchAccounts(), HomeDashboard(), toGb(), StorageChartRow, StorageChartTooltip(), FilePreviewDialog(), formatBytes()
 
 ### Community 12 - "getAdapter"
 Cohesion: 0.36
@@ -202,7 +202,7 @@ Nodes (68): POST(), cookieOpts(), GET(), oauthRedirect(), PROVIDER_PARAM_MAP, Ro
 
 ### Community 14 - "Dropbox — Setup Lengkap"
 Cohesion: 0.08
-Nodes (26): 1.1 Buka App Console, 1.2 Pilih tipe app, 1.3 Atur permissions (scope), 1.4 Salin App key & App secret, 2.1 Daftarkan di Dropbox, 2.2 Salin dari dashboard TurnixCloud (alternatif), 3.1 Lewat dashboard (disarankan), 3.2 Lewat `.env.local` (fallback) (+18 more)
+Nodes (26): 1.1 Buka App Console, 1.2 Pilih tipe app, 1.3 Atur permissions (scope), 1.4 Salin App key & App secret, 2.1 Daftarkan di Dropbox, 2.2 Salin dari dashboard SamarCloud (alternatif), 3.1 Lewat dashboard (disarankan), 3.2 Lewat `.env.local` (fallback) (+18 more)
 
 ### Community 16 - "types.ts"
 Cohesion: 0.12
@@ -230,7 +230,7 @@ Nodes (3): Badge(), BadgeProps, badgeVariants
 
 ### Community 22 - "dependencies"
 Cohesion: 0.13
-Nodes (15): class-variance-authority, next-themes, dependencies, class-variance-authority, next-themes, @radix-ui/react-hover-card, @radix-ui/react-slot, @radix-ui/react-tabs (+7 more)
+Nodes (15): framer-motion, next-themes, dependencies, framer-motion, next-themes, @radix-ui/react-hover-card, @radix-ui/react-slot, @radix-ui/react-tabs (+7 more)
 
 ### Community 23 - "TeraBoxApp"
 Cohesion: 0.13
@@ -309,16 +309,16 @@ Cohesion: 0.25
 Nodes (7): useCarousel(), useChart(), useFormField(), useSidebar(), useIsMobile(), react, react
 
 ### Community 101 - "file-explorer.tsx"
-Cohesion: 0.22
-Nodes (9): Checkbox, Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader (+1 more)
+Cohesion: 0.16
+Nodes (11): fetchFiles(), FileExplorer(), Checkbox, Table, TableBody, TableCaption, TableCell, TableFooter (+3 more)
 
 ### Community 104 - "dropdown-menu.tsx"
 Cohesion: 0.20
 Nodes (9): DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuShortcut(), DropdownMenuSubContent (+1 more)
 
 ### Community 106 - "file-preview.ts"
-Cohesion: 0.33
-Nodes (9): FilePreviewDialog(), AUDIO_EXTENSIONS, canPreviewFile(), getPreviewKind(), IMAGE_EXTENSIONS, PreviewKind, TEXT_EXTENSIONS, TEXT_MIME_PREFIXES (+1 more)
+Cohesion: 0.39
+Nodes (8): AUDIO_EXTENSIONS, canPreviewFile(), getPreviewKind(), IMAGE_EXTENSIONS, PreviewKind, TEXT_EXTENSIONS, TEXT_MIME_PREFIXES, VIDEO_EXTENSIONS
 
 ### Community 107 - "toggle-group.tsx"
 Cohesion: 0.33

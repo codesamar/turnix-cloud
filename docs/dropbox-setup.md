@@ -1,6 +1,6 @@
 # Dropbox — Setup Lengkap
 
-Panduan mengatur Dropbox OAuth di TurnixCloud, mulai dari membuat app di Dropbox App Console sampai file Dropbox tampil di **My Drive**.
+Panduan mengatur Dropbox OAuth di SamarCloud, mulai dari membuat app di Dropbox App Console sampai file Dropbox tampil di **My Drive**.
 
 > Untuk development lokal, app Dropbox default-nya hanya bisa dipakai oleh **pemilik app**. Untuk user lain, aktifkan **Development users** (lihat [Development vs Production](#development-vs-production)).
 
@@ -8,13 +8,13 @@ Panduan mengatur Dropbox OAuth di TurnixCloud, mulai dari membuat app di Dropbox
 
 ## Ringkasan alur
 
-TurnixCloud punya **tiga langkah terpisah** untuk Dropbox:
+SamarCloud punya **tiga langkah terpisah** untuk Dropbox:
 
 | Langkah | Arti | Indikator sukses |
 |---|---|---|
 | **Configure** | Simpan App key & App secret OAuth app Anda | Badge **Configured** di `/quota` |
 | **Connect** | Authorize akun Dropbox pribadi pengguna | Muncul di **Connected Accounts** |
-| **Sync** | Mirror metadata file ke database TurnixCloud | File tampil di **My Drive** |
+| **Sync** | Mirror metadata file ke database SamarCloud | File tampil di **My Drive** |
 
 Badge **Configured** saja **belum** menampilkan file Dropbox.
 
@@ -22,7 +22,7 @@ Badge **Configured** saja **belum** menampilkan file Dropbox.
 
 | Langkah | Apa yang diset | Berapa kali |
 |---|---|---|
-| **Langkah 1 — Configure** | OAuth **app** TurnixCloud (App key + App secret) | **1×** per provider |
+| **Langkah 1 — Configure** | OAuth **app** SamarCloud (App key + App secret) | **1×** per provider |
 | **Langkah 2 — Connect** | Akun Dropbox **pribadi** pengguna | **Banyak×** (akun berbeda) |
 
 Satu App key/App secret Dropbox dipakai untuk semua akun Dropbox yang di-connect.
@@ -31,7 +31,7 @@ Satu App key/App secret Dropbox dipakai untuk semua akun Dropbox yang di-connect
 
 ## Prasyarat
 
-- TurnixCloud sudah jalan (lokal atau production HTTPS)
+- SamarCloud sudah jalan (lokal atau production HTTPS)
 - Akun Dropbox (gratis atau Business)
 - Variabel dasar sudah diset di `.env.local` atau hosting:
 
@@ -40,13 +40,13 @@ NEXT_PUBLIC_APP_URL=http://localhost:3500
 NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
 SUPABASE_SERVICE_ROLE_KEY=eyJ...
-TURNIX_SECRET_KEY=ganti-dengan-secret-minimal-32-karakter
+SAMAR_SECRET_KEY=ganti-dengan-secret-minimal-32-karakter
 ```
 
 | Variable | Fungsi |
 |---|---|
 | `NEXT_PUBLIC_APP_URL` | Base URL app — dipakai untuk OAuth redirect URI |
-| `TURNIX_SECRET_KEY` | Enkripsi token provider di database |
+| `SAMAR_SECRET_KEY` | Enkripsi token provider di database |
 
 ---
 
@@ -64,16 +64,16 @@ TURNIX_SECRET_KEY=ganti-dengan-secret-minimal-32-karakter
 | **Choose an API** | **Scoped access** (wajib untuk app baru) |
 | **Choose the type of access** | **Full Dropbox** — akses seluruh file user (cocok untuk file manager) |
 | | **App folder** — hanya folder khusus `/Apps/<nama-app>/` |
-| **Name your app** | Mis. `TurnixCloud` (harus unik di seluruh Dropbox) |
+| **Name your app** | Mis. `SamarCloud` (harus unik di seluruh Dropbox) |
 
 3. Centang syarat & ketentuan → **Create app**
 
-> **Full Dropbox** vs **App folder**: TurnixCloud memakai path penuh (`/`, folder mana saja). Pilih **Full Dropbox** kecuali Anda sengaja membatasi ke satu folder app.
+> **Full Dropbox** vs **App folder**: SamarCloud memakai path penuh (`/`, folder mana saja). Pilih **Full Dropbox** kecuali Anda sengaja membatasi ke satu folder app.
 
 ### 1.3 Atur permissions (scope)
 
 1. Buka tab **Permissions**
-2. Aktifkan scope berikut (sesuai fitur TurnixCloud):
+2. Aktifkan scope berikut (sesuai fitur SamarCloud):
 
 | Scope | Dipakai untuk |
 |---|---|
@@ -91,8 +91,8 @@ TURNIX_SECRET_KEY=ganti-dengan-secret-minimal-32-karakter
 
 1. Buka tab **Settings**
 2. Di bagian **OAuth 2**, catat:
-   - **App key** → ini **Client ID** TurnixCloud
-   - **App secret** → klik **Show** → ini **Client Secret** TurnixCloud
+   - **App key** → ini **Client ID** SamarCloud
+   - **App secret** → klik **Show** → ini **Client Secret** SamarCloud
 
 > App secret bersifat rahasia — jangan commit ke git atau bagikan publik.
 
@@ -100,7 +100,7 @@ TURNIX_SECRET_KEY=ganti-dengan-secret-minimal-32-karakter
 
 ## Langkah 2 — Set Redirect URI
 
-Redirect URI TurnixCloud mengikuti `NEXT_PUBLIC_APP_URL`:
+Redirect URI SamarCloud mengikuti `NEXT_PUBLIC_APP_URL`:
 
 ```
 {NEXT_PUBLIC_APP_URL}/api/accounts/dropbox/callback
@@ -126,15 +126,15 @@ https://domain-anda.com/api/accounts/dropbox/callback
 
 > Dropbox mengizinkan `http://localhost` untuk development. Production **wajib HTTPS**.
 
-### 2.2 Salin dari dashboard TurnixCloud (alternatif)
+### 2.2 Salin dari dashboard SamarCloud (alternatif)
 
-1. Login TurnixCloud → **Storage & Accounts** (`/quota`)
+1. Login SamarCloud → **Storage & Accounts** (`/quota`)
 2. Expand **Dropbox** di **Configure Cloud Providers**
 3. Copy **Redirect URI** yang ditampilkan → paste ke Dropbox App Console
 
 ---
 
-## Langkah 3 — Configure di TurnixCloud
+## Langkah 3 — Configure di SamarCloud
 
 ### 3.1 Lewat dashboard (disarankan)
 
@@ -171,7 +171,7 @@ Dashboard config **mengoverride** env jika sudah disimpan di database.
 
 ### OAuth popup
 
-TurnixCloud meminta **offline access** (`token_access_type=offline`) agar refresh token tersimpan — sync otomatis tetap jalan setelah access token expired.
+SamarCloud meminta **offline access** (`token_access_type=offline`) agar refresh token tersimpan — sync otomatis tetap jalan setelah access token expired.
 
 ---
 
@@ -180,7 +180,7 @@ TurnixCloud meminta **offline access** (`token_access_type=offline`) agar refres
 1. Klik **Sync All** di section **Connected Accounts**
 2. Tunggu toast **Sync completed**
 3. Buka **My Drive** dari sidebar — file Dropbox tampil di explorer
-4. (Opsional) Upload, rename, move, atau delete via TurnixCloud
+4. (Opsional) Upload, rename, move, atau delete via SamarCloud
 
 ---
 
@@ -233,7 +233,7 @@ OAuth Dropbox bisa tetap dikonfigurasi lewat dashboard `/quota` tanpa redeploy (
 ## Diagram alur
 
 ```
-Dropbox App Console              TurnixCloud Dashboard
+Dropbox App Console              SamarCloud Dashboard
 ─────────────────────            ─────────────────────
 Create app (Scoped access)  →
 Set Permissions + Submit    →
@@ -264,7 +264,7 @@ Apply for Production        →    Sync All
 Pastikan ketiga nilai ini **identik**:
 
 1. `NEXT_PUBLIC_APP_URL` + `/api/accounts/dropbox/callback`
-2. Redirect URI di dashboard TurnixCloud (`/quota`)
+2. Redirect URI di dashboard SamarCloud (`/quota`)
 3. Redirect URI di Dropbox App Console → **OAuth 2**
 
 ---
@@ -274,5 +274,5 @@ Pastikan ketiga nilai ini **identik**:
 - [Dropbox App Console](https://www.dropbox.com/developers/apps)
 - [Dropbox OAuth guide](https://developers.dropbox.com/oauth-guide)
 - [Dropbox permission scopes](https://developers.dropbox.com/developers/reference/auth-types#scopes)
-- TurnixCloud README — [Connect Google Drive](../README.md#connect-google-drive-step-by-step) (alur serupa)
+- SamarCloud README — [Connect Google Drive](../README.md#connect-google-drive-step-by-step) (alur serupa)
 - Panduan in-app: `/connect-guide` (sidebar **Help → Cara Connect**)

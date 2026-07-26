@@ -1,11 +1,11 @@
 # Graph Report - turnix-cloud  (2026-07-26)
 
 ## Corpus Check
-- 153 files · ~57,509 words
+- 153 files · ~57,492 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1027 nodes · 1886 edges · 102 communities (49 shown, 53 thin omitted)
+- 1027 nodes · 1886 edges · 102 communities (48 shown, 54 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 8 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
@@ -142,7 +142,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (102 total, 53 thin omitted)
+## Communities (102 total, 54 thin omitted)
 
 ### Community 0 - "accounts-panel.tsx"
 Cohesion: 0.06
@@ -205,8 +205,8 @@ Cohesion: 0.08
 Nodes (26): 1.1 Buka App Console, 1.2 Pilih tipe app, 1.3 Atur permissions (scope), 1.4 Salin App key & App secret, 2.1 Daftarkan di Dropbox, 2.2 Salin dari dashboard TurnixCloud (alternatif), 3.1 Lewat dashboard (disarankan), 3.2 Lewat `.env.local` (fallback) (+18 more)
 
 ### Community 16 - "types.ts"
-Cohesion: 0.15
-Nodes (8): dropboxAdapter, oneDriveAdapter, SCOPES, s3Adapter, S3Credentials, NormalizedFile, OAuthProviderConfig, ProviderCredentials
+Cohesion: 0.12
+Nodes (10): dropboxAdapter, GOOGLE_EXPORT_MIMES, googleDriveAdapter, SCOPES, s3Adapter, S3Credentials, NormalizedFile, OAuthProviderConfig (+2 more)
 
 ### Community 17 - "utils.ts"
 Cohesion: 0.12
@@ -251,10 +251,6 @@ Nodes (9): ContextMenuCheckboxItem, ContextMenuContent, ContextMenuItem, Context
 ### Community 28 - "alert-dialog.tsx"
 Cohesion: 0.22
 Nodes (8): AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter(), AlertDialogHeader(), AlertDialogOverlay, AlertDialogTitle
-
-### Community 29 - "terabox-client.ts"
-Cohesion: 0.20
-Nodes (4): GOOGLE_EXPORT_MIMES, googleDriveAdapter, SCOPES, QuotaInfo
 
 ### Community 30 - "breadcrumb.tsx"
 Cohesion: 0.25
@@ -331,7 +327,7 @@ Nodes (5): ToggleGroup, ToggleGroupContext, ToggleGroupItem, Toggle, toggleVaria
 ## Knowledge Gaps
 - **434 isolated node(s):** `next/core-web-vitals`, `next/typescript`, `PROVIDER_PARAM_MAP`, `RouteParams`, `PROVIDER_PARAM_MAP` (+429 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **53 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **54 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_

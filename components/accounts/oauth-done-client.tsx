@@ -35,7 +35,7 @@ export function OAuthDoneClient() {
         <>
           <p className="text-lg font-medium">Account connected</p>
           <p className="text-sm text-muted-foreground">
-            Closing this window. Return to TurnixCloud.
+            Closing this window. Return to SamarCloud.
           </p>
         </>
       ) : (

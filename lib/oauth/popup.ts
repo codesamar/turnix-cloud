@@ -1,6 +1,6 @@
 import type { CloudProvider } from "@/lib/types/database";
 
-export const OAUTH_MESSAGE_TYPE = "turnix-oauth";
+export const OAUTH_MESSAGE_TYPE = "samar-oauth";
 
 export interface OAuthMessagePayload {
   type: typeof OAUTH_MESSAGE_TYPE;
@@ -36,7 +36,7 @@ export function openOAuthPopup(provider: CloudProvider): Window | null {
 
   return window.open(
     `/api/accounts/${provider}/connect?popup=1`,
-    `turnix-oauth-${provider}`,
+    `samar-oauth-${provider}`,
     [
       "popup=yes",
       `width=${width}`,

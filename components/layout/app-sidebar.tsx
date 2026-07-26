@@ -98,7 +98,7 @@ export function AppSidebar({ userEmail }: AppSidebarProps) {
       <SidebarHeader className="p-4">
         <Link href="/" className="flex items-center gap-2 font-semibold">
           <Cloud className="size-5 text-primary" />
-          <span>TurnixCloud</span>
+          <span>SamarCloud</span>
         </Link>
       </SidebarHeader>
       <SidebarContent>

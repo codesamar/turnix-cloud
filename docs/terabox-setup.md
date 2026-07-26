@@ -1,13 +1,13 @@
 # TeraBox Setup Guide
 
-TeraBox does **not** provide a public OAuth developer API. TurnixCloud connects via a **session token** (`ndus` cookie) copied from your browser after logging in to TeraBox.
+TeraBox does **not** provide a public OAuth developer API. SamarCloud connects via a **session token** (`ndus` cookie) copied from your browser after logging in to TeraBox.
 
 > **Note:** This is an unofficial integration based on reverse-engineered web APIs. Sessions expire when you log out of TeraBox or when cookies expire. Reconnect the account to refresh.
 
 ## Prerequisites
 
 - A TeraBox account ([terabox.com](https://www.terabox.com))
-- TurnixCloud running locally or deployed
+- SamarCloud running locally or deployed
 
 ## Step 1 — Log in to TeraBox
 
@@ -37,9 +37,9 @@ TeraBox does **not** provide a public OAuth developer API. TurnixCloud connects 
 You can paste either:
 
 - The raw `ndus` value, or
-- The full Cookie header (TurnixCloud extracts `ndus` automatically).
+- The full Cookie header (SamarCloud extracts `ndus` automatically).
 
-## Step 3 — Connect in TurnixCloud
+## Step 3 — Connect in SamarCloud
 
 1. Open **Storage & Accounts** (`/quota`).
 2. Click **Add Account** → **TeraBox** → **Connect**.
@@ -48,7 +48,7 @@ You can paste either:
 5. Optional: **Base URL** — leave empty for default `https://www.terabox.com`.
 6. Click **Connect**.
 
-TurnixCloud validates the session before saving. If the token is invalid or expired, connection fails with an error message.
+SamarCloud validates the session before saving. If the token is invalid or expired, connection fails with an error message.
 
 ## Step 4 — Sync files
 
@@ -62,12 +62,12 @@ TurnixCloud validates the session before saving. If the token is invalid or expi
 | `TeraBox session is invalid or expired` | Log in to TeraBox again, copy a fresh `ndus` token, reconnect |
 | Files empty after connect | Run **Sync All** — connecting alone does not sync files |
 | Account shows `error` status | Session expired — disconnect and reconnect with a new token |
-| Upload/sync fails suddenly | TeraBox may have changed their web API — check for TurnixCloud updates |
+| Upload/sync fails suddenly | TeraBox may have changed their web API — check for SamarCloud updates |
 
 ## Security
 
 - The NDUS token grants full access to your TeraBox account (same as staying logged in on the web).
-- Tokens are stored **encrypted** in TurnixCloud.
+- Tokens are stored **encrypted** in SamarCloud.
 - Never share your NDUS token or commit it to git.
 - Reconnect periodically or after logging out of TeraBox on the web.
 

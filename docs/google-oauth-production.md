@@ -16,11 +16,11 @@ Panduan mengatur Google Drive OAuth agar **semua pengguna Google** bisa connect 
 | Token OAuth | Bisa expire ~7 hari | Refresh token lebih stabil |
 | Cocok untuk | Dev, demo internal | App live untuk publik |
 
-### Configure vs Connect (TurnixCloud)
+### Configure vs Connect (SamarCloud)
 
 | Langkah | Apa yang diset | Berapa kali |
 |---|---|---|
-| **Langkah 1 — Configure** | OAuth **app** TurnixCloud (Client ID + Secret) | **1×** per provider |
+| **Langkah 1 — Configure** | OAuth **app** SamarCloud (Client ID + Secret) | **1×** per provider |
 | **Langkah 2 — Connect** | Akun Gmail **pribadi** pengguna | **Banyak×** (email berbeda) |
 
 Satu Client ID/Secret Google Drive dipakai untuk semua akun Gmail yang di-connect.
@@ -29,14 +29,14 @@ Satu Client ID/Secret Google Drive dipakai untuk semua akun Gmail yang di-connec
 
 ## Prasyarat
 
-- TurnixCloud sudah deploy ke domain **HTTPS** (mis. Vercel)
+- SamarCloud sudah deploy ke domain **HTTPS** (mis. Vercel)
 - Google Cloud project dengan **Google Drive API** enabled
 - OAuth client sudah pernah dibuat (Client ID + Secret)
 - URL **Privacy Policy** publik (wajib untuk verifikasi Google)
 
 ---
 
-## Langkah 1 — Deploy TurnixCloud
+## Langkah 1 — Deploy SamarCloud
 
 ### 1.1 Environment variables (Vercel / hosting)
 
@@ -47,13 +47,13 @@ NEXT_PUBLIC_APP_URL=https://domain-anda.com
 NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
 SUPABASE_SERVICE_ROLE_KEY=eyJ...
-TURNIX_SECRET_KEY=ganti-dengan-secret-minimal-32-karakter
+SAMAR_SECRET_KEY=ganti-dengan-secret-minimal-32-karakter
 ```
 
 | Variable | Fungsi |
 |---|---|
 | `NEXT_PUBLIC_APP_URL` | Base URL app — dipakai untuk OAuth redirect URI |
-| `TURNIX_SECRET_KEY` | Enkripsi token provider di database |
+| `SAMAR_SECRET_KEY` | Enkripsi token provider di database |
 
 OAuth Google bisa diset lewat **dashboard** (`/quota → Configure Cloud Providers`) atau fallback `.env`:
 
@@ -79,7 +79,7 @@ Supabase Dashboard → **Authentication → URL Configuration**:
 
 1. Buka [Google Cloud Console](https://console.cloud.google.com/)
 2. **Google Auth platform → Clients** (atau **APIs & Services → Credentials**)
-3. Buka OAuth client **Web application** TurnixCloud
+3. Buka OAuth client **Web application** SamarCloud
 4. **Authorized redirect URIs** → tambahkan:
 
 ```
@@ -91,7 +91,7 @@ Ganti `domain-anda.com` dengan domain production Anda.
 > URI localhost bisa tetap ada untuk development:
 > `http://localhost:3500/api/accounts/google_drive/callback`
 
-**Redirect URI harus exact match** dengan URL yang ditampilkan di TurnixCloud dashboard (`/quota → Configure → Google Drive`).
+**Redirect URI harus exact match** dengan URL yang ditampilkan di SamarCloud dashboard (`/quota → Configure → Google Drive`).
 
 ### 2.2 Branding & kebijakan (wajib verifikasi)
 
@@ -134,12 +134,12 @@ Setelah branding lengkap (idealnya verifikasi disetujui):
 Setelah **In production**:
 
 - **Test users tidak lagi wajib**
-- Gmail mana pun bisa connect via TurnixCloud
+- Gmail mana pun bisa connect via SamarCloud
 - Untuk connect akun ke-2, ke-3, cukup **Tambah Akun → Tambah lagi** — tidak perlu tambah Test user
 
 ---
 
-## Langkah 3 — Konfigurasi TurnixCloud (production)
+## Langkah 3 — Konfigurasi SamarCloud (production)
 
 1. Login ke `https://domain-anda.com`
 2. Sidebar → **Penyimpanan & Akun** (`/quota`)
@@ -179,11 +179,11 @@ Opsi:
 ```
 [ ] Domain HTTPS live
 [ ] NEXT_PUBLIC_APP_URL = https://domain-anda.com
-[ ] TURNIX_SECRET_KEY diset di hosting
+[ ] SAMAR_SECRET_KEY diset di hosting
 [ ] Supabase Site URL & Redirect URLs updated
 [ ] Google Drive API enabled
 [ ] Redirect URI production di Google Console
-[ ] Redirect URI production match dengan dashboard TurnixCloud
+[ ] Redirect URI production match dengan dashboard SamarCloud
 [ ] Privacy Policy URL publik
 [ ] App Verification submitted (scope Drive)
 [ ] Publishing status = In production
@@ -206,7 +206,7 @@ Opsi:
 
 ### redirect_uri_mismatch
 
-- Redirect URI di Google Console harus **exact match** dengan TurnixCloud dashboard
+- Redirect URI di Google Console harus **exact match** dengan SamarCloud dashboard
 - Cek `http` vs `https`, port, trailing slash
 - Cek `NEXT_PUBLIC_APP_URL` di env production
 
@@ -233,7 +233,7 @@ Opsi:
 ## Diagram alur production
 
 ```
-Deploy TurnixCloud (HTTPS)
+Deploy SamarCloud (HTTPS)
         │
         ▼
 Set NEXT_PUBLIC_APP_URL + Supabase URLs
@@ -251,7 +251,7 @@ Submit App Verification (scope Drive)
 Publish app → In production
         │
         ▼
-TurnixCloud: Configure (Client ID/Secret)
+SamarCloud: Configure (Client ID/Secret)
         │
         ▼
 Connect — semua Gmail tanpa Test users
@@ -266,6 +266,6 @@ Sync All → My Drive ✓
 
 - [Google OAuth App Verification](https://support.google.com/cloud/answer/9110914)
 - [Google Auth platform — Audience](https://console.cloud.google.com/auth/audience)
-- [TurnixCloud README — Deploy](../README.md#deploy-ke-production-vercel--supabase)
-- [TurnixCloud README — Connect Google Drive (dev)](../README.md#connect-google-drive-step-by-step)
+- [SamarCloud README — Deploy](../README.md#deploy-ke-production-vercel--supabase)
+- [SamarCloud README — Connect Google Drive (dev)](../README.md#connect-google-drive-step-by-step)
 - Panduan in-app: `/connect-guide` (sidebar **Help → Cara Connect**)
