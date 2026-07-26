@@ -129,6 +129,7 @@ export const id: Dictionary = {
   "providers.connecting": "Menghubungkan...",
   "providers.connectSuccess": "Akun berhasil dihubungkan",
   "providers.connectFailed": "Gagal menghubungkan akun",
+  "providers.notConfiguredError": "OAuth provider ini belum dikonfigurasi. Simpan Client ID dan Client Secret di Langkah 1 (Configure), lalu coba Reconnect lagi.",
   "providers.oauthDenied": "Login dibatalkan atau ditolak",
   "providers.popupBlocked": "Popup diblokir. Izinkan popup untuk SamarCloud agar bisa connect.",
   "providers.oauthPopupHint": "OAuth dibuka di popup agar halaman ini tetap terbuka.",

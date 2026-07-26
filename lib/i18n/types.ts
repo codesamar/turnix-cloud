@@ -128,6 +128,7 @@ export type TranslationKey =
   | "providers.connecting"
   | "providers.connectSuccess"
   | "providers.connectFailed"
+  | "providers.notConfiguredError"
   | "providers.oauthDenied"
   | "providers.popupBlocked"
   | "providers.oauthPopupHint"

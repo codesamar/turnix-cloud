@@ -83,7 +83,7 @@ export function ConnectAccountDialog({
 
   function resolveOAuthError(error?: string) {
     if (error === "oauth_denied") return t("providers.oauthDenied");
-    if (error === "provider_not_configured") return t("providers.connectFailed");
+    if (error === "provider_not_configured") return t("providers.notConfiguredError");
     return error ?? t("providers.connectFailed");
   }
 

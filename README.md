@@ -268,6 +268,8 @@ openssl rand -base64 32
 Notes:
 - TeraBox and S3 do not use `.env` OAuth credentials; they are connected from the UI
 - Dashboard provider config on `/quota` takes precedence over env fallbacks for OAuth apps
+- Never leave `SAMAR_SECRET_KEY` as the placeholder from `.env.example` — generate a real secret with `openssl rand -base64 32`
+- Changing `SAMAR_SECRET_KEY` without re-encrypting existing DB rows breaks decrypt (accounts stay in DB, but sync / OAuth config fail). See [Rotate `SAMAR_SECRET_KEY`](#-rotate-samar_secret_key)
 
 ### 5. Configure Supabase Auth
 
@@ -341,6 +343,36 @@ docker compose down
 Also update:
 - Supabase Auth Site URL / Redirect URLs to production
 - OAuth redirect URIs on each provider console to the production domain
+- Use the **same** `SAMAR_SECRET_KEY` as the environment that encrypted the data in Supabase (or run the [rotation script](#-rotate-samar_secret_key) first)
+
+## 🔑 Rotate `SAMAR_SECRET_KEY`
+
+`SAMAR_SECRET_KEY` encrypts:
+
+- Linked account tokens in `cloud_accounts.credentials_encrypted`
+- OAuth client secrets in `provider_config.client_secret_encrypted`
+
+If you change the key (for example you left the placeholder and later set a real secret), **re-encrypt existing rows** before relying on the new key in local or production.
+
+```bash
+# Preview (no DB writes)
+OLD_SAMAR_SECRET_KEY='previous-secret' \
+NEW_SAMAR_SECRET_KEY='new-secret' \
+npm run secrets:reencrypt -- --dry-run
+
+# Apply
+OLD_SAMAR_SECRET_KEY='previous-secret' \
+NEW_SAMAR_SECRET_KEY='new-secret' \
+npm run secrets:reencrypt
+```
+
+Notes:
+- Script reads `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` from `.env.local` when unset
+- If `NEW_SAMAR_SECRET_KEY` is omitted, it uses `SAMAR_SECRET_KEY` from `.env.local`
+- Rows already encrypted with the new key are skipped; rows that decrypt with neither key are reported as failed
+- After a successful run: set the **new** key in `.env.local` **and** Vercel (or your host), then redeploy
+- Keep local and production on the same key if they share one Supabase project
+- Alternative without the script: re-save each provider Client Secret in `/quota` Step 1, then **Reconnect** every linked account (tokens cannot be recovered without the old key)
 
 ## 📌 Available scripts
 
@@ -353,6 +385,7 @@ Also update:
 | `npm run supabase` | Supabase CLI (via local dependency) |
 | `npm run db:push` | Push migrations to linked Supabase project |
 | `npm run db:push:url` | Push migrations with an explicit DB URL |
+| `npm run secrets:reencrypt` | Re-encrypt DB secrets after rotating `SAMAR_SECRET_KEY` |
 
 ## 🔌 API overview
 
@@ -412,7 +445,7 @@ Important data stored in Supabase includes:
 
 - Do not commit `.env.local` or service-role keys
 - Treat OAuth client secrets, refresh tokens, S3 keys, and TeraBox NDUS tokens as sensitive
-- `SAMAR_SECRET_KEY` is used to encrypt provider credentials at rest
+- `SAMAR_SECRET_KEY` is used to encrypt provider credentials at rest — rotate via [`npm run secrets:reencrypt`](#-rotate-samar_secret_key), do not only change the env var
 - `SUPABASE_SERVICE_ROLE_KEY` must never be exposed to the browser
 - Keep OAuth redirect URIs exact-match with `NEXT_PUBLIC_APP_URL`
 
@@ -437,6 +470,9 @@ App is still in Testing — add the Gmail under Test users, or publish for produ
 
 ### Provider shows "Configured" but no files
 **Configured ≠ Connected.** Use **Add Account → Connect**, then **Sync All**.
+
+### `provider_not_configured` / decrypt failures after changing `SAMAR_SECRET_KEY`
+Existing ciphertext was encrypted with the previous key. Run [`npm run secrets:reencrypt`](#-rotate-samar_secret_key) with `OLD_SAMAR_SECRET_KEY` + `NEW_SAMAR_SECRET_KEY`, then set the new key everywhere and redeploy. If the old key is lost, re-save Client Secrets in `/quota` and reconnect accounts.
 
 ## 📄 Reference
 

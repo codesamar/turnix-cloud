@@ -129,6 +129,7 @@ export const en: Dictionary = {
   "providers.connecting": "Connecting...",
   "providers.connectSuccess": "Account connected successfully",
   "providers.connectFailed": "Failed to connect account",
+  "providers.notConfiguredError": "OAuth is not configured for this provider. Save Client ID and Client Secret in Step 1 (Configure), then try Reconnect again.",
   "providers.oauthDenied": "Sign-in was cancelled or denied",
   "providers.popupBlocked": "Popup blocked. Allow popups for SamarCloud to connect accounts.",
   "providers.oauthPopupHint": "OAuth opens in a popup so this page stays open.",

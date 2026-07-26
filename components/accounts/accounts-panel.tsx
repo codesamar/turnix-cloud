@@ -93,7 +93,18 @@ export function AccountsPanel() {
       setReconnectingProvider(null);
 
       if (event.data.error) {
-        toast.error(t("providers.connectFailed"));
+        const message =
+          event.data.error === "provider_not_configured"
+            ? t("providers.notConfiguredError")
+            : event.data.error === "oauth_denied"
+              ? t("providers.oauthDenied")
+              : t("providers.connectFailed");
+        toast.error(message);
+        if (event.data.error === "provider_not_configured") {
+          document.getElementById("provider-config")?.scrollIntoView({
+            behavior: "smooth",
+          });
+        }
         return;
       }
 

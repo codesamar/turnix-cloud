@@ -143,8 +143,16 @@ export async function listProviderStatuses(): Promise<ProviderStatus[]> {
     const row = rowMap.get(provider);
     const redirectUri = getProviderRedirectUri(provider);
     const envConfig = getEnvOAuthConfig(provider);
+    // Must decrypt successfully — a stale secret encrypted with a different
+    // SAMAR_SECRET_KEY must not report as configured.
     const dbConfigured = Boolean(
-      row?.enabled && row.client_id && row.client_secret_encrypted
+      row &&
+        rowToOAuthConfig(provider, {
+          client_id: row.client_id,
+          client_secret_encrypted: row.client_secret_encrypted,
+          extra: row.extra as Record<string, string>,
+          enabled: row.enabled,
+        })
     );
     const envConfigured = Boolean(envConfig);
     const authType: ProviderStatus["authType"] = OAUTH_PROVIDERS.includes(provider)
