@@ -98,8 +98,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_dashboard_connect_guide_page",
-      "community": 42,
-      "community_name": "scroll-area.tsx",
+      "community": 33,
+      "community_name": "onedrive.ts",
       "norm_label": "page.tsx"
     },
     {
@@ -109,8 +109,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "app_dashboard_connect_guide_page_connectguidepage",
-      "community": 42,
-      "community_name": "scroll-area.tsx",
+      "community": 33,
+      "community_name": "onedrive.ts",
       "norm_label": "connectguidepage()"
     },
     {
@@ -142,8 +142,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_dashboard_my_drive_page",
-      "community": 100,
-      "community_name": "FileExplorer",
+      "community": 99,
+      "community_name": "upload-dropzone.tsx",
       "norm_label": "page.tsx"
     },
     {
@@ -153,8 +153,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "app_dashboard_my_drive_page_mydrivepage",
-      "community": 100,
-      "community_name": "FileExplorer",
+      "community": 99,
+      "community_name": "upload-dropzone.tsx",
       "norm_label": "mydrivepage()"
     },
     {
@@ -208,8 +208,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_dashboard_recent_page",
-      "community": 100,
-      "community_name": "FileExplorer",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "page.tsx"
     },
     {
@@ -219,8 +219,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "app_dashboard_recent_page_recentpage",
-      "community": 100,
-      "community_name": "FileExplorer",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "recentpage()"
     },
     {
@@ -252,8 +252,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_dashboard_shared_with_me_page",
-      "community": 100,
-      "community_name": "FileExplorer",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "page.tsx"
     },
     {
@@ -263,8 +263,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "app_dashboard_shared_with_me_page_sharedpage",
-      "community": 100,
-      "community_name": "FileExplorer",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "sharedpage()"
     },
     {
@@ -274,8 +274,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_dashboard_starred_page",
-      "community": 100,
-      "community_name": "FileExplorer",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "page.tsx"
     },
     {
@@ -285,8 +285,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "app_dashboard_starred_page_starredpage",
-      "community": 100,
-      "community_name": "FileExplorer",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "starredpage()"
     },
     {
@@ -296,8 +296,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_api_accounts_provider_callback_route",
-      "community": 12,
-      "community_name": "getAdapter",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "route.ts"
     },
     {
@@ -307,8 +307,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "app_api_accounts_provider_callback_route_provider_param_map",
-      "community": 12,
-      "community_name": "getAdapter",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "provider_param_map"
     },
     {
@@ -318,8 +318,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "app_api_accounts_provider_callback_route_routeparams",
-      "community": 12,
-      "community_name": "getAdapter",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "routeparams"
     },
     {
@@ -329,8 +329,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "app_api_accounts_provider_callback_route_oauthredirect",
-      "community": 12,
-      "community_name": "getAdapter",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "oauthredirect()"
     },
     {
@@ -340,19 +340,41 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "app_api_accounts_provider_callback_route_shorterror",
-      "community": 12,
-      "community_name": "getAdapter",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "shorterror()"
+    },
+    {
+      "label": "cookieOpts()",
+      "file_type": "code",
+      "source_file": "app/api/accounts/[provider]/callback/route.ts",
+      "source_location": "L37",
+      "_origin": "ast",
+      "id": "app_api_accounts_provider_callback_route_cookieopts",
+      "community": 13,
+      "community_name": "registry.ts",
+      "norm_label": "cookieopts()"
+    },
+    {
+      "label": "waitThenFinalize()",
+      "file_type": "code",
+      "source_file": "app/api/accounts/[provider]/callback/route.ts",
+      "source_location": "L48",
+      "_origin": "ast",
+      "id": "app_api_accounts_provider_callback_route_waitthenfinalize",
+      "community": 13,
+      "community_name": "registry.ts",
+      "norm_label": "waitthenfinalize()"
     },
     {
       "label": "GET()",
       "file_type": "code",
       "source_file": "app/api/accounts/[provider]/callback/route.ts",
-      "source_location": "L38",
+      "source_location": "L61",
       "_origin": "ast",
       "id": "app_api_accounts_provider_callback_route_get",
-      "community": 12,
-      "community_name": "getAdapter",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "get()"
     },
     {
@@ -362,8 +384,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_api_accounts_provider_connect_route",
-      "community": 12,
-      "community_name": "getAdapter",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "route.ts"
     },
     {
@@ -373,8 +395,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "app_api_accounts_provider_connect_route_provider_param_map",
-      "community": 12,
-      "community_name": "getAdapter",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "provider_param_map"
     },
     {
@@ -384,8 +406,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "app_api_accounts_provider_connect_route_routeparams",
-      "community": 12,
-      "community_name": "getAdapter",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "routeparams"
     },
     {
@@ -395,8 +417,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "app_api_accounts_provider_connect_route_get",
-      "community": 12,
-      "community_name": "getAdapter",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "get()"
     },
     {
@@ -406,8 +428,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_api_accounts_connect_route",
-      "community": 15,
-      "community_name": "createClient",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "route.ts"
     },
     {
@@ -417,8 +439,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "app_api_accounts_connect_route_post",
-      "community": 15,
-      "community_name": "createClient",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "post()"
     },
     {
@@ -428,8 +450,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_api_accounts_route",
-      "community": 108,
-      "community_name": "accounts.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "route.ts"
     },
     {
@@ -439,8 +461,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "app_api_accounts_route_get",
-      "community": 108,
-      "community_name": "accounts.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "get()"
     },
     {
@@ -450,8 +472,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "app_api_accounts_route_delete",
-      "community": 108,
-      "community_name": "accounts.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "delete()"
     },
     {
@@ -461,8 +483,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_api_accounts_terabox_connect_route",
-      "community": 15,
-      "community_name": "createClient",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "route.ts"
     },
     {
@@ -472,8 +494,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "app_api_accounts_terabox_connect_route_post",
-      "community": 15,
-      "community_name": "createClient",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "post()"
     },
     {
@@ -516,8 +538,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_api_auth_me_route",
-      "community": 15,
-      "community_name": "createClient",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "route.ts"
     },
     {
@@ -527,8 +549,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "app_api_auth_me_route_get",
-      "community": 15,
-      "community_name": "createClient",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "get()"
     },
     {
@@ -626,8 +648,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "app_api_files_id_route_get",
-      "community": 15,
-      "community_name": "createClient",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "get()"
     },
     {
@@ -670,8 +692,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "app_api_files_route_get",
-      "community": 15,
-      "community_name": "createClient",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "get()"
     },
     {
@@ -714,8 +736,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_api_providers_provider_route",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "route.ts"
     },
     {
@@ -725,8 +747,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "app_api_providers_provider_route_provider_param_map",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "provider_param_map"
     },
     {
@@ -736,8 +758,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "app_api_providers_provider_route_routeparams",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "routeparams"
     },
     {
@@ -747,8 +769,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "app_api_providers_provider_route_patch",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "patch()"
     },
     {
@@ -758,8 +780,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_api_providers_route",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "route.ts"
     },
     {
@@ -769,8 +791,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "app_api_providers_route_get",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "get()"
     },
     {
@@ -780,8 +802,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_api_settings_route",
-      "community": 15,
-      "community_name": "createClient",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "route.ts"
     },
     {
@@ -791,8 +813,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "app_api_settings_route_get",
-      "community": 15,
-      "community_name": "createClient",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "get()"
     },
     {
@@ -802,8 +824,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "app_api_settings_route_patch",
-      "community": 15,
-      "community_name": "createClient",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "patch()"
     },
     {
@@ -813,8 +835,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_api_sync_run_route",
-      "community": 15,
-      "community_name": "createClient",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "route.ts"
     },
     {
@@ -824,8 +846,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "app_api_sync_run_route_post",
-      "community": 15,
-      "community_name": "createClient",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "post()"
     },
     {
@@ -857,8 +879,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_api_uploads_route",
-      "community": 21,
-      "community_name": "database.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "route.ts"
     },
     {
@@ -868,8 +890,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "app_api_uploads_route_get",
-      "community": 21,
-      "community_name": "database.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "get()"
     },
     {
@@ -879,8 +901,8 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "app_api_uploads_route_post",
-      "community": 21,
-      "community_name": "database.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "post()"
     },
     {
@@ -890,8 +912,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_auth_callback_route",
-      "community": 15,
-      "community_name": "createClient",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "route.ts"
     },
     {
@@ -901,8 +923,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "app_auth_callback_route_get",
-      "community": 15,
-      "community_name": "createClient",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "get()"
     },
     {
@@ -1308,8 +1330,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_accounts_connect_terabox_form",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 11,
+      "community_name": "provider-config.ts",
       "norm_label": "connect-terabox-form.tsx"
     },
     {
@@ -1319,8 +1341,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "components_accounts_connect_terabox_form_connectteraboxformprops",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 11,
+      "community_name": "provider-config.ts",
       "norm_label": "connectteraboxformprops"
     },
     {
@@ -1330,8 +1352,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "components_accounts_connect_terabox_form_connectteraboxform",
-      "community": 98,
-      "community_name": "useLanguage",
+      "community": 11,
+      "community_name": "provider-config.ts",
       "norm_label": "connectteraboxform()"
     },
     {
@@ -1572,8 +1594,8 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "components_files_file_explorer_fetchfiles",
-      "community": 100,
-      "community_name": "FileExplorer",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "fetchfiles()"
     },
     {
@@ -1583,8 +1605,8 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "components_files_file_explorer_fileexplorer",
-      "community": 100,
-      "community_name": "FileExplorer",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "fileexplorer()"
     },
     {
@@ -1616,8 +1638,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "components_files_file_preview_dialog_filepreviewdialog",
-      "community": 106,
-      "community_name": "file-preview.ts",
+      "community": 102,
+      "community_name": "home-dashboard.tsx",
       "norm_label": "filepreviewdialog()"
     },
     {
@@ -1682,8 +1704,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_files_my_drive_view",
-      "community": 100,
-      "community_name": "FileExplorer",
+      "community": 99,
+      "community_name": "upload-dropzone.tsx",
       "norm_label": "my-drive-view.tsx"
     },
     {
@@ -1693,8 +1715,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "components_files_my_drive_view_mydriveview",
-      "community": 100,
-      "community_name": "FileExplorer",
+      "community": 99,
+      "community_name": "upload-dropzone.tsx",
       "norm_label": "mydriveview()"
     },
     {
@@ -1726,8 +1748,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "components_files_upload_dropzone_activeupload",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 0,
+      "community_name": "accounts-panel.tsx",
       "norm_label": "activeupload"
     },
     {
@@ -1825,8 +1847,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_guide_connect_guide_content",
-      "community": 42,
-      "community_name": "scroll-area.tsx",
+      "community": 33,
+      "community_name": "onedrive.ts",
       "norm_label": "connect-guide-content.tsx"
     },
     {
@@ -1836,8 +1858,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "components_guide_connect_guide_content_googlesteps",
-      "community": 42,
-      "community_name": "scroll-area.tsx",
+      "community": 33,
+      "community_name": "onedrive.ts",
       "norm_label": "googlesteps"
     },
     {
@@ -1847,8 +1869,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "components_guide_connect_guide_content_dropboxsteps",
-      "community": 42,
-      "community_name": "scroll-area.tsx",
+      "community": 33,
+      "community_name": "onedrive.ts",
       "norm_label": "dropboxsteps"
     },
     {
@@ -1858,8 +1880,8 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "components_guide_connect_guide_content_teraboxsteps",
-      "community": 42,
-      "community_name": "scroll-area.tsx",
+      "community": 33,
+      "community_name": "onedrive.ts",
       "norm_label": "teraboxsteps"
     },
     {
@@ -1869,8 +1891,8 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "components_guide_connect_guide_content_getappurl",
-      "community": 42,
-      "community_name": "scroll-area.tsx",
+      "community": 33,
+      "community_name": "onedrive.ts",
       "norm_label": "getappurl()"
     },
     {
@@ -1880,8 +1902,8 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "components_guide_connect_guide_content_getproviderredirecturi",
-      "community": 42,
-      "community_name": "scroll-area.tsx",
+      "community": 33,
+      "community_name": "onedrive.ts",
       "norm_label": "getproviderredirecturi()"
     },
     {
@@ -1891,8 +1913,8 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "components_guide_connect_guide_content_providersetupcardprops",
-      "community": 42,
-      "community_name": "scroll-area.tsx",
+      "community": 10,
+      "community_name": "index.ts",
       "norm_label": "providersetupcardprops"
     },
     {
@@ -1902,8 +1924,8 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "components_guide_connect_guide_content_providersetupcard",
-      "community": 42,
-      "community_name": "scroll-area.tsx",
+      "community": 98,
+      "community_name": "useLanguage",
       "norm_label": "providersetupcard()"
     },
     {
@@ -1913,8 +1935,8 @@
       "source_location": "L121",
       "_origin": "ast",
       "id": "components_guide_connect_guide_content_connectguidecontent",
-      "community": 42,
-      "community_name": "scroll-area.tsx",
+      "community": 33,
+      "community_name": "onedrive.ts",
       "norm_label": "connectguidecontent()"
     },
     {
@@ -1979,8 +2001,8 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "components_layout_app_sidebar_appsidebarnav",
-      "community": 2,
-      "community_name": "sidebar.tsx",
+      "community": 98,
+      "community_name": "useLanguage",
       "norm_label": "appsidebarnav()"
     },
     {
@@ -1990,8 +2012,8 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "components_layout_app_sidebar_signoutbutton",
-      "community": 2,
-      "community_name": "sidebar.tsx",
+      "community": 98,
+      "community_name": "useLanguage",
       "norm_label": "signoutbutton()"
     },
     {
@@ -2001,8 +2023,8 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "components_layout_app_sidebar_appsidebar",
-      "community": 2,
-      "community_name": "sidebar.tsx",
+      "community": 98,
+      "community_name": "useLanguage",
       "norm_label": "appsidebar()"
     },
     {
@@ -2067,8 +2089,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_providers_language_provider",
-      "community": 42,
-      "community_name": "scroll-area.tsx",
+      "community": 10,
+      "community_name": "index.ts",
       "norm_label": "language-provider.tsx"
     },
     {
@@ -2078,8 +2100,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "components_providers_language_provider_languagecontextvalue",
-      "community": 42,
-      "community_name": "scroll-area.tsx",
+      "community": 10,
+      "community_name": "index.ts",
       "norm_label": "languagecontextvalue"
     },
     {
@@ -2089,8 +2111,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "components_providers_language_provider_languagecontext",
-      "community": 42,
-      "community_name": "scroll-area.tsx",
+      "community": 10,
+      "community_name": "index.ts",
       "norm_label": "languagecontext"
     },
     {
@@ -2419,8 +2441,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_ui_alert",
-      "community": 99,
-      "community_name": "upload-dropzone.tsx",
+      "community": 11,
+      "community_name": "provider-config.ts",
       "norm_label": "alert.tsx"
     },
     {
@@ -2430,8 +2452,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_ui_alert_alertvariants",
-      "community": 99,
-      "community_name": "upload-dropzone.tsx",
+      "community": 11,
+      "community_name": "provider-config.ts",
       "norm_label": "alertvariants"
     },
     {
@@ -2441,8 +2463,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "components_ui_alert_alert",
-      "community": 99,
-      "community_name": "upload-dropzone.tsx",
+      "community": 11,
+      "community_name": "provider-config.ts",
       "norm_label": "alert"
     },
     {
@@ -2452,8 +2474,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "components_ui_alert_alerttitle",
-      "community": 99,
-      "community_name": "upload-dropzone.tsx",
+      "community": 11,
+      "community_name": "provider-config.ts",
       "norm_label": "alerttitle"
     },
     {
@@ -2463,8 +2485,8 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "components_ui_alert_alertdescription",
-      "community": 99,
-      "community_name": "upload-dropzone.tsx",
+      "community": 11,
+      "community_name": "provider-config.ts",
       "norm_label": "alertdescription"
     },
     {
@@ -2529,8 +2551,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_ui_badge",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 38,
+      "community_name": "accordion.tsx",
       "norm_label": "badge.tsx"
     },
     {
@@ -2540,8 +2562,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_ui_badge_badgevariants",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 38,
+      "community_name": "accordion.tsx",
       "norm_label": "badgevariants"
     },
     {
@@ -2551,8 +2573,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "components_ui_badge_badgeprops",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 38,
+      "community_name": "accordion.tsx",
       "norm_label": "badgeprops"
     },
     {
@@ -2562,8 +2584,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "components_ui_badge_badge",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 38,
+      "community_name": "accordion.tsx",
       "norm_label": "badge()"
     },
     {
@@ -5312,8 +5334,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "lib_adapters_config_getappurl",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "getappurl()"
     },
     {
@@ -5323,8 +5345,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "lib_adapters_config_getoauthredirecturi",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 0,
+      "community_name": "accounts-panel.tsx",
       "norm_label": "getoauthredirecturi()"
     },
     {
@@ -5422,8 +5444,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_adapters_google_drive",
-      "community": 105,
-      "community_name": "google-drive.ts",
+      "community": 16,
+      "community_name": "types.ts",
       "norm_label": "google-drive.ts"
     },
     {
@@ -5433,8 +5455,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "lib_adapters_google_drive_scopes",
-      "community": 105,
-      "community_name": "google-drive.ts",
+      "community": 16,
+      "community_name": "types.ts",
       "norm_label": "scopes"
     },
     {
@@ -5444,8 +5466,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "lib_adapters_google_drive_getconfig",
-      "community": 105,
-      "community_name": "google-drive.ts",
+      "community": 16,
+      "community_name": "types.ts",
       "norm_label": "getconfig()"
     },
     {
@@ -5455,8 +5477,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "lib_adapters_google_drive_google_export_mimes",
-      "community": 105,
-      "community_name": "google-drive.ts",
+      "community": 16,
+      "community_name": "types.ts",
       "norm_label": "google_export_mimes"
     },
     {
@@ -5466,8 +5488,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "lib_adapters_google_drive_getgoogleexportmime",
-      "community": 105,
-      "community_name": "google-drive.ts",
+      "community": 16,
+      "community_name": "types.ts",
       "norm_label": "getgoogleexportmime()"
     },
     {
@@ -5477,8 +5499,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "lib_adapters_google_drive_appendextension",
-      "community": 105,
-      "community_name": "google-drive.ts",
+      "community": 16,
+      "community_name": "types.ts",
       "norm_label": "appendextension()"
     },
     {
@@ -5488,8 +5510,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "lib_adapters_google_drive_normalizefile",
-      "community": 105,
-      "community_name": "google-drive.ts",
+      "community": 16,
+      "community_name": "types.ts",
       "norm_label": "normalizefile()"
     },
     {
@@ -5499,8 +5521,8 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "lib_adapters_google_drive_drivefetch",
-      "community": 105,
-      "community_name": "google-drive.ts",
+      "community": 16,
+      "community_name": "types.ts",
       "norm_label": "drivefetch()"
     },
     {
@@ -5510,8 +5532,8 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "lib_adapters_google_drive_googledriveadapter",
-      "community": 105,
-      "community_name": "google-drive.ts",
+      "community": 16,
+      "community_name": "types.ts",
       "norm_label": "googledriveadapter"
     },
     {
@@ -5521,8 +5543,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_adapters_onedrive",
-      "community": 16,
-      "community_name": "types.ts",
+      "community": 12,
+      "community_name": "getAdapter",
       "norm_label": "onedrive.ts"
     },
     {
@@ -5532,8 +5554,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "lib_adapters_onedrive_scopes",
-      "community": 16,
-      "community_name": "types.ts",
+      "community": 12,
+      "community_name": "getAdapter",
       "norm_label": "scopes"
     },
     {
@@ -5543,8 +5565,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "lib_adapters_onedrive_getconfig",
-      "community": 16,
-      "community_name": "types.ts",
+      "community": 12,
+      "community_name": "getAdapter",
       "norm_label": "getconfig()"
     },
     {
@@ -5554,8 +5576,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "lib_adapters_onedrive_normalizeitem",
-      "community": 16,
-      "community_name": "types.ts",
+      "community": 12,
+      "community_name": "getAdapter",
       "norm_label": "normalizeitem()"
     },
     {
@@ -5565,8 +5587,8 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "lib_adapters_onedrive_graphfetch",
-      "community": 16,
-      "community_name": "types.ts",
+      "community": 12,
+      "community_name": "getAdapter",
       "norm_label": "graphfetch()"
     },
     {
@@ -5576,8 +5598,8 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "lib_adapters_onedrive_onedriveadapter",
-      "community": 16,
-      "community_name": "types.ts",
+      "community": 12,
+      "community_name": "getAdapter",
       "norm_label": "onedriveadapter"
     },
     {
@@ -6115,8 +6137,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "lib_adapters_types_quotainfo",
-      "community": 105,
-      "community_name": "google-drive.ts",
+      "community": 16,
+      "community_name": "types.ts",
       "norm_label": "quotainfo"
     },
     {
@@ -6456,8 +6478,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_i18n_types",
-      "community": 42,
-      "community_name": "scroll-area.tsx",
+      "community": 10,
+      "community_name": "index.ts",
       "norm_label": "types.ts"
     },
     {
@@ -6467,8 +6489,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_i18n_types_language",
-      "community": 42,
-      "community_name": "scroll-area.tsx",
+      "community": 10,
+      "community_name": "index.ts",
       "norm_label": "language"
     },
     {
@@ -6478,8 +6500,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "lib_i18n_types_translationkey",
-      "community": 42,
-      "community_name": "scroll-area.tsx",
+      "community": 10,
+      "community_name": "index.ts",
       "norm_label": "translationkey"
     },
     {
@@ -6500,8 +6522,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_oauth_popup",
-      "community": 12,
-      "community_name": "getAdapter",
+      "community": 0,
+      "community_name": "accounts-panel.tsx",
       "norm_label": "popup.ts"
     },
     {
@@ -6511,8 +6533,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "lib_oauth_popup_oauthmessagepayload",
-      "community": 12,
-      "community_name": "getAdapter",
+      "community": 0,
+      "community_name": "accounts-panel.tsx",
       "norm_label": "oauthmessagepayload"
     },
     {
@@ -6533,8 +6555,8 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "lib_oauth_popup_buildoauthreturnurl",
-      "community": 12,
-      "community_name": "getAdapter",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "buildoauthreturnurl()"
     },
     {
@@ -6555,8 +6577,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_services_accounts",
-      "community": 108,
-      "community_name": "accounts.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "accounts.ts"
     },
     {
@@ -6566,8 +6588,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "lib_services_accounts_supabase",
-      "community": 108,
-      "community_name": "accounts.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "supabase"
     },
     {
@@ -6588,8 +6610,8 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "lib_services_accounts_saveaccount",
-      "community": 15,
-      "community_name": "createClient",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "saveaccount()"
     },
     {
@@ -6599,8 +6621,8 @@
       "source_location": "L88",
       "_origin": "ast",
       "id": "lib_services_accounts_listaccounts",
-      "community": 108,
-      "community_name": "accounts.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "listaccounts()"
     },
     {
@@ -6720,8 +6742,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_services_crypto",
-      "community": 103,
-      "community_name": "sync.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "crypto.ts"
     },
     {
@@ -6731,8 +6753,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "lib_services_crypto_getkey",
-      "community": 103,
-      "community_name": "sync.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "getkey()"
     },
     {
@@ -6742,8 +6764,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "lib_services_crypto_encryptcredentials",
-      "community": 103,
-      "community_name": "sync.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "encryptcredentials()"
     },
     {
@@ -6753,8 +6775,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "lib_services_crypto_decryptcredentials",
-      "community": 103,
-      "community_name": "sync.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "decryptcredentials()"
     },
     {
@@ -6874,8 +6896,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_services_provider_config",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "provider-config.ts"
     },
     {
@@ -6885,8 +6907,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "lib_services_provider_config_providerconfigrow",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 0,
+      "community_name": "accounts-panel.tsx",
       "norm_label": "providerconfigrow"
     },
     {
@@ -6907,8 +6929,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "lib_services_provider_config_storedprovidersecret",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "storedprovidersecret"
     },
     {
@@ -6918,8 +6940,8 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "lib_services_provider_config_env_map",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "env_map"
     },
     {
@@ -6929,8 +6951,8 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "lib_services_provider_config_getproviderredirecturi",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "getproviderredirecturi()"
     },
     {
@@ -6940,8 +6962,8 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "lib_services_provider_config_getenvoauthconfig",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "getenvoauthconfig()"
     },
     {
@@ -6951,8 +6973,8 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "lib_services_provider_config_rowtooauthconfig",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "rowtooauthconfig()"
     },
     {
@@ -6962,8 +6984,8 @@
       "source_location": "L103",
       "_origin": "ast",
       "id": "lib_services_provider_config_resolveoauthconfig",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "resolveoauthconfig()"
     },
     {
@@ -6973,8 +6995,8 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "lib_services_provider_config_listproviderstatuses",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "listproviderstatuses()"
     },
     {
@@ -6984,8 +7006,8 @@
       "source_location": "L170",
       "_origin": "ast",
       "id": "lib_services_provider_config_saveproviderconfig",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "saveproviderconfig()"
     },
     {
@@ -6995,8 +7017,8 @@
       "source_location": "L226",
       "_origin": "ast",
       "id": "lib_services_provider_config_sanitizeproviderrow",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "sanitizeproviderrow()"
     },
     {
@@ -7006,8 +7028,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_services_sync",
-      "community": 103,
-      "community_name": "sync.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "sync.ts"
     },
     {
@@ -7017,8 +7039,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "lib_services_sync_supabase",
-      "community": 103,
-      "community_name": "sync.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "supabase"
     },
     {
@@ -7028,8 +7050,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "lib_services_sync_syncresult",
-      "community": 103,
-      "community_name": "sync.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "syncresult"
     },
     {
@@ -7039,8 +7061,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "lib_services_sync_getvalidcredentials",
-      "community": 103,
-      "community_name": "sync.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "getvalidcredentials()"
     },
     {
@@ -7050,8 +7072,8 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "lib_services_sync_syncaccountpath",
-      "community": 15,
-      "community_name": "createClient",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "syncaccountpath()"
     },
     {
@@ -7061,8 +7083,8 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "lib_services_sync_syncuseraccounts",
-      "community": 15,
-      "community_name": "createClient",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "syncuseraccounts()"
     },
     {
@@ -7072,8 +7094,8 @@
       "source_location": "L175",
       "_origin": "ast",
       "id": "lib_services_sync_syncallusers",
-      "community": 15,
-      "community_name": "createClient",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "syncallusers()"
     },
     {
@@ -7083,8 +7105,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_services_upload",
-      "community": 21,
-      "community_name": "database.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "upload.ts"
     },
     {
@@ -7094,8 +7116,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "lib_services_upload_supabase",
-      "community": 21,
-      "community_name": "database.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "supabase"
     },
     {
@@ -7105,8 +7127,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "lib_services_upload_initiateupload",
-      "community": 21,
-      "community_name": "database.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "initiateupload()"
     },
     {
@@ -7116,8 +7138,8 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "lib_services_upload_processupload",
-      "community": 21,
-      "community_name": "database.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "processupload()"
     },
     {
@@ -7171,8 +7193,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_supabase_server",
-      "community": 15,
-      "community_name": "createClient",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "server.ts"
     },
     {
@@ -7182,8 +7204,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "lib_supabase_server_createclient",
-      "community": 15,
-      "community_name": "createClient",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "createclient()"
     },
     {
@@ -7193,8 +7215,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "lib_supabase_server_createserviceclient",
-      "community": 15,
-      "community_name": "createClient",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "createserviceclient()"
     },
     {
@@ -7215,8 +7237,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_types_database_cloudprovider",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 0,
+      "community_name": "accounts-panel.tsx",
       "norm_label": "cloudprovider"
     },
     {
@@ -7380,8 +7402,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "lib_utils_account_display_accountlike",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 0,
+      "community_name": "accounts-panel.tsx",
       "norm_label": "accountlike"
     },
     {
@@ -7402,8 +7424,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "lib_utils_account_display_getfileaccountlabel",
-      "community": 100,
-      "community_name": "FileExplorer",
+      "community": 0,
+      "community_name": "accounts-panel.tsx",
       "norm_label": "getfileaccountlabel()"
     },
     {
@@ -7413,8 +7435,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_utils_account_error",
-      "community": 103,
-      "community_name": "sync.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "account-error.ts"
     },
     {
@@ -7424,8 +7446,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "lib_utils_account_error_classifyaccounterror",
-      "community": 103,
-      "community_name": "sync.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "classifyaccounterror()"
     },
     {
@@ -7435,8 +7457,8 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "lib_utils_account_error_istokenexpirederror",
-      "community": 103,
-      "community_name": "sync.ts",
+      "community": 13,
+      "community_name": "registry.ts",
       "norm_label": "istokenexpirederror()"
     },
     {
@@ -7765,8 +7787,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "package_dependencies_aws_sdk_client_s3",
-      "community": 44,
-      "community_name": "@aws-sdk/client-s3",
+      "community": 22,
+      "community_name": "dependencies",
       "norm_label": "@aws-sdk/client-s3"
     },
     {
@@ -7776,8 +7798,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "aws_sdk_client_s3",
-      "community": 44,
-      "community_name": "@aws-sdk/client-s3",
+      "community": 22,
+      "community_name": "dependencies",
       "norm_label": "@aws-sdk/client-s3"
     },
     {
@@ -8557,8 +8579,8 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "package_dependencies_date_fns",
-      "community": 22,
-      "community_name": "dependencies",
+      "community": 15,
+      "community_name": "createClient",
       "norm_label": "date-fns"
     },
     {
@@ -8568,8 +8590,8 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "date_fns",
-      "community": 22,
-      "community_name": "dependencies",
+      "community": 15,
+      "community_name": "createClient",
       "norm_label": "date-fns"
     },
     {
@@ -11751,7 +11773,18 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/api/accounts/[provider]/callback/route.ts",
-      "source_location": "L38",
+      "source_location": "L37",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "app_api_accounts_provider_callback_route",
+      "target": "app_api_accounts_provider_callback_route_cookieopts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/api/accounts/[provider]/callback/route.ts",
+      "source_location": "L61",
       "weight": 1.0,
       "_origin": "ast",
       "source": "app_api_accounts_provider_callback_route",
@@ -11800,6 +11833,17 @@
       "_origin": "ast",
       "source": "app_api_accounts_provider_callback_route",
       "target": "app_api_accounts_provider_callback_route_shorterror",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/api/accounts/[provider]/callback/route.ts",
+      "source_location": "L48",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "app_api_accounts_provider_callback_route",
+      "target": "app_api_accounts_provider_callback_route_waitthenfinalize",
       "confidence_score": 1.0
     },
     {
@@ -11975,7 +12019,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "app/api/accounts/[provider]/callback/route.ts",
-      "source_location": "L46",
+      "source_location": "L69",
       "weight": 1.0,
       "_origin": "ast",
       "source": "app_api_accounts_provider_callback_route_get",
@@ -11999,7 +12043,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "app/api/accounts/[provider]/callback/route.ts",
-      "source_location": "L145",
+      "source_location": "L225",
       "weight": 1.0,
       "_origin": "ast",
       "source": "app_api_accounts_provider_callback_route_get",
@@ -12010,9 +12054,33 @@
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
+      "source_file": "app/api/accounts/[provider]/callback/route.ts",
+      "source_location": "L188",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "app_api_accounts_provider_callback_route_get",
+      "target": "app_api_accounts_provider_callback_route_cookieopts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/api/accounts/[provider]/callback/route.ts",
+      "source_location": "L109",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "app_api_accounts_provider_callback_route_get",
+      "target": "app_api_accounts_provider_callback_route_waitthenfinalize",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/api/accounts/[provider]/callback/route.ts",
-      "source_location": "L126",
+      "source_location": "L208",
       "weight": 1.0,
       "_origin": "ast",
       "source": "app_api_accounts_provider_callback_route_get",
@@ -12024,7 +12092,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/api/accounts/[provider]/callback/route.ts",
-      "source_location": "L128",
+      "source_location": "L210",
       "weight": 1.0,
       "_origin": "ast",
       "source": "app_api_accounts_provider_callback_route_get",
@@ -12036,7 +12104,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/api/accounts/[provider]/callback/route.ts",
-      "source_location": "L114",
+      "source_location": "L191",
       "weight": 1.0,
       "_origin": "ast",
       "source": "app_api_accounts_provider_callback_route_get",
@@ -12048,7 +12116,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/api/accounts/[provider]/callback/route.ts",
-      "source_location": "L130",
+      "source_location": "L212",
       "weight": 1.0,
       "_origin": "ast",
       "source": "app_api_accounts_provider_callback_route_get",
@@ -12060,7 +12128,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/api/accounts/[provider]/callback/route.ts",
-      "source_location": "L103",
+      "source_location": "L175",
       "weight": 1.0,
       "_origin": "ast",
       "source": "app_api_accounts_provider_callback_route_get",

@@ -25,11 +25,14 @@ function getConfig(config: OAuthProviderConfig) {
 
 function normalizeItem(item: Record<string, unknown>): NormalizedFile {
   const folder = item.folder !== undefined;
+  const fileMeta = item.file as { mimeType?: string } | undefined;
   return {
     providerFileId: item.id as string,
     name: item.name as string,
     path: "/",
-    mimeType: folder ? "application/vnd.onedrive.folder" : null,
+    mimeType: folder
+      ? "application/vnd.onedrive.folder"
+      : fileMeta?.mimeType ?? null,
     size: Number(item.size ?? 0),
     isFolder: folder,
     isStarred: false,
@@ -233,7 +236,10 @@ export const oneDriveAdapter: CloudAdapter = {
     }
     return {
       stream: response.body,
-      mimeType: "application/octet-stream",
+      mimeType:
+        meta.mimeType ??
+        response.headers.get("Content-Type") ??
+        "application/octet-stream",
       name: meta.name,
     };
   },

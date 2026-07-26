@@ -530,8 +530,8 @@
     "semantic_hash": ""
   },
   "lib/adapters/onedrive.ts": {
-    "mtime": 1785038176.1110072,
-    "ast_hash": "b317f309204ca62ebe868830af132df0",
+    "mtime": 1785038497.4933372,
+    "ast_hash": "cd3872879b93c9eafe11a07e72136347",
     "semantic_hash": ""
   },
   "lib/adapters/registry.ts": {
@@ -670,8 +670,8 @@
     "semantic_hash": ""
   },
   "lib/utils/file-preview.ts": {
-    "mtime": 1781478125.4445362,
-    "ast_hash": "d446e365b222e34b88ae078054e28a18",
+    "mtime": 1785038493.800833,
+    "ast_hash": "4e0135d888724603a9e623132dd14cd9",
     "semantic_hash": ""
   },
   "lib/utils/format.ts": {

@@ -60,8 +60,8 @@
     "semantic_hash": ""
   },
   "app/api/accounts/[provider]/callback/route.ts": {
-    "mtime": 1785038170.4514637,
-    "ast_hash": "02c9611907738db88c21f6ea64c407f8",
+    "mtime": 1785038211.7039742,
+    "ast_hash": "a71f8fe92310d31adcc1f35985fd60e2",
     "semantic_hash": ""
   },
   "app/api/accounts/[provider]/connect/route.ts": {

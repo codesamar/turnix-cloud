@@ -2,6 +2,9 @@ export type PreviewKind = "image" | "pdf" | "text" | "video" | "audio" | "unsupp
 
 const TEXT_MIME_PREFIXES = ["text/", "application/json", "application/xml", "application/javascript"];
 const TEXT_EXTENSIONS = [".txt", ".md", ".csv", ".json", ".xml", ".js", ".ts", ".tsx", ".jsx", ".css", ".html", ".log", ".yaml", ".yml"];
+const IMAGE_EXTENSIONS = [".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".svg", ".ico", ".avif"];
+const VIDEO_EXTENSIONS = [".mp4", ".webm", ".mov", ".mkv", ".avi"];
+const AUDIO_EXTENSIONS = [".mp3", ".wav", ".ogg", ".m4a", ".aac", ".flac"];
 
 export function getPreviewKind(
   mimeType: string | null | undefined,
@@ -32,6 +35,12 @@ export function getPreviewKind(
       return "pdf";
     }
   }
+
+  // Fallback when providers omit mime type (e.g. older OneDrive sync rows).
+  if (IMAGE_EXTENSIONS.some((ext) => lowerName.endsWith(ext))) return "image";
+  if (lowerName.endsWith(".pdf")) return "pdf";
+  if (VIDEO_EXTENSIONS.some((ext) => lowerName.endsWith(ext))) return "video";
+  if (AUDIO_EXTENSIONS.some((ext) => lowerName.endsWith(ext))) return "audio";
 
   return "unsupported";
 }
