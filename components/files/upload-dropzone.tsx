@@ -3,10 +3,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Cloud, FolderOpen, Upload } from "lucide-react";
+import { Plus, Upload } from "lucide-react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { PROVIDER_LABELS } from "@/lib/adapters/config";
 import type { AllocationStrategy, CloudProvider } from "@/lib/types/database";
 import { useLanguage } from "@/components/providers/language-provider";
@@ -113,69 +113,6 @@ function uploadFileWithProgress(
   });
 }
 
-function UploadDestinationPreview({
-  destination,
-  folderName,
-}: {
-  destination: UploadDestination | null | undefined;
-  folderName: string | null;
-}) {
-  const { t } = useLanguage();
-
-  if (destination === undefined) {
-    return (
-      <p className="text-xs text-muted-foreground mt-3 animate-pulse">
-        {t("upload.destinationTitle")}...
-      </p>
-    );
-  }
-
-  if (!destination) {
-    return (
-      <Alert className="mt-3 text-left">
-        <AlertDescription>{t("upload.noAccount")}</AlertDescription>
-      </Alert>
-    );
-  }
-
-  const accountName = getAccountDisplayName(destination.account);
-  const folderLabel = destination.isRoot
-    ? t("upload.destinationRoot")
-    : folderName ?? destination.folderName ?? t("upload.destinationRoot");
-
-  return (
-    <div className="mt-3 w-full rounded-md border bg-muted/40 p-3 text-left text-xs space-y-2">
-      <p className="font-medium text-foreground">{t("upload.destinationTitle")}</p>
-      <div className="flex items-start gap-2 text-muted-foreground">
-        <Cloud className="size-3.5 mt-0.5 shrink-0" />
-        <div>
-          <span className="text-foreground/80">{t("upload.destinationAccount")}: </span>
-          {accountName}
-          <span className="text-muted-foreground">
-            {" "}
-            · {PROVIDER_LABELS[destination.account.provider]}
-          </span>
-        </div>
-      </div>
-      <div className="flex items-start gap-2 text-muted-foreground">
-        <FolderOpen className="size-3.5 mt-0.5 shrink-0" />
-        <div>
-          <span className="text-foreground/80">{t("upload.destinationFolder")}: </span>
-          <span className="text-foreground">{folderLabel}</span>
-        </div>
-      </div>
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-muted-foreground">
-        <span>
-          {t("upload.destinationStrategy")}: {t(strategyLabelKey(destination.strategy))}
-        </span>
-        <Link href="/quota" className="text-primary hover:underline">
-          {t("upload.changeAllocation")}
-        </Link>
-      </div>
-    </div>
-  );
-}
-
 export function UploadDropzone({
   parentPath = "/",
   folderName = null,
@@ -183,11 +120,12 @@ export function UploadDropzone({
 }: UploadDropzoneProps) {
   const { t } = useLanguage();
   const queryClient = useQueryClient();
+  const inputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [uploads, setUploads] = useState<ActiveUpload[]>([]);
   const pollTimersRef = useRef<Map<string, number>>(new Map());
 
-  const { data: destination, isLoading: isDestinationLoading } = useQuery({
+  const { data: destination } = useQuery({
     queryKey: ["upload-destination", parentPath, folderName],
     queryFn: () => fetchUploadDestination(parentPath, folderName),
   });
@@ -330,10 +268,14 @@ export function UploadDropzone({
   useEffect(() => {
     function onDragOver(e: DragEvent) {
       e.preventDefault();
-      setIsDragging(true);
+      if (e.dataTransfer?.types?.includes("Files")) {
+        setIsDragging(true);
+      }
     }
-    function onDragLeave() {
-      setIsDragging(false);
+    function onDragLeave(e: DragEvent) {
+      if (e.relatedTarget === null) {
+        setIsDragging(false);
+      }
     }
     function onDrop(e: DragEvent) {
       e.preventDefault();
@@ -352,35 +294,64 @@ export function UploadDropzone({
   }, [handleFiles]);
 
   const canUpload = Boolean(destination);
+  const folderLabel = destination
+    ? destination.isRoot
+      ? t("upload.destinationRoot")
+      : folderName ?? destination.folderName ?? t("upload.destinationRoot")
+    : null;
 
   return (
     <div className="space-y-3">
-      <label
-        className={`flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-6 transition-colors ${
-          !canUpload
-            ? "cursor-not-allowed opacity-60"
-            : isDragging
-              ? "border-primary bg-primary/5"
-              : "border-muted-foreground/25 hover:border-primary/50"
-        }`}
-      >
-        <Upload className="size-8 text-muted-foreground mb-2" />
-        <p className="text-sm font-medium">{t("upload.dropTitle")}</p>
-        <p className="text-xs text-muted-foreground mt-1 text-center px-2">
-          {t("upload.dropHint")}
-        </p>
-        <UploadDestinationPreview
-          destination={isDestinationLoading ? undefined : destination}
-          folderName={folderName}
-        />
+      <div className="flex flex-wrap items-center gap-3">
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          disabled={!canUpload}
+          title={t("upload.dropHint")}
+          onClick={() => inputRef.current?.click()}
+        >
+          <Plus className="size-4 mr-1" />
+          {t("upload.add")}
+        </Button>
         <input
+          ref={inputRef}
           type="file"
           multiple
           className="hidden"
           disabled={!canUpload}
-          onChange={(e) => handleFiles(e.target.files)}
+          onChange={(e) => {
+            handleFiles(e.target.files);
+            e.target.value = "";
+          }}
         />
-      </label>
+        {destination && folderLabel ? (
+          <p className="min-w-0 flex-1 truncate text-xs text-muted-foreground">
+            {getAccountDisplayName(destination.account)}
+            {" · "}
+            {PROVIDER_LABELS[destination.account.provider]}
+            {" · "}
+            {folderLabel}
+            {" · "}
+            {t(strategyLabelKey(destination.strategy))}
+            {" · "}
+            <Link href="/quota" className="text-primary hover:underline">
+              {t("upload.changeAllocation")}
+            </Link>
+          </p>
+        ) : !canUpload ? (
+          <p className="text-xs text-muted-foreground">{t("upload.noAccount")}</p>
+        ) : null}
+      </div>
+
+      {isDragging && canUpload ? (
+        <div className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center bg-background/70 backdrop-blur-[1px]">
+          <div className="flex flex-col items-center gap-2 rounded-lg border-2 border-dashed border-primary bg-background px-8 py-6 shadow-sm">
+            <Upload className="size-8 text-primary" />
+            <p className="text-sm font-medium">{t("upload.dropOverlay")}</p>
+          </div>
+        </div>
+      ) : null}
 
       {uploads.map((upload) => (
         <div key={upload.id} className="space-y-1 rounded-md border p-3">

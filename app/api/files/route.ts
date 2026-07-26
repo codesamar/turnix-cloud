@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getAccountCredentials } from "@/lib/services/accounts";
+import { deleteFiles } from "@/lib/services/delete";
 import { moveFiles } from "@/lib/services/move";
 import { getAdapter } from "@/lib/adapters/registry";
 import { toAccountApiError } from "@/lib/utils/account-error";
@@ -140,26 +141,33 @@ export async function POST(request: Request) {
   }
 
   if (action === "bulk_delete" && fileIds?.length) {
-    for (const fileId of fileIds as string[]) {
-      const { data: file } = await supabase
-        .from("file_metadata")
-        .select("*")
-        .eq("id", fileId)
-        .eq("user_id", user.id)
-        .single();
+    const encoder = new TextEncoder();
+    const stream = new ReadableStream<Uint8Array>({
+      async start(controller) {
+        const send = (event: Record<string, unknown>) => {
+          controller.enqueue(encoder.encode(`${JSON.stringify(event)}\n`));
+        };
 
-      if (file) {
-        const { account, credentials } = await getAccountCredentials(
-          supabase,
-          file.account_id,
-          user.id
-        );
-        const adapter = getAdapter(account.provider);
-        await adapter.deleteFile(credentials, file.provider_file_id);
-        await supabase.from("file_metadata").delete().eq("id", fileId);
-      }
-    }
-    return NextResponse.json({ success: true });
+        try {
+          await deleteFiles(supabase, user.id, {
+            fileIds,
+            onProgress: (event) => send(event),
+          });
+        } catch (err) {
+          console.error("[bulk_delete]", err);
+          send({ type: "error", ...toAccountApiError(err) });
+        } finally {
+          controller.close();
+        }
+      },
+    });
+
+    return new Response(stream, {
+      headers: {
+        "Content-Type": "application/x-ndjson; charset=utf-8",
+        "Cache-Control": "no-cache, no-transform",
+      },
+    });
   }
 
   return NextResponse.json({ error: "Invalid action" }, { status: 400 });

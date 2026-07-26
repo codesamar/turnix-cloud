@@ -235,8 +235,8 @@
     "semantic_hash": ""
   },
   "components/files/upload-dropzone.tsx": {
-    "mtime": 1781479297.0089831,
-    "ast_hash": "f79e4232efd70390148df400de844a5d",
+    "mtime": 1785051895.389665,
+    "ast_hash": "0dcf823605c36057c1f5f60731a419dd",
     "semantic_hash": ""
   },
   "components/guide/connect-guide-content.tsx": {
@@ -570,13 +570,13 @@
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/en.ts": {
-    "mtime": 1785051588.0432003,
-    "ast_hash": "24a102bd3d04f53e87eebb4606a44439",
+    "mtime": 1785051882.1144617,
+    "ast_hash": "e9fb7648abf0e5b07d6bbcf897e31965",
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/id.ts": {
-    "mtime": 1785051589.46312,
-    "ast_hash": "bd63efe5041d17bf155a9c69752088ae",
+    "mtime": 1785051882.1143804,
+    "ast_hash": "0d2b65484a0d8c1720d56cd2aa7b4cbb",
     "semantic_hash": ""
   },
   "lib/i18n/index.ts": {
@@ -585,8 +585,8 @@
     "semantic_hash": ""
   },
   "lib/i18n/types.ts": {
-    "mtime": 1785051586.758886,
-    "ast_hash": "ea71993da8073b92677eb2d055a4e407",
+    "mtime": 1785051882.1144416,
+    "ast_hash": "c4da99f76a7b3cbb0f7a609c49f53e10",
     "semantic_hash": ""
   },
   "lib/oauth/popup.ts": {

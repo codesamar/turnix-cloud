@@ -18,7 +18,6 @@ import {
   Trash2,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -49,6 +48,7 @@ import type { FileMetadata, FileMetadataWithAccount } from "@/lib/types/database
 import { getFileAccountLabel } from "@/lib/utils/account-display";
 import { getPreviewKind } from "@/lib/utils/file-preview";
 import { FilePreviewDialog } from "@/components/files/file-preview-dialog";
+import { DeleteFilesDialog } from "@/components/files/delete-files-dialog";
 import { MoveFileDialog } from "@/components/files/move-file-dialog";
 import { useLanguage } from "@/components/providers/language-provider";
 
@@ -276,6 +276,7 @@ function FileActionsMenu({
   onMove,
   onDelete,
   moveLabel,
+  deleteLabel,
 }: {
   file: FileMetadata;
   onPreview: (file: FileMetadata) => void;
@@ -283,6 +284,7 @@ function FileActionsMenu({
   onMove: (file: FileMetadata) => void;
   onDelete: (file: FileMetadata) => void;
   moveLabel: string;
+  deleteLabel: string;
 }) {
   return (
     <DropdownMenu>
@@ -319,7 +321,7 @@ function FileActionsMenu({
           onClick={() => onDelete(file)}
         >
           <Trash2 className="size-4 mr-2" />
-          Delete
+          {deleteLabel}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -349,6 +351,8 @@ export function FileExplorer({
   const [previewOpen, setPreviewOpen] = useState(false);
   const [moveOpen, setMoveOpen] = useState(false);
   const [moveFiles, setMoveFiles] = useState<FileMetadata[]>([]);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteFiles, setDeleteFiles] = useState<FileMetadata[]>([]);
 
   const sortControlled = sortModeProp !== undefined;
   const viewControlled = viewModeProp !== undefined;
@@ -417,21 +421,9 @@ export function FileExplorer({
     refetch();
   }
 
-  async function handleDelete(file: FileMetadata) {
-    await fetch(`/api/files/${file.id}`, { method: "DELETE" });
-    toast.success(`Deleted ${file.name}`);
-    refetch();
-  }
-
-  async function handleBulkDelete() {
-    await fetch("/api/files", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "bulk_delete", fileIds: [...selected] }),
-    });
-    setSelected(new Set());
-    toast.success("Deleted selected files");
-    refetch();
+  function openDeleteDialog(items: FileMetadata[]) {
+    setDeleteFiles(items);
+    setDeleteOpen(true);
   }
 
   function openMoveDialog(items: FileMetadata[]) {
@@ -440,6 +432,11 @@ export function FileExplorer({
   }
 
   function handleMoveComplete() {
+    setSelected(new Set());
+    refetch();
+  }
+
+  function handleDeleteComplete() {
     setSelected(new Set());
     refetch();
   }
@@ -463,6 +460,7 @@ export function FileExplorer({
 
   const columnCount = showProvider ? 6 : 5;
   const moveLabel = t("move.action");
+  const deleteLabel = t("delete.action");
 
   return (
     <div className="space-y-4">
@@ -551,9 +549,17 @@ export function FileExplorer({
             <FolderInput className="size-4 mr-1" />
             {moveLabel}
           </Button>
-          <Button variant="destructive" size="sm" onClick={handleBulkDelete}>
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() =>
+              openDeleteDialog(
+                sortedFiles.filter((file) => selected.has(file.id))
+              )
+            }
+          >
             <Trash2 className="size-4 mr-1" />
-            Delete
+            {deleteLabel}
           </Button>
         </div>
       )}
@@ -653,8 +659,9 @@ export function FileExplorer({
                         onPreview={handlePreview}
                         onStar={handleStar}
                         onMove={(item) => openMoveDialog([item])}
-                        onDelete={handleDelete}
+                        onDelete={(file) => openDeleteDialog([file])}
                         moveLabel={moveLabel}
+                        deleteLabel={deleteLabel}
                       />
                     </div>
                   </TableCell>
@@ -744,8 +751,9 @@ export function FileExplorer({
                           onPreview={handlePreview}
                           onStar={handleStar}
                           onMove={(item) => openMoveDialog([item])}
-                          onDelete={handleDelete}
+                          onDelete={(file) => openDeleteDialog([file])}
                           moveLabel={moveLabel}
+                          deleteLabel={deleteLabel}
                         />
                       </div>
                     </div>
@@ -770,6 +778,13 @@ export function FileExplorer({
         onOpenChange={setMoveOpen}
         files={moveFiles}
         onMoved={handleMoveComplete}
+      />
+
+      <DeleteFilesDialog
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
+        files={deleteFiles}
+        onDeleted={handleDeleteComplete}
       />
     </div>
   );

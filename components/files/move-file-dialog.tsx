@@ -89,6 +89,8 @@ export function MoveFileDialog({
   const [folderStack, setFolderStack] = useState<FileMetadata[]>([]);
   const [progress, setProgress] = useState<MoveProgressState | null>(null);
   const abortRef = useRef<AbortController | null>(null);
+  /** True after server sends complete — closing the dialog must not abort the request. */
+  const finishedRef = useRef(false);
 
   const movingFolderIds = useMemo(
     () => new Set(files.filter((file) => file.is_folder).map((file) => file.id)),
@@ -128,6 +130,7 @@ export function MoveFileDialog({
     setDestinationAccountId(defaultAccountId);
     setFolderStack([]);
     setProgress(null);
+    finishedRef.current = false;
   }, [open, accounts, files]);
 
   const selectedAccount = accounts.find(
@@ -160,6 +163,7 @@ export function MoveFileDialog({
       abortRef.current?.abort();
       const controller = new AbortController();
       abortRef.current = controller;
+      finishedRef.current = false;
       setProgress({
         index: 1,
         total: Math.max(files.length, 1),
@@ -196,6 +200,84 @@ export function MoveFileDialog({
       let buffer = "";
       let moved = 0;
 
+      const handleEvent = (event: {
+        type: string;
+        total?: number;
+        index?: number;
+        name?: string;
+        phase?: MoveItemPhase;
+        percent?: number;
+        moved?: number;
+        error?: string;
+        message?: string;
+        code?: string;
+        accountLabel?: string;
+      }) => {
+        if (event.type === "error") {
+          throw Object.assign(
+            new Error(event.error ?? event.message ?? "Move failed"),
+            {
+              code: event.code,
+              accountLabel: event.accountLabel,
+            }
+          );
+        }
+
+        if (event.type === "start" && typeof event.total === "number") {
+          setProgress({
+            index: 1,
+            total: event.total,
+            name: files[0]?.name ?? "",
+            phase: "moving",
+          });
+          return;
+        }
+
+        if (
+          event.type === "item" &&
+          typeof event.index === "number" &&
+          typeof event.total === "number" &&
+          event.name &&
+          event.phase
+        ) {
+          setProgress({
+            index: event.index,
+            total: event.total,
+            name: event.name,
+            phase: event.phase,
+            percent: event.percent,
+          });
+          return;
+        }
+
+        if (
+          event.type === "item_done" &&
+          typeof event.index === "number" &&
+          typeof event.total === "number" &&
+          event.name
+        ) {
+          setProgress({
+            index: event.index,
+            total: event.total,
+            name: event.name,
+            phase: "moving",
+            percent: 100,
+          });
+          return;
+        }
+
+        if (event.type === "complete" && typeof event.moved === "number") {
+          moved = event.moved;
+          // Close as soon as the server finishes — do not wait for stream teardown.
+          finishedRef.current = true;
+          abortRef.current = null;
+          setProgress(null);
+          toast.success(t("move.success"));
+          onOpenChange(false);
+          onMoved();
+        }
+      };
+
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
@@ -205,83 +287,24 @@ export function MoveFileDialog({
 
         for (const line of lines) {
           if (!line.trim()) continue;
-          const event = JSON.parse(line) as {
-            type: string;
-            total?: number;
-            index?: number;
-            name?: string;
-            phase?: MoveItemPhase;
-            percent?: number;
-            moved?: number;
-            error?: string;
-            message?: string;
-            code?: string;
-            accountLabel?: string;
-          };
-
-          if (event.type === "error") {
-            throw Object.assign(
-              new Error(event.error ?? event.message ?? "Move failed"),
-              {
-                code: event.code,
-                accountLabel: event.accountLabel,
-              }
-            );
-          }
-
-          if (event.type === "start" && typeof event.total === "number") {
-            setProgress({
-              index: 1,
-              total: event.total,
-              name: files[0]?.name ?? "",
-              phase: "moving",
-            });
-            continue;
-          }
-
-          if (
-            event.type === "item" &&
-            typeof event.index === "number" &&
-            typeof event.total === "number" &&
-            event.name &&
-            event.phase
-          ) {
-            setProgress({
-              index: event.index,
-              total: event.total,
-              name: event.name,
-              phase: event.phase,
-              percent: event.percent,
-            });
-            continue;
-          }
-
-          if (
-            event.type === "item_done" &&
-            typeof event.index === "number" &&
-            typeof event.total === "number" &&
-            event.name
-          ) {
-            setProgress({
-              index: event.index,
-              total: event.total,
-              name: event.name,
-              phase: "moving",
-              percent: 100,
-            });
-            continue;
-          }
-
-          if (event.type === "complete" && typeof event.moved === "number") {
-            moved = event.moved;
-          }
+          handleEvent(JSON.parse(line));
         }
+      }
+
+      if (buffer.trim()) {
+        handleEvent(JSON.parse(buffer));
       }
 
       return { moved };
     },
     onSuccess: () => {
       abortRef.current = null;
+      // Already closed when the complete event arrived.
+      if (finishedRef.current) {
+        finishedRef.current = false;
+        return;
+      }
+      finishedRef.current = false;
       setProgress(null);
       toast.success(t("move.success"));
       onOpenChange(false);
@@ -290,6 +313,10 @@ export function MoveFileDialog({
     onError: (error: Error & { code?: string; accountLabel?: string; name?: string }) => {
       abortRef.current = null;
       setProgress(null);
+      if (finishedRef.current) {
+        finishedRef.current = false;
+        return;
+      }
       if (error.name === "AbortError") {
         toast.message(t("move.cancelled"));
         return;
@@ -309,7 +336,7 @@ export function MoveFileDialog({
   });
 
   function handleDialogOpenChange(nextOpen: boolean) {
-    if (!nextOpen && moveMutation.isPending) {
+    if (!nextOpen && moveMutation.isPending && !finishedRef.current) {
       abortRef.current?.abort();
     }
     if (!nextOpen) setProgress(null);

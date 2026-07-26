@@ -1,11 +1,11 @@
 # Graph Report - turnix-cloud  (2026-07-26)
 
 ## Corpus Check
-- 159 files · ~81,959 words
+- 159 files · ~82,697 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1090 nodes · 2099 edges · 118 communities (59 shown, 59 thin omitted)
+- 1095 nodes · 2108 edges · 105 communities (53 shown, 52 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 10 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
@@ -36,6 +36,7 @@
 - cn
 - components.json
 - menubar.tsx
+- provider-config-panel.tsx
 - dependencies
 - TeraBoxApp
 - CloudAdapter
@@ -45,17 +46,18 @@
 - alert-dialog.tsx
 - upload-dropzone.tsx
 - breadcrumb.tsx
+- button.tsx
 - navigation-menu.tsx
 - slider.tsx
 - sidebar.tsx
 - FileExplorer
 - middleware.ts
 - allocation.ts
+- move.ts
 - command.tsx
 - terabox-client.ts
 - extends
 - allocation-settings.tsx
-- CloudAdapter
 - classnames
 - tabs.tsx
 - cmdk
@@ -67,7 +69,6 @@
 - lucide-react
 - next
 - next.config.mjs
-- @radix-ui/react-accordion
 - @radix-ui/react-alert-dialog
 - @radix-ui/react-aspect-ratio
 - @radix-ui/react-avatar
@@ -75,7 +76,6 @@
 - @radix-ui/react-collapsible
 - @radix-ui/react-context-menu
 - @radix-ui/react-dialog
-- registry.ts
 - @radix-ui/react-label
 - @radix-ui/react-menubar
 - @radix-ui/react-navigation-menu
@@ -87,7 +87,6 @@
 - connect-guide-content.tsx
 - @radix-ui/react-slider
 - upload.ts
-- index.ts
 - @radix-ui/react-toggle-group
 - @radix-ui/react-tooltip
 - react-dom
@@ -107,7 +106,6 @@
 - postcss.config.mjs
 - tailwind.config.ts
 - class-variance-authority
-- onedrive.ts
 - hover-card.tsx
 - @radix-ui/react-tabs
 - file-explorer.tsx
@@ -117,17 +115,7 @@
 - getPreviewKind
 - command.tsx
 - drawer.tsx
-- Troubleshooting
-- Langkah 1 — Buat app di Dropbox App Console
-- Langkah 2 — Google Cloud Console
-- buttonVariants
 - radio-group.tsx
-- scroll-area.tsx
-- Langkah 3 — Configure di SamarCloud
-- Development vs Production
-- hover-card.tsx
-- slider.tsx
-- textarea.tsx
 - @radix-ui/react-accordion
 
 ## God Nodes (most connected - your core abstractions)
@@ -143,8 +131,8 @@
 10. `OAUTH_PROVIDERS` - 17 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `GET()` --calls--> `createClient()`  [EXTRACTED]
-  app/api/files/route.ts → lib/supabase/server.ts
+- `DashboardLayout()` --calls--> `createClient()`  [EXTRACTED]
+  app/(dashboard)/layout.tsx → lib/supabase/server.ts
 - `GET()` --calls--> `createClient()`  [EXTRACTED]
   app/api/uploads/route.ts → lib/supabase/server.ts
 - `BreadcrumbSeparator()` --calls--> `cn()`  [EXTRACTED]
@@ -157,27 +145,27 @@
 ## Import Cycles
 - None detected.
 
-## Communities (118 total, 59 thin omitted)
+## Communities (105 total, 52 thin omitted)
 
 ### Community 0 - "accounts-panel.tsx"
-Cohesion: 0.09
-Nodes (39): GET(), PROVIDER_PARAM_MAP, RouteParams, PATCH(), PROVIDER_PARAM_MAP, RouteParams, GET(), ConnectAccountDialog() (+31 more)
+Cohesion: 0.07
+Nodes (48): GET(), PROVIDER_PARAM_MAP, RouteParams, PATCH(), PROVIDER_PARAM_MAP, RouteParams, ConnectAccountDialog(), fetchProviders() (+40 more)
 
 ### Community 1 - "file-explorer.tsx"
 Cohesion: 0.20
 Nodes (12): FileExplorerProps, FilePreviewDialog(), FilePreviewDialogProps, MoveFileDialogProps, DialogContent, DialogDescription, DialogFooter(), DialogHeader() (+4 more)
 
 ### Community 2 - "sidebar.tsx"
-Cohesion: 0.06
-Nodes (45): AppSidebar(), AppSidebarNav(), AppSidebarProps, DashboardShellProps, helpNavItems, navItems, SidebarNavItem, SignOutButton() (+37 more)
+Cohesion: 0.05
+Nodes (47): DashboardLayout(), AppSidebar(), AppSidebarNav(), AppSidebarProps, DashboardShell(), DashboardShellProps, helpNavItems, navItems (+39 more)
 
 ### Community 3 - "TurnixCloud"
 Cohesion: 0.04
 Nodes (47): 1. Clone and install, 2. Create a Supabase project, 3. Run database migrations, 4. Environment variables, 5. Configure Supabase Auth, 6. Connect a provider (example: Google Drive), Accounts, 🔌 API overview (+39 more)
 
 ### Community 4 - "Google OAuth — Production Setup"
-Cohesion: 0.15
-Nodes (13): 1.1 Environment variables (Vercel / hosting), 1.2 Supabase Auth URLs, Checklist production, Configure vs Connect (SamarCloud), Dev vs Production — dua OAuth client (disarankan), Diagram alur production, Google OAuth — Production Setup, Langkah 1 — Deploy SamarCloud (+5 more)
+Cohesion: 0.05
+Nodes (36): 1.1 Environment variables (Vercel / hosting), 1.2 Supabase Auth URLs, 2.1 Redirect URI production, 2.2 Branding & kebijakan (wajib verifikasi), 2.3 Submit App Verification, 2.4 Publish app (In Production), Checklist production, Configure vs Connect (SamarCloud) (+28 more)
 
 ### Community 5 - "carousel.tsx"
 Cohesion: 0.05
@@ -192,36 +180,36 @@ Cohesion: 0.06
 Nodes (33): autoprefixer, eslint, eslint-config-next, devDependencies, autoprefixer, eslint, eslint-config-next, postcss (+25 more)
 
 ### Community 8 - "upload-dropzone.tsx"
-Cohesion: 0.15
-Nodes (16): AccountsPanel(), ConfirmAction, fetchAccounts(), fetchProviders(), fetchProviders(), ProviderConfigPanel(), AlertDialogAction, AlertDialogCancel (+8 more)
+Cohesion: 0.18
+Nodes (14): AccountsPanel(), ConfirmAction, fetchAccounts(), fetchProviders(), AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription (+6 more)
 
 ### Community 9 - "compilerOptions"
 Cohesion: 0.07
 Nodes (29): dom, dom.iterable, esnext, next.config.mjs, .next/dev/types/**/*.ts, next-env.d.ts, .next/types/**/*.ts, node_modules (+21 more)
 
 ### Community 10 - "index.ts"
-Cohesion: 0.09
-Nodes (16): inter, metadata, OAuthDoneClient(), LoginForm(), RegisterForm(), AuthBrand(), SamarLogo(), SamarLogoProps (+8 more)
+Cohesion: 0.07
+Nodes (28): inter, metadata, OAuthDoneClient(), AuthBrand(), SamarLogo(), SamarLogoProps, SamarLogoVariant, ProviderSetupCardProps (+20 more)
 
 ### Community 11 - "provider-config.ts"
 Cohesion: 0.29
 Nodes (9): decryptWith(), deriveKey(), __dirname, dryRun, encryptWith(), main(), reencryptField(), root (+1 more)
 
 ### Community 12 - "getAdapter"
-Cohesion: 0.12
-Nodes (27): GET(), RouteParams, GET(), RouteParams, DELETE(), PATCH(), RouteParams, GET() (+19 more)
+Cohesion: 0.17
+Nodes (18): GET(), GET(), RouteParams, GET(), RouteParams, DELETE(), GET(), PATCH() (+10 more)
 
 ### Community 13 - "registry.ts"
-Cohesion: 0.18
-Nodes (13): DELETE(), deleteFileMetadataBatched(), GET(), GET(), GET(), GET(), PATCH(), GET() (+5 more)
+Cohesion: 0.48
+Nodes (5): DELETE(), deleteFileMetadataBatched(), GET(), listAccounts(), createAdminClient()
 
 ### Community 14 - "Dropbox — Setup Lengkap"
-Cohesion: 0.13
-Nodes (15): 2.1 Daftarkan di Dropbox, 2.2 Salin dari dashboard SamarCloud (alternatif), Cek Redirect URI, Configure vs Connect, Deploy production (Vercel), Diagram alur, Dropbox — Setup Lengkap, Langkah 2 — Set Redirect URI (+7 more)
+Cohesion: 0.08
+Nodes (26): 1.1 Buka App Console, 1.2 Pilih tipe app, 1.3 Atur permissions (scope), 1.4 Salin App key & App secret, 2.1 Daftarkan di Dropbox, 2.2 Salin dari dashboard SamarCloud (alternatif), 3.1 Lewat dashboard (disarankan), 3.2 Lewat `.env.local` (fallback) (+18 more)
 
 ### Community 15 - "createClient"
-Cohesion: 0.18
-Nodes (19): ConnectS3Form(), ConnectS3FormProps, ProviderConfigItemProps, ProviderFormState, AccordionContent, AccordionItem, AccordionTrigger, Button (+11 more)
+Cohesion: 0.45
+Nodes (7): Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, createClient()
 
 ### Community 16 - "types.ts"
 Cohesion: 0.25
@@ -232,8 +220,8 @@ Cohesion: 0.20
 Nodes (9): DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuShortcut(), DropdownMenuSubContent (+1 more)
 
 ### Community 18 - "cn"
-Cohesion: 0.18
-Nodes (13): ButtonProps, Pagination(), PaginationContent, PaginationEllipsis(), PaginationItem, PaginationLink(), PaginationLinkProps, PaginationNext() (+5 more)
+Cohesion: 0.16
+Nodes (16): ButtonProps, buttonVariants, Calendar(), CalendarProps, Pagination(), PaginationContent, PaginationEllipsis(), PaginationItem (+8 more)
 
 ### Community 19 - "components.json"
 Cohesion: 0.11
@@ -243,21 +231,25 @@ Nodes (17): aliases, components, hooks, lib, ui, utils, iconLibrary, rsc (+9 mor
 Cohesion: 0.12
 Nodes (11): Menubar, MenubarCheckboxItem, MenubarContent, MenubarItem, MenubarLabel, MenubarRadioItem, MenubarSeparator, MenubarShortcut() (+3 more)
 
+### Community 21 - "provider-config-panel.tsx"
+Cohesion: 0.19
+Nodes (12): fetchProviders(), ProviderConfigItem(), ProviderConfigItemProps, ProviderConfigPanel(), ProviderFormState, AccordionContent, AccordionItem, AccordionTrigger (+4 more)
+
 ### Community 22 - "dependencies"
 Cohesion: 0.13
 Nodes (15): @aws-sdk/client-s3, dependencies, @aws-sdk/client-s3, @radix-ui/react-scroll-area, @radix-ui/react-separator, @radix-ui/react-switch, @radix-ui/react-toggle, shadcn-ui (+7 more)
 
 ### Community 23 - "TeraBoxApp"
-Cohesion: 0.13
-Nodes (10): getChunkSize(), hashBuffer(), TeraboxFileHash, isTransientTeraboxUploadError(), normalizeEntry(), resolveUploadedFile(), sleep(), teraboxAdapter (+2 more)
+Cohesion: 0.07
+Nodes (22): POST(), terabox-api, TeraBoxApp, TeraboxListEntry, buildTeraboxCredentials(), configureTeraboxUndiciTimeouts(), createTeraboxApp(), getTeraboxApiHost() (+14 more)
 
 ### Community 24 - "CloudAdapter"
-Cohesion: 0.12
-Nodes (27): ConnectAccountDialogProps, StorageOverviewProps, parseViewMode(), fetchAccounts(), fetchFolders(), MoveFileDialog(), fetchAccounts(), fetchFolder() (+19 more)
+Cohesion: 0.18
+Nodes (15): fetchAccounts(), fetchFolders(), MoveFileDialog(), MoveProgressState, overallPercent(), fetchSettings(), SelectContent, SelectItem (+7 more)
 
 ### Community 25 - "terabox.ts"
-Cohesion: 0.20
-Nodes (11): fetchAccounts(), HomeDashboard(), usagePercent(), StorageOverview(), usagePercent(), Badge(), BadgeProps, badgeVariants (+3 more)
+Cohesion: 0.23
+Nodes (11): ConnectAccountDialogProps, fetchAccounts(), HomeDashboard(), usagePercent(), StorageOverview(), StorageOverviewProps, usagePercent(), AllocationSettingsProps (+3 more)
 
 ### Community 27 - "context-menu.tsx"
 Cohesion: 0.20
@@ -268,80 +260,76 @@ Cohesion: 0.33
 Nodes (5): ToggleGroup, ToggleGroupContext, ToggleGroupItem, Toggle, toggleVariants
 
 ### Community 29 - "upload-dropzone.tsx"
-Cohesion: 0.17
-Nodes (3): terabox-api, TeraBoxApp, TeraboxListEntry
+Cohesion: 0.29
+Nodes (11): GET(), getAppUrl(), ENV_MAP, getEnvOAuthConfig(), getProviderRedirectUri(), listProviderStatuses(), resolveOAuthConfig(), rowToOAuthConfig() (+3 more)
+
+### Community 31 - "button.tsx"
+Cohesion: 0.26
+Nodes (8): ConnectS3Form(), ConnectS3FormProps, ConnectTeraboxForm(), ConnectTeraboxFormProps, Button, Input, Label, labelVariants
 
 ### Community 32 - "navigation-menu.tsx"
 Cohesion: 0.25
 Nodes (7): NavigationMenu, NavigationMenuContent, NavigationMenuIndicator, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle, NavigationMenuViewport
 
 ### Community 33 - "slider.tsx"
-Cohesion: 0.39
-Nodes (7): cookieOpts(), GET(), oauthRedirect(), PROVIDER_PARAM_MAP, RouteParams, shortError(), waitThenFinalize()
+Cohesion: 0.29
+Nodes (9): POST(), cookieOpts(), GET(), oauthRedirect(), PROVIDER_PARAM_MAP, RouteParams, shortError(), waitThenFinalize() (+1 more)
 
 ### Community 34 - "sidebar.tsx"
-Cohesion: 0.12
-Nodes (10): dropboxAdapter, GOOGLE_EXPORT_MIMES, googleDriveAdapter, SCOPES, s3Adapter, S3Credentials, NormalizedFile, OAuthProviderConfig (+2 more)
+Cohesion: 0.06
+Nodes (19): dropboxAdapter, GOOGLE_EXPORT_MIMES, googleDriveAdapter, SCOPES, getOneDriveSpecialFolder(), graphFetch(), listChildrenPaginated(), normalizeItem() (+11 more)
 
 ### Community 36 - "middleware.ts"
 Cohesion: 0.60
 Nodes (3): updateSession(), config, proxy()
 
 ### Community 37 - "allocation.ts"
-Cohesion: 0.15
-Nodes (19): GET(), PATCH(), GET(), GET(), POST(), UploadDestination, advanceRotation(), AllocationConfig (+11 more)
+Cohesion: 0.26
+Nodes (11): GET(), PATCH(), GET(), advanceRotation(), getAllocationConfig(), loadAllocationContext(), peekUploadAccount(), pickUploadAccount() (+3 more)
+
+### Community 38 - "move.ts"
+Cohesion: 0.26
+Nodes (11): isAncestorOf(), loadFile(), moveFiles(), MoveOptions, MoveProgressEvent, moveSameAccount(), resolveDestination(), Supabase (+3 more)
 
 ### Community 39 - "command.tsx"
-Cohesion: 0.50
-Nodes (3): Avatar, AvatarFallback, AvatarImage
+Cohesion: 0.36
+Nodes (6): Supabase, AccountDisconnectedError, classifyAccountError(), isAccountDisconnectedError(), isTokenExpiredError(), toAccountApiError()
 
 ### Community 40 - "terabox-client.ts"
-Cohesion: 0.27
-Nodes (8): buildTeraboxCredentials(), configureTeraboxUndiciTimeouts(), createTeraboxApp(), getTeraboxApiHost(), parseNdusToken(), requireFromHere, TeraboxSessionExtra, withTimeout()
+Cohesion: 0.48
+Nodes (5): GET(), POST(), initiateUpload(), processUpload(), Supabase
 
 ### Community 41 - "extends"
 Cohesion: 0.50
 Nodes (3): extends, next/core-web-vitals, next/typescript
 
 ### Community 42 - "allocation-settings.tsx"
-Cohesion: 0.18
-Nodes (14): ConnectTeraboxForm(), ConnectTeraboxFormProps, fetchUploadDestination(), fetchUploadStatus(), strategyLabelKey(), UploadDestinationPreview(), UploadDropzone(), UploadDropzoneProps (+6 more)
+Cohesion: 0.27
+Nodes (9): AllocationSettings(), fetchAllocation(), STRATEGIES, strategyDescKey(), strategyLabelKey(), Alert, AlertDescription, AlertTitle (+1 more)
 
 ### Community 46 - "tabs.tsx"
-Cohesion: 0.40
-Nodes (4): InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot
+Cohesion: 0.19
+Nodes (7): Avatar, AvatarFallback, AvatarImage, InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot
 
 ### Community 48 - "getAdapter"
 Cohesion: 0.50
 Nodes (3): TabsContent, TabsList, TabsTrigger
 
 ### Community 50 - "sync.ts"
-Cohesion: 0.21
-Nodes (15): POST(), POST(), POST(), saveAccount(), decryptCredentials(), encryptCredentials(), getKey(), getValidCredentials() (+7 more)
-
-### Community 56 - "@radix-ui/react-accordion"
-Cohesion: 0.17
-Nodes (12): Method A: Application / Cookies tab (easiest), Method B: Network tab, Multiple accounts, Prerequisites, Related, Security, Step 1 — Log in to TeraBox, Step 2 — Copy the NDUS token (+4 more)
+Cohesion: 0.27
+Nodes (12): POST(), decryptCredentials(), encryptCredentials(), getKey(), getValidCredentials(), ONEDRIVE_SPECIAL_FOLDERS, Supabase, syncAccountPath() (+4 more)
 
 ### Community 73 - "connect-guide-content.tsx"
-Cohesion: 0.14
-Nodes (17): ProviderConfigItem(), ConnectGuideContent(), dropboxSteps, getAppUrl(), getProviderRedirectUri(), googleSteps, ProviderSetupCard(), ProviderSetupCardProps (+9 more)
+Cohesion: 0.16
+Nodes (12): LoginForm(), RegisterForm(), ConnectGuideContent(), dropboxSteps, getAppUrl(), getProviderRedirectUri(), googleSteps, ProviderSetupCard() (+4 more)
 
 ### Community 75 - "upload.ts"
 Cohesion: 0.18
 Nodes (5): fetchFiles(), FileExplorer(), formatFileDate(), readStoredViewMode(), sortFiles()
 
-### Community 76 - "index.ts"
-Cohesion: 0.26
-Nodes (9): readStoredLanguage(), en, id, detectBrowserLanguage(), dictionaries, getDictionary(), isLanguage(), translate() (+1 more)
-
-### Community 98 - "onedrive.ts"
-Cohesion: 0.31
-Nodes (7): getOneDriveSpecialFolder(), graphFetch(), listChildrenPaginated(), normalizeItem(), oneDriveAdapter, OneDriveSpecialFolderName, SCOPES
-
 ### Community 101 - "file-explorer.tsx"
-Cohesion: 0.16
-Nodes (14): parseSortMode(), readStoredSortMode(), SORT_MODES, SortMode, ViewMode, Checkbox, Table, TableBody (+6 more)
+Cohesion: 0.19
+Nodes (11): readStoredSortMode(), SORT_MODES, Checkbox, Table, TableBody, TableCaption, TableCell, TableFooter (+3 more)
 
 ### Community 105 - "getPreviewKind"
 Cohesion: 0.33
@@ -355,49 +343,29 @@ Nodes (8): Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Comma
 Cohesion: 0.25
 Nodes (6): DrawerContent, DrawerDescription, DrawerFooter(), DrawerHeader(), DrawerOverlay, DrawerTitle
 
-### Community 109 - "Troubleshooting"
-Cohesion: 0.33
-Nodes (6): "Configured" tapi tidak bisa connect, Error 403: access_denied, File tidak muncul setelah connect, Google hasn't verified this app, redirect_uri_mismatch, Troubleshooting
-
-### Community 111 - "Langkah 1 — Buat app di Dropbox App Console"
-Cohesion: 0.40
-Nodes (5): 1.1 Buka App Console, 1.2 Pilih tipe app, 1.3 Atur permissions (scope), 1.4 Salin App key & App secret, Langkah 1 — Buat app di Dropbox App Console
-
-### Community 112 - "Langkah 2 — Google Cloud Console"
-Cohesion: 0.40
-Nodes (5): 2.1 Redirect URI production, 2.2 Branding & kebijakan (wajib verifikasi), 2.3 Submit App Verification, 2.4 Publish app (In Production), Langkah 2 — Google Cloud Console
-
-### Community 113 - "buttonVariants"
-Cohesion: 0.67
-Nodes (3): buttonVariants, Calendar(), CalendarProps
-
-### Community 116 - "Langkah 3 — Configure di SamarCloud"
-Cohesion: 0.67
-Nodes (3): 3.1 Lewat dashboard (disarankan), 3.2 Lewat `.env.local` (fallback), Langkah 3 — Configure di SamarCloud
-
-### Community 117 - "Development vs Production"
-Cohesion: 0.67
-Nodes (3): Development — izinkan user lain connect, Development vs Production, Production — Apply for Production
+### Community 114 - "radio-group.tsx"
+Cohesion: 0.12
+Nodes (9): HoverCardContent, PopoverContent, RadioGroup, RadioGroupItem, ScrollArea, ScrollBar, Slider, Switch (+1 more)
 
 ## Knowledge Gaps
-- **438 isolated node(s):** `next/core-web-vitals`, `next/typescript`, `PROVIDER_PARAM_MAP`, `RouteParams`, `PROVIDER_PARAM_MAP` (+433 more)
+- **440 isolated node(s):** `next/core-web-vitals`, `next/typescript`, `PROVIDER_PARAM_MAP`, `RouteParams`, `PROVIDER_PARAM_MAP` (+435 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **59 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **52 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `dependencies` connect `dependencies` to `carousel.tsx`, `devDependencies`, `date-fns`, `breadcrumb.tsx`, `FileExplorer`, `classnames`, `cmdk`, `embla-carousel-react`, `@hookform/resolvers`, `input-otp`, `lucide-react`, `next`, `@radix-ui/react-alert-dialog`, `@radix-ui/react-aspect-ratio`, `@radix-ui/react-avatar`, `@radix-ui/react-checkbox`, `@radix-ui/react-collapsible`, `@radix-ui/react-context-menu`, `@radix-ui/react-dialog`, `@radix-ui/react-label`, `@radix-ui/react-menubar`, `@radix-ui/react-navigation-menu`, `@radix-ui/react-popover`, `@radix-ui/react-progress`, `@radix-ui/react-radio-group`, `class-variance-authority`, `@radix-ui/react-select`, `@radix-ui/react-slider`, `@radix-ui/react-toggle-group`, `@radix-ui/react-tooltip`, `react-dom`, `react-resizable-panels`, `recharts`, `shadcn-ui`, `sonner`, `@supabase/ssr`, `@supabase/supabase-js`, `tailwind-merge`, `tailwindcss-animate`, `@tanstack/react-query`, `@tanstack/react-table`, `terabox-api`, `vaul`, `zod`, `class-variance-authority`, `hover-card.tsx`, `@radix-ui/react-tabs`, `textarea.tsx`, `react-hook-form`, `dropdown-menu.tsx`, `@radix-ui/react-accordion`?**
-  _High betweenness centrality (0.217) - this node is a cross-community bridge._
+  _High betweenness centrality (0.203) - this node is a cross-community bridge._
 - **Why does `react` connect `carousel.tsx` to `sidebar.tsx`, `dependencies`?**
-  _High betweenness centrality (0.199) - this node is a cross-community bridge._
-- **Why does `cn()` connect `cn` to `file-explorer.tsx`, `sidebar.tsx`, `carousel.tsx`, `upload-dropzone.tsx`, `index.ts`, `createClient`, `types.ts`, `utils.ts`, `menubar.tsx`, `CloudAdapter`, `terabox.ts`, `context-menu.tsx`, `alert-dialog.tsx`, `navigation-menu.tsx`, `command.tsx`, `allocation-settings.tsx`, `tabs.tsx`, `getAdapter`, `upload.ts`, `file-explorer.tsx`, `getPreviewKind`, `command.tsx`, `drawer.tsx`, `buttonVariants`, `radio-group.tsx`, `scroll-area.tsx`, `hover-card.tsx`, `slider.tsx`, `textarea.tsx`?**
-  _High betweenness centrality (0.133) - this node is a cross-community bridge._
+  _High betweenness centrality (0.187) - this node is a cross-community bridge._
+- **Why does `cn()` connect `cn` to `file-explorer.tsx`, `sidebar.tsx`, `carousel.tsx`, `upload-dropzone.tsx`, `index.ts`, `createClient`, `types.ts`, `utils.ts`, `menubar.tsx`, `provider-config-panel.tsx`, `CloudAdapter`, `terabox.ts`, `context-menu.tsx`, `alert-dialog.tsx`, `button.tsx`, `navigation-menu.tsx`, `allocation-settings.tsx`, `tabs.tsx`, `getAdapter`, `upload.ts`, `file-explorer.tsx`, `getPreviewKind`, `command.tsx`, `drawer.tsx`, `radio-group.tsx`?**
+  _High betweenness centrality (0.129) - this node is a cross-community bridge._
 - **What connects `next/core-web-vitals`, `next/typescript`, `PROVIDER_PARAM_MAP` to the rest of the system?**
-  _438 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _440 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `accounts-panel.tsx` be split into smaller, more focused modules?**
-  _Cohesion score 0.08973172987974098 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.0701344243132671 - nodes in this community are weakly interconnected._
 - **Should `sidebar.tsx` be split into smaller, more focused modules?**
-  _Cohesion score 0.05568627450980392 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05241090146750524 - nodes in this community are weakly interconnected._
 - **Should `TurnixCloud` be split into smaller, more focused modules?**
   _Cohesion score 0.0425531914893617 - nodes in this community are weakly interconnected._
