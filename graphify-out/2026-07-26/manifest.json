@@ -215,8 +215,8 @@
     "semantic_hash": ""
   },
   "components/files/file-explorer.tsx": {
-    "mtime": 1785042902.0639448,
-    "ast_hash": "586f7e61516b7a26229ec9e60c6f9cda",
+    "mtime": 1785050008.1550763,
+    "ast_hash": "357e695c5f97d4439718cd33c774c798",
     "semantic_hash": ""
   },
   "components/files/file-preview-dialog.tsx": {
@@ -570,13 +570,13 @@
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/en.ts": {
-    "mtime": 1785048768.110236,
-    "ast_hash": "a9b3832f9bcad0bcedc2fc81584a6c76",
+    "mtime": 1785049992.423689,
+    "ast_hash": "bbf183155de34310733b384597a81b8b",
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/id.ts": {
-    "mtime": 1785048777.6558983,
-    "ast_hash": "ca74d4ebc44a1751594a6c87c5d9bd57",
+    "mtime": 1785049994.2836335,
+    "ast_hash": "1944df0de2d4b91538e31fbb49f8f49d",
     "semantic_hash": ""
   },
   "lib/i18n/index.ts": {
@@ -585,8 +585,8 @@
     "semantic_hash": ""
   },
   "lib/i18n/types.ts": {
-    "mtime": 1785048762.9037411,
-    "ast_hash": "56940eb93728d1ef0d2633c0c9016278",
+    "mtime": 1785049991.9549754,
+    "ast_hash": "09ae1d4c2da98847b151750037159dcb",
     "semantic_hash": ""
   },
   "lib/oauth/popup.ts": {

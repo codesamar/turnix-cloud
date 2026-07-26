@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { FileExplorer } from "@/components/files/file-explorer";
 import { UploadDropzone } from "@/components/files/upload-dropzone";
 import { Label } from "@/components/ui/label";
@@ -24,18 +25,117 @@ async function fetchAccounts() {
   return data.accounts as CloudAccount[];
 }
 
+async function fetchFolder(id: string): Promise<FileMetadata | null> {
+  const response = await fetch(`/api/files/${id}`);
+  if (response.status === 404) return null;
+  if (!response.ok) throw new Error("Failed to fetch folder");
+  const data = await response.json();
+  return (data.file as FileMetadata) ?? null;
+}
+
+/** Walk parent_id chain from root → current folder (includes current). */
+async function fetchFolderBreadcrumbs(folderId: string): Promise<FileMetadata[]> {
+  const chain: FileMetadata[] = [];
+  const seen = new Set<string>();
+  let currentId: string | null = folderId;
+
+  while (currentId && !seen.has(currentId) && chain.length < 64) {
+    seen.add(currentId);
+    const file = await fetchFolder(currentId);
+    if (!file || !file.is_folder) break;
+    chain.unshift(file);
+    currentId = file.parent_id;
+  }
+
+  return chain;
+}
+
 export function MyDriveView() {
   const { t } = useLanguage();
   const queryClient = useQueryClient();
-  const [breadcrumbs, setBreadcrumbs] = useState<FileMetadata[]>([]);
-  const [currentFolder, setCurrentFolder] = useState<FileMetadata | null>(null);
-  const [providerFilter, setProviderFilter] = useState<string>("all");
-  const [accountFilter, setAccountFilter] = useState<string>("all");
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const folderId = searchParams.get("folder");
+  const providerFilter = searchParams.get("provider") ?? "all";
+  const accountFilter = searchParams.get("account") ?? "all";
+
+  const updateUrl = useCallback(
+    (
+      updates: {
+        folder?: string | null;
+        provider?: string | null;
+        account?: string | null;
+      },
+      mode: "push" | "replace" = "push"
+    ) => {
+      const params = new URLSearchParams(searchParams.toString());
+
+      if ("folder" in updates) {
+        if (updates.folder) params.set("folder", updates.folder);
+        else params.delete("folder");
+      }
+      if ("provider" in updates) {
+        if (updates.provider && updates.provider !== "all") {
+          params.set("provider", updates.provider);
+        } else {
+          params.delete("provider");
+        }
+      }
+      if ("account" in updates) {
+        if (updates.account && updates.account !== "all") {
+          params.set("account", updates.account);
+        } else {
+          params.delete("account");
+        }
+      }
+
+      const query = params.toString();
+      const href = query ? `${pathname}?${query}` : pathname;
+      if (mode === "replace") router.replace(href);
+      else router.push(href);
+    },
+    [pathname, router, searchParams]
+  );
 
   const { data: accounts = [] } = useQuery({
     queryKey: ["accounts"],
     queryFn: fetchAccounts,
   });
+
+  const {
+    data: folderPath = [],
+    isError: folderPathError,
+    isFetched: folderPathFetched,
+  } = useQuery({
+    queryKey: ["my-drive-path", folderId],
+    queryFn: () => fetchFolderBreadcrumbs(folderId!),
+    enabled: Boolean(folderId),
+    retry: false,
+  });
+
+  // Invalid / deleted folder → drop folder param so UI returns to root.
+  useEffect(() => {
+    if (
+      folderId &&
+      folderPathFetched &&
+      (folderPathError || folderPath.length === 0)
+    ) {
+      updateUrl({ folder: null }, "replace");
+    }
+  }, [
+    folderId,
+    folderPathFetched,
+    folderPathError,
+    folderPath.length,
+    updateUrl,
+  ]);
+
+  const breadcrumbs = folderId ? folderPath : [];
+  const currentFolder =
+    breadcrumbs.length > 0 ? breadcrumbs[breadcrumbs.length - 1]! : null;
+  const folderPathLoading = Boolean(folderId) && !folderPathFetched;
 
   const connectedProviders = useMemo(() => {
     const seen = new Set<CloudProvider>();
@@ -68,8 +168,9 @@ export function MyDriveView() {
 
   const fetchUrl = useMemo(() => {
     const params = new URLSearchParams();
-    if (currentFolder) {
-      params.set("parentId", currentFolder.id);
+    // Prefer URL folder id so listing works before breadcrumb chain finishes.
+    if (folderId) {
+      params.set("parentId", folderId);
     } else if (accountFilter !== "all") {
       params.set("accountId", accountFilter);
     } else if (providerFilter !== "all") {
@@ -77,39 +178,27 @@ export function MyDriveView() {
     }
     const query = params.toString();
     return query ? `/api/files?${query}` : "/api/files";
-  }, [currentFolder, providerFilter, accountFilter]);
-
-  function resetNavigation() {
-    setBreadcrumbs([]);
-    setCurrentFolder(null);
-  }
+  }, [folderId, providerFilter, accountFilter]);
 
   function handleProviderFilterChange(value: string) {
-    setProviderFilter(value);
-    setAccountFilter("all");
-    resetNavigation();
+    updateUrl({ provider: value, account: null, folder: null });
   }
 
   function handleAccountFilterChange(value: string) {
-    setAccountFilter(value);
-    resetNavigation();
+    updateUrl({ account: value, folder: null });
   }
 
   function handleNavigate(folder: FileMetadata) {
-    setBreadcrumbs((prev) => [...prev, folder]);
-    setCurrentFolder(folder);
+    updateUrl({ folder: folder.id });
   }
 
   function handleBreadcrumbClick(index: number) {
     if (index === -1) {
-      resetNavigation();
+      updateUrl({ folder: null });
       return;
     }
-    setBreadcrumbs((prev) => {
-      const next = prev.slice(0, index + 1);
-      setCurrentFolder(next[index] ?? null);
-      return next;
-    });
+    const target = breadcrumbs[index];
+    if (target) updateUrl({ folder: target.id });
   }
 
   function handleUploadComplete() {
@@ -178,11 +267,13 @@ export function MyDriveView() {
         </div>
       </div>
 
-      <UploadDropzone
-        parentPath={currentFolder?.provider_file_id ?? "/"}
-        folderName={currentFolder?.name ?? null}
-        onComplete={handleUploadComplete}
-      />
+      {!folderPathLoading && (
+        <UploadDropzone
+          parentPath={currentFolder?.provider_file_id ?? "/"}
+          folderName={currentFolder?.name ?? null}
+          onComplete={handleUploadComplete}
+        />
+      )}
       <FileExplorer
         queryKey="my-drive"
         fetchUrl={fetchUrl}
