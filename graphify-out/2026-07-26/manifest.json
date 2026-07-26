@@ -75,8 +75,8 @@
     "semantic_hash": ""
   },
   "app/api/accounts/route.ts": {
-    "mtime": 1785047057.8255494,
-    "ast_hash": "1c42cde93810ed07193e8ce2e82686da",
+    "mtime": 1785047277.0923707,
+    "ast_hash": "f428406e629edf43208dac0cdea17af0",
     "semantic_hash": ""
   },
   "app/api/accounts/terabox/connect/route.ts": {
@@ -827,6 +827,11 @@
   "components/dashboard/storage-overview.tsx": {
     "mtime": 1785045891.9121308,
     "ast_hash": "ca30581e4c2316f1f0dc04457e08f293",
+    "semantic_hash": ""
+  },
+  "lib/supabase/admin.ts": {
+    "mtime": 1785047269.7487743,
+    "ast_hash": "9f1d7a2faa5b20f6964e0830dab57eb1",
     "semantic_hash": ""
   }
 }

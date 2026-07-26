@@ -120,7 +120,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_dashboard_layout",
-      "community": 34,
+      "community": 2,
       "community_name": "sidebar.tsx",
       "norm_label": "layout.tsx"
     },
@@ -131,7 +131,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "app_dashboard_layout_dashboardlayout",
-      "community": 34,
+      "community": 2,
       "community_name": "sidebar.tsx",
       "norm_label": "dashboardlayout()"
     },
@@ -142,8 +142,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_dashboard_my_drive_page",
-      "community": 21,
-      "community_name": "database.ts",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "page.tsx"
     },
     {
@@ -153,8 +153,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "app_dashboard_my_drive_page_mydrivepage",
-      "community": 21,
-      "community_name": "database.ts",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "mydrivepage()"
     },
     {
@@ -186,7 +186,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_dashboard_quota_page",
-      "community": 0,
+      "community": 37,
       "community_name": "accounts-panel.tsx",
       "norm_label": "page.tsx"
     },
@@ -197,7 +197,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "app_dashboard_quota_page_quotapage",
-      "community": 0,
+      "community": 37,
       "community_name": "accounts-panel.tsx",
       "norm_label": "quotapage()"
     },
@@ -208,8 +208,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_dashboard_recent_page",
-      "community": 24,
-      "community_name": "CloudAdapter",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "page.tsx"
     },
     {
@@ -219,8 +219,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "app_dashboard_recent_page_recentpage",
-      "community": 24,
-      "community_name": "CloudAdapter",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "recentpage()"
     },
     {
@@ -230,8 +230,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_dashboard_settings_page",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 21,
+      "community_name": "database.ts",
       "norm_label": "page.tsx"
     },
     {
@@ -241,8 +241,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "app_dashboard_settings_page_settingspage",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 21,
+      "community_name": "database.ts",
       "norm_label": "settingspage()"
     },
     {
@@ -252,8 +252,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_dashboard_shared_with_me_page",
-      "community": 24,
-      "community_name": "CloudAdapter",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "page.tsx"
     },
     {
@@ -263,8 +263,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "app_dashboard_shared_with_me_page_sharedpage",
-      "community": 24,
-      "community_name": "CloudAdapter",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "sharedpage()"
     },
     {
@@ -274,8 +274,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_dashboard_starred_page",
-      "community": 24,
-      "community_name": "CloudAdapter",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "page.tsx"
     },
     {
@@ -285,8 +285,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "app_dashboard_starred_page_starredpage",
-      "community": 24,
-      "community_name": "CloudAdapter",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "starredpage()"
     },
     {
@@ -428,8 +428,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_api_accounts_connect_route",
-      "community": 1,
-      "community_name": "file-explorer.tsx",
+      "community": 34,
+      "community_name": "sidebar.tsx",
       "norm_label": "route.ts"
     },
     {
@@ -439,8 +439,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "app_api_accounts_connect_route_post",
-      "community": 1,
-      "community_name": "file-explorer.tsx",
+      "community": 34,
+      "community_name": "sidebar.tsx",
       "norm_label": "post()"
     },
     {
@@ -458,7 +458,7 @@
       "label": "GET()",
       "file_type": "code",
       "source_file": "app/api/accounts/route.ts",
-      "source_location": "L5",
+      "source_location": "L8",
       "_origin": "ast",
       "id": "app_api_accounts_route_get",
       "community": 34,
@@ -466,10 +466,21 @@
       "norm_label": "get()"
     },
     {
+      "label": "deleteFileMetadataBatched()",
+      "file_type": "code",
+      "source_file": "app/api/accounts/route.ts",
+      "source_location": "L22",
+      "_origin": "ast",
+      "id": "app_api_accounts_route_deletefilemetadatabatched",
+      "community": 34,
+      "community_name": "sidebar.tsx",
+      "norm_label": "deletefilemetadatabatched()"
+    },
+    {
       "label": "DELETE()",
       "file_type": "code",
       "source_file": "app/api/accounts/route.ts",
-      "source_location": "L19",
+      "source_location": "L67",
       "_origin": "ast",
       "id": "app_api_accounts_route_delete",
       "community": 34,
@@ -483,8 +494,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_api_accounts_terabox_connect_route",
-      "community": 1,
-      "community_name": "file-explorer.tsx",
+      "community": 34,
+      "community_name": "sidebar.tsx",
       "norm_label": "route.ts"
     },
     {
@@ -494,8 +505,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "app_api_accounts_terabox_connect_route_post",
-      "community": 1,
-      "community_name": "file-explorer.tsx",
+      "community": 34,
+      "community_name": "sidebar.tsx",
       "norm_label": "post()"
     },
     {
@@ -736,8 +747,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_api_providers_provider_route",
-      "community": 35,
-      "community_name": "FileExplorer",
+      "community": 34,
+      "community_name": "sidebar.tsx",
       "norm_label": "route.ts"
     },
     {
@@ -747,8 +758,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "app_api_providers_provider_route_provider_param_map",
-      "community": 35,
-      "community_name": "FileExplorer",
+      "community": 34,
+      "community_name": "sidebar.tsx",
       "norm_label": "provider_param_map"
     },
     {
@@ -758,8 +769,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "app_api_providers_provider_route_routeparams",
-      "community": 35,
-      "community_name": "FileExplorer",
+      "community": 34,
+      "community_name": "sidebar.tsx",
       "norm_label": "routeparams"
     },
     {
@@ -769,8 +780,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "app_api_providers_provider_route_patch",
-      "community": 35,
-      "community_name": "FileExplorer",
+      "community": 34,
+      "community_name": "sidebar.tsx",
       "norm_label": "patch()"
     },
     {
@@ -780,8 +791,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_api_providers_route",
-      "community": 34,
-      "community_name": "sidebar.tsx",
+      "community": 35,
+      "community_name": "FileExplorer",
       "norm_label": "route.ts"
     },
     {
@@ -791,8 +802,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "app_api_providers_route_get",
-      "community": 34,
-      "community_name": "sidebar.tsx",
+      "community": 35,
+      "community_name": "FileExplorer",
       "norm_label": "get()"
     },
     {
@@ -835,8 +846,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_api_sync_run_route",
-      "community": 34,
-      "community_name": "sidebar.tsx",
+      "community": 1,
+      "community_name": "file-explorer.tsx",
       "norm_label": "route.ts"
     },
     {
@@ -846,8 +857,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "app_api_sync_run_route_post",
-      "community": 34,
-      "community_name": "sidebar.tsx",
+      "community": 1,
+      "community_name": "file-explorer.tsx",
       "norm_label": "post()"
     },
     {
@@ -879,8 +890,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_api_uploads_route",
-      "community": 38,
-      "community_name": "chart.tsx",
+      "community": 28,
+      "community_name": "alert-dialog.tsx",
       "norm_label": "route.ts"
     },
     {
@@ -890,8 +901,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "app_api_uploads_route_get",
-      "community": 38,
-      "community_name": "chart.tsx",
+      "community": 28,
+      "community_name": "alert-dialog.tsx",
       "norm_label": "get()"
     },
     {
@@ -901,8 +912,8 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "app_api_uploads_route_post",
-      "community": 38,
-      "community_name": "chart.tsx",
+      "community": 28,
+      "community_name": "alert-dialog.tsx",
       "norm_label": "post()"
     },
     {
@@ -1198,7 +1209,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_accounts_accounts_panel",
-      "community": 0,
+      "community": 37,
       "community_name": "accounts-panel.tsx",
       "norm_label": "accounts-panel.tsx"
     },
@@ -1209,7 +1220,7 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "components_accounts_accounts_panel_confirmaction",
-      "community": 0,
+      "community": 37,
       "community_name": "accounts-panel.tsx",
       "norm_label": "confirmaction"
     },
@@ -1220,7 +1231,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "components_accounts_accounts_panel_fetchaccounts",
-      "community": 0,
+      "community": 37,
       "community_name": "accounts-panel.tsx",
       "norm_label": "fetchaccounts()"
     },
@@ -1231,7 +1242,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "components_accounts_accounts_panel_fetchproviders",
-      "community": 0,
+      "community": 37,
       "community_name": "accounts-panel.tsx",
       "norm_label": "fetchproviders()"
     },
@@ -1242,7 +1253,7 @@
       "source_location": "L66",
       "_origin": "ast",
       "id": "components_accounts_accounts_panel_accountspanel",
-      "community": 0,
+      "community": 37,
       "community_name": "accounts-panel.tsx",
       "norm_label": "accountspanel()"
     },
@@ -1253,8 +1264,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_accounts_connect_account_dialog",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 21,
+      "community_name": "database.ts",
       "norm_label": "connect-account-dialog.tsx"
     },
     {
@@ -1264,8 +1275,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "components_accounts_connect_account_dialog_providericons",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 21,
+      "community_name": "database.ts",
       "norm_label": "providericons"
     },
     {
@@ -1275,8 +1286,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "components_accounts_connect_account_dialog_fetchproviders",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 21,
+      "community_name": "database.ts",
       "norm_label": "fetchproviders()"
     },
     {
@@ -1286,8 +1297,8 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "components_accounts_connect_account_dialog_connectaccountdialogprops",
-      "community": 38,
-      "community_name": "chart.tsx",
+      "community": 21,
+      "community_name": "database.ts",
       "norm_label": "connectaccountdialogprops"
     },
     {
@@ -1297,8 +1308,8 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "components_accounts_connect_account_dialog_connectaccountdialog",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 21,
+      "community_name": "database.ts",
       "norm_label": "connectaccountdialog()"
     },
     {
@@ -1308,8 +1319,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_accounts_connect_s3_form",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 21,
+      "community_name": "database.ts",
       "norm_label": "connect-s3-form.tsx"
     },
     {
@@ -1319,8 +1330,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "components_accounts_connect_s3_form_connects3formprops",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 21,
+      "community_name": "database.ts",
       "norm_label": "connects3formprops"
     },
     {
@@ -1330,8 +1341,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "components_accounts_connect_s3_form_connects3form",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 21,
+      "community_name": "database.ts",
       "norm_label": "connects3form()"
     },
     {
@@ -1341,8 +1352,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_accounts_connect_terabox_form",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 21,
+      "community_name": "database.ts",
       "norm_label": "connect-terabox-form.tsx"
     },
     {
@@ -1352,8 +1363,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "components_accounts_connect_terabox_form_connectteraboxformprops",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 21,
+      "community_name": "database.ts",
       "norm_label": "connectteraboxformprops"
     },
     {
@@ -1363,8 +1374,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "components_accounts_connect_terabox_form_connectteraboxform",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 21,
+      "community_name": "database.ts",
       "norm_label": "connectteraboxform()"
     },
     {
@@ -1396,8 +1407,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_accounts_provider_config_panel",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 25,
+      "community_name": "terabox.ts",
       "norm_label": "provider-config-panel.tsx"
     },
     {
@@ -1407,8 +1418,8 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "components_accounts_provider_config_panel_fetchproviders",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 25,
+      "community_name": "terabox.ts",
       "norm_label": "fetchproviders()"
     },
     {
@@ -1418,8 +1429,8 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "components_accounts_provider_config_panel_providerformstate",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 25,
+      "community_name": "terabox.ts",
       "norm_label": "providerformstate"
     },
     {
@@ -1429,8 +1440,8 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "components_accounts_provider_config_panel_providerconfigpanel",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 25,
+      "community_name": "terabox.ts",
       "norm_label": "providerconfigpanel()"
     },
     {
@@ -1440,8 +1451,8 @@
       "source_location": "L140",
       "_origin": "ast",
       "id": "components_accounts_provider_config_panel_providerconfigitemprops",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 25,
+      "community_name": "terabox.ts",
       "norm_label": "providerconfigitemprops"
     },
     {
@@ -1451,8 +1462,8 @@
       "source_location": "L147",
       "_origin": "ast",
       "id": "components_accounts_provider_config_panel_providerconfigitem",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 25,
+      "community_name": "terabox.ts",
       "norm_label": "providerconfigitem()"
     },
     {
@@ -1473,8 +1484,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "components_auth_login_form_loginform",
-      "community": 10,
-      "community_name": "index.ts",
+      "community": 21,
+      "community_name": "database.ts",
       "norm_label": "loginform()"
     },
     {
@@ -1495,8 +1506,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "components_auth_register_form_registerform",
-      "community": 10,
-      "community_name": "index.ts",
+      "community": 21,
+      "community_name": "database.ts",
       "norm_label": "registerform()"
     },
     {
@@ -1638,8 +1649,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "components_dashboard_storage_overview_storageoverviewprops",
-      "community": 38,
-      "community_name": "chart.tsx",
+      "community": 0,
+      "community_name": "accounts-panel.tsx",
       "norm_label": "storageoverviewprops"
     },
     {
@@ -1682,8 +1693,8 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "components_files_file_explorer_fileexplorerprops",
-      "community": 21,
-      "community_name": "database.ts",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "fileexplorerprops"
     },
     {
@@ -1693,8 +1704,8 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "components_files_file_explorer_fetchfiles",
-      "community": 24,
-      "community_name": "CloudAdapter",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "fetchfiles()"
     },
     {
@@ -1704,8 +1715,8 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "components_files_file_explorer_readstoredviewmode",
-      "community": 24,
-      "community_name": "CloudAdapter",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "readstoredviewmode()"
     },
     {
@@ -1748,8 +1759,8 @@
       "source_location": "L241",
       "_origin": "ast",
       "id": "components_files_file_explorer_fileexplorer",
-      "community": 24,
-      "community_name": "CloudAdapter",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "fileexplorer()"
     },
     {
@@ -1759,8 +1770,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_files_file_preview_dialog",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 8,
+      "community_name": "upload-dropzone.tsx",
       "norm_label": "file-preview-dialog.tsx"
     },
     {
@@ -1770,8 +1781,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "components_files_file_preview_dialog_filepreviewdialogprops",
-      "community": 21,
-      "community_name": "database.ts",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "filepreviewdialogprops"
     },
     {
@@ -1792,8 +1803,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_files_move_file_dialog",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 24,
+      "community_name": "CloudAdapter",
       "norm_label": "move-file-dialog.tsx"
     },
     {
@@ -1803,8 +1814,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "components_files_move_file_dialog_movefiledialogprops",
-      "community": 21,
-      "community_name": "database.ts",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "movefiledialogprops"
     },
     {
@@ -1814,8 +1825,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "components_files_move_file_dialog_fetchaccounts",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 24,
+      "community_name": "CloudAdapter",
       "norm_label": "fetchaccounts()"
     },
     {
@@ -1825,8 +1836,8 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "components_files_move_file_dialog_fetchfolders",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 24,
+      "community_name": "CloudAdapter",
       "norm_label": "fetchfolders()"
     },
     {
@@ -1836,8 +1847,8 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "components_files_move_file_dialog_movefiledialog",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 24,
+      "community_name": "CloudAdapter",
       "norm_label": "movefiledialog()"
     },
     {
@@ -1847,8 +1858,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_files_my_drive_view",
-      "community": 21,
-      "community_name": "database.ts",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "my-drive-view.tsx"
     },
     {
@@ -1858,8 +1869,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "components_files_my_drive_view_mydriveview",
-      "community": 21,
-      "community_name": "database.ts",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "mydriveview()"
     },
     {
@@ -1869,8 +1880,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_files_upload_dropzone",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 29,
+      "community_name": "upload-dropzone.tsx",
       "norm_label": "upload-dropzone.tsx"
     },
     {
@@ -1880,8 +1891,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "components_files_upload_dropzone_uploaddropzoneprops",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 29,
+      "community_name": "upload-dropzone.tsx",
       "norm_label": "uploaddropzoneprops"
     },
     {
@@ -1891,8 +1902,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "components_files_upload_dropzone_activeupload",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 29,
+      "community_name": "upload-dropzone.tsx",
       "norm_label": "activeupload"
     },
     {
@@ -1902,8 +1913,8 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "components_files_upload_dropzone_uploadsessionstatus",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 29,
+      "community_name": "upload-dropzone.tsx",
       "norm_label": "uploadsessionstatus"
     },
     {
@@ -1924,8 +1935,8 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "components_files_upload_dropzone_strategylabelkey",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 29,
+      "community_name": "upload-dropzone.tsx",
       "norm_label": "strategylabelkey()"
     },
     {
@@ -1935,8 +1946,8 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "components_files_upload_dropzone_fetchuploaddestination",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 29,
+      "community_name": "upload-dropzone.tsx",
       "norm_label": "fetchuploaddestination()"
     },
     {
@@ -1946,8 +1957,8 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "components_files_upload_dropzone_fetchuploadstatus",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 29,
+      "community_name": "upload-dropzone.tsx",
       "norm_label": "fetchuploadstatus()"
     },
     {
@@ -1957,8 +1968,8 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "components_files_upload_dropzone_uploadfilewithprogress",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 29,
+      "community_name": "upload-dropzone.tsx",
       "norm_label": "uploadfilewithprogress()"
     },
     {
@@ -1968,8 +1979,8 @@
       "source_location": "L116",
       "_origin": "ast",
       "id": "components_files_upload_dropzone_uploaddestinationpreview",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 29,
+      "community_name": "upload-dropzone.tsx",
       "norm_label": "uploaddestinationpreview()"
     },
     {
@@ -1979,8 +1990,8 @@
       "source_location": "L179",
       "_origin": "ast",
       "id": "components_files_upload_dropzone_uploaddropzone",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 29,
+      "community_name": "upload-dropzone.tsx",
       "norm_label": "uploaddropzone()"
     },
     {
@@ -2056,8 +2067,8 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "components_guide_connect_guide_content_providersetupcardprops",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 26,
+      "community_name": "command.tsx",
       "norm_label": "providersetupcardprops"
     },
     {
@@ -2067,8 +2078,8 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "components_guide_connect_guide_content_providersetupcard",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 21,
+      "community_name": "database.ts",
       "norm_label": "providersetupcard()"
     },
     {
@@ -2144,8 +2155,8 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "components_layout_app_sidebar_appsidebarnav",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 2,
+      "community_name": "sidebar.tsx",
       "norm_label": "appsidebarnav()"
     },
     {
@@ -2155,8 +2166,8 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "components_layout_app_sidebar_signoutbutton",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 2,
+      "community_name": "sidebar.tsx",
       "norm_label": "signoutbutton()"
     },
     {
@@ -2166,8 +2177,8 @@
       "source_location": "L94",
       "_origin": "ast",
       "id": "components_layout_app_sidebar_appsidebar",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 2,
+      "community_name": "sidebar.tsx",
       "norm_label": "appsidebar()"
     },
     {
@@ -2188,7 +2199,7 @@
       "source_location": "L136",
       "_origin": "ast",
       "id": "components_layout_app_sidebar_dashboardshell",
-      "community": 34,
+      "community": 2,
       "community_name": "sidebar.tsx",
       "norm_label": "dashboardshell()"
     },
@@ -2232,8 +2243,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_providers_language_provider",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 21,
+      "community_name": "database.ts",
       "norm_label": "language-provider.tsx"
     },
     {
@@ -2243,8 +2254,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "components_providers_language_provider_languagecontextvalue",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 26,
+      "community_name": "command.tsx",
       "norm_label": "languagecontextvalue"
     },
     {
@@ -2254,8 +2265,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "components_providers_language_provider_languagecontext",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 21,
+      "community_name": "database.ts",
       "norm_label": "languagecontext"
     },
     {
@@ -2265,8 +2276,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "components_providers_language_provider_readstoredlanguage",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 26,
+      "community_name": "command.tsx",
       "norm_label": "readstoredlanguage()"
     },
     {
@@ -2276,8 +2287,8 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "components_providers_language_provider_applydocumentlanguage",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 10,
+      "community_name": "index.ts",
       "norm_label": "applydocumentlanguage()"
     },
     {
@@ -2287,8 +2298,8 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "components_providers_language_provider_languageprovider",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 10,
+      "community_name": "index.ts",
       "norm_label": "languageprovider()"
     },
     {
@@ -2298,8 +2309,8 @@
       "source_location": "L110",
       "_origin": "ast",
       "id": "components_providers_language_provider_uselanguage",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 21,
+      "community_name": "database.ts",
       "norm_label": "uselanguage()"
     },
     {
@@ -2309,8 +2320,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_settings_allocation_settings",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 24,
+      "community_name": "CloudAdapter",
       "norm_label": "allocation-settings.tsx"
     },
     {
@@ -2320,8 +2331,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "components_settings_allocation_settings_strategies",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 24,
+      "community_name": "CloudAdapter",
       "norm_label": "strategies"
     },
     {
@@ -2331,8 +2342,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "components_settings_allocation_settings_strategylabelkey",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 24,
+      "community_name": "CloudAdapter",
       "norm_label": "strategylabelkey()"
     },
     {
@@ -2342,8 +2353,8 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "components_settings_allocation_settings_strategydesckey",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 24,
+      "community_name": "CloudAdapter",
       "norm_label": "strategydesckey()"
     },
     {
@@ -2353,8 +2364,8 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "components_settings_allocation_settings_fetchallocation",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 24,
+      "community_name": "CloudAdapter",
       "norm_label": "fetchallocation()"
     },
     {
@@ -2364,8 +2375,8 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "components_settings_allocation_settings_allocationsettingsprops",
-      "community": 38,
-      "community_name": "chart.tsx",
+      "community": 24,
+      "community_name": "CloudAdapter",
       "norm_label": "allocationsettingsprops"
     },
     {
@@ -2375,8 +2386,8 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "components_settings_allocation_settings_allocationsettings",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 24,
+      "community_name": "CloudAdapter",
       "norm_label": "allocationsettings()"
     },
     {
@@ -2386,8 +2397,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_settings_settings_page_content",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 21,
+      "community_name": "database.ts",
       "norm_label": "settings-page-content.tsx"
     },
     {
@@ -2397,8 +2408,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_settings_settings_page_content_settingspagecontent",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 21,
+      "community_name": "database.ts",
       "norm_label": "settingspagecontent()"
     },
     {
@@ -2419,8 +2430,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "components_settings_user_settings_fetchsettings",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 21,
+      "community_name": "database.ts",
       "norm_label": "fetchsettings()"
     },
     {
@@ -2430,8 +2441,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "components_settings_user_settings_usersettings",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 21,
+      "community_name": "database.ts",
       "norm_label": "usersettings()"
     },
     {
@@ -2441,8 +2452,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_ui_accordion",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 25,
+      "community_name": "terabox.ts",
       "norm_label": "accordion.tsx"
     },
     {
@@ -2452,8 +2463,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "components_ui_accordion_accordionitem",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 25,
+      "community_name": "terabox.ts",
       "norm_label": "accordionitem"
     },
     {
@@ -2463,8 +2474,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "components_ui_accordion_accordiontrigger",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 25,
+      "community_name": "terabox.ts",
       "norm_label": "accordiontrigger"
     },
     {
@@ -2474,8 +2485,8 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "components_ui_accordion_accordioncontent",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 25,
+      "community_name": "terabox.ts",
       "norm_label": "accordioncontent"
     },
     {
@@ -2485,8 +2496,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_ui_alert_dialog",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 40,
+      "community_name": "breadcrumb.tsx",
       "norm_label": "alert-dialog.tsx"
     },
     {
@@ -2496,8 +2507,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "components_ui_alert_dialog_alertdialogoverlay",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 40,
+      "community_name": "breadcrumb.tsx",
       "norm_label": "alertdialogoverlay"
     },
     {
@@ -2507,8 +2518,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "components_ui_alert_dialog_alertdialogcontent",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 40,
+      "community_name": "breadcrumb.tsx",
       "norm_label": "alertdialogcontent"
     },
     {
@@ -2518,8 +2529,8 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "components_ui_alert_dialog_alertdialogheader",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 40,
+      "community_name": "breadcrumb.tsx",
       "norm_label": "alertdialogheader()"
     },
     {
@@ -2529,8 +2540,8 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "components_ui_alert_dialog_alertdialogfooter",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 40,
+      "community_name": "breadcrumb.tsx",
       "norm_label": "alertdialogfooter()"
     },
     {
@@ -2540,8 +2551,8 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "components_ui_alert_dialog_alertdialogtitle",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 40,
+      "community_name": "breadcrumb.tsx",
       "norm_label": "alertdialogtitle"
     },
     {
@@ -2551,8 +2562,8 @@
       "source_location": "L88",
       "_origin": "ast",
       "id": "components_ui_alert_dialog_alertdialogdescription",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 40,
+      "community_name": "breadcrumb.tsx",
       "norm_label": "alertdialogdescription"
     },
     {
@@ -2562,8 +2573,8 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "components_ui_alert_dialog_alertdialogaction",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 40,
+      "community_name": "breadcrumb.tsx",
       "norm_label": "alertdialogaction"
     },
     {
@@ -2573,8 +2584,8 @@
       "source_location": "L113",
       "_origin": "ast",
       "id": "components_ui_alert_dialog_alertdialogcancel",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 40,
+      "community_name": "breadcrumb.tsx",
       "norm_label": "alertdialogcancel"
     },
     {
@@ -2584,8 +2595,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_ui_alert",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 24,
+      "community_name": "CloudAdapter",
       "norm_label": "alert.tsx"
     },
     {
@@ -2595,8 +2606,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_ui_alert_alertvariants",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 24,
+      "community_name": "CloudAdapter",
       "norm_label": "alertvariants"
     },
     {
@@ -2606,8 +2617,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "components_ui_alert_alert",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 24,
+      "community_name": "CloudAdapter",
       "norm_label": "alert"
     },
     {
@@ -2617,8 +2628,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "components_ui_alert_alerttitle",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 24,
+      "community_name": "CloudAdapter",
       "norm_label": "alerttitle"
     },
     {
@@ -2628,8 +2639,8 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "components_ui_alert_alertdescription",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 24,
+      "community_name": "CloudAdapter",
       "norm_label": "alertdescription"
     },
     {
@@ -2694,8 +2705,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_ui_badge",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 25,
+      "community_name": "terabox.ts",
       "norm_label": "badge.tsx"
     },
     {
@@ -2705,8 +2716,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "components_ui_badge_badgevariants",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 25,
+      "community_name": "terabox.ts",
       "norm_label": "badgevariants"
     },
     {
@@ -2716,8 +2727,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "components_ui_badge_badgeprops",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 25,
+      "community_name": "terabox.ts",
       "norm_label": "badgeprops"
     },
     {
@@ -2727,8 +2738,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "components_ui_badge_badge",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 25,
+      "community_name": "terabox.ts",
       "norm_label": "badge()"
     },
     {
@@ -2738,8 +2749,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_ui_breadcrumb",
-      "community": 40,
-      "community_name": "breadcrumb.tsx",
+      "community": 18,
+      "community_name": "cn",
       "norm_label": "breadcrumb.tsx"
     },
     {
@@ -2749,8 +2760,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "components_ui_breadcrumb_breadcrumb",
-      "community": 40,
-      "community_name": "breadcrumb.tsx",
+      "community": 18,
+      "community_name": "cn",
       "norm_label": "breadcrumb"
     },
     {
@@ -2760,8 +2771,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "components_ui_breadcrumb_breadcrumblist",
-      "community": 40,
-      "community_name": "breadcrumb.tsx",
+      "community": 18,
+      "community_name": "cn",
       "norm_label": "breadcrumblist"
     },
     {
@@ -2771,8 +2782,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "components_ui_breadcrumb_breadcrumbitem",
-      "community": 40,
-      "community_name": "breadcrumb.tsx",
+      "community": 18,
+      "community_name": "cn",
       "norm_label": "breadcrumbitem"
     },
     {
@@ -2782,8 +2793,8 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "components_ui_breadcrumb_breadcrumblink",
-      "community": 40,
-      "community_name": "breadcrumb.tsx",
+      "community": 18,
+      "community_name": "cn",
       "norm_label": "breadcrumblink"
     },
     {
@@ -2793,8 +2804,8 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "components_ui_breadcrumb_breadcrumbpage",
-      "community": 40,
-      "community_name": "breadcrumb.tsx",
+      "community": 18,
+      "community_name": "cn",
       "norm_label": "breadcrumbpage"
     },
     {
@@ -2804,8 +2815,8 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "components_ui_breadcrumb_breadcrumbseparator",
-      "community": 40,
-      "community_name": "breadcrumb.tsx",
+      "community": 18,
+      "community_name": "cn",
       "norm_label": "breadcrumbseparator()"
     },
     {
@@ -2815,8 +2826,8 @@
       "source_location": "L91",
       "_origin": "ast",
       "id": "components_ui_breadcrumb_breadcrumbellipsis",
-      "community": 40,
-      "community_name": "breadcrumb.tsx",
+      "community": 18,
+      "community_name": "cn",
       "norm_label": "breadcrumbellipsis()"
     },
     {
@@ -2826,8 +2837,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_ui_button",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 21,
+      "community_name": "database.ts",
       "norm_label": "button.tsx"
     },
     {
@@ -2859,8 +2870,8 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "components_ui_button_button",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 21,
+      "community_name": "database.ts",
       "norm_label": "button"
     },
     {
@@ -3288,8 +3299,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_ui_command",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 39,
+      "community_name": "command.tsx",
       "norm_label": "command.tsx"
     },
     {
@@ -3299,8 +3310,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "components_ui_command_command",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 39,
+      "community_name": "command.tsx",
       "norm_label": "command"
     },
     {
@@ -3310,8 +3321,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "components_ui_command_commanddialog",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 39,
+      "community_name": "command.tsx",
       "norm_label": "commanddialog()"
     },
     {
@@ -3321,8 +3332,8 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "components_ui_command_commandinput",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 39,
+      "community_name": "command.tsx",
       "norm_label": "commandinput"
     },
     {
@@ -3332,8 +3343,8 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "components_ui_command_commandlist",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 39,
+      "community_name": "command.tsx",
       "norm_label": "commandlist"
     },
     {
@@ -3343,8 +3354,8 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "components_ui_command_commandempty",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 39,
+      "community_name": "command.tsx",
       "norm_label": "commandempty"
     },
     {
@@ -3354,8 +3365,8 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "components_ui_command_commandgroup",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 39,
+      "community_name": "command.tsx",
       "norm_label": "commandgroup"
     },
     {
@@ -3365,8 +3376,8 @@
       "source_location": "L99",
       "_origin": "ast",
       "id": "components_ui_command_commandseparator",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 39,
+      "community_name": "command.tsx",
       "norm_label": "commandseparator"
     },
     {
@@ -3376,8 +3387,8 @@
       "source_location": "L111",
       "_origin": "ast",
       "id": "components_ui_command_commanditem",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 39,
+      "community_name": "command.tsx",
       "norm_label": "commanditem"
     },
     {
@@ -3387,8 +3398,8 @@
       "source_location": "L127",
       "_origin": "ast",
       "id": "components_ui_command_commandshortcut",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 39,
+      "community_name": "command.tsx",
       "norm_label": "commandshortcut()"
     },
     {
@@ -3508,8 +3519,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_ui_dialog",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 8,
+      "community_name": "upload-dropzone.tsx",
       "norm_label": "dialog.tsx"
     },
     {
@@ -3519,8 +3530,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "components_ui_dialog_dialogoverlay",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 8,
+      "community_name": "upload-dropzone.tsx",
       "norm_label": "dialogoverlay"
     },
     {
@@ -3530,8 +3541,8 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "components_ui_dialog_dialogcontent",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 8,
+      "community_name": "upload-dropzone.tsx",
       "norm_label": "dialogcontent"
     },
     {
@@ -3541,8 +3552,8 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "components_ui_dialog_dialogheader",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 8,
+      "community_name": "upload-dropzone.tsx",
       "norm_label": "dialogheader()"
     },
     {
@@ -3552,8 +3563,8 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "components_ui_dialog_dialogfooter",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 8,
+      "community_name": "upload-dropzone.tsx",
       "norm_label": "dialogfooter()"
     },
     {
@@ -3563,8 +3574,8 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "components_ui_dialog_dialogtitle",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 8,
+      "community_name": "upload-dropzone.tsx",
       "norm_label": "dialogtitle"
     },
     {
@@ -3574,8 +3585,8 @@
       "source_location": "L99",
       "_origin": "ast",
       "id": "components_ui_dialog_dialogdescription",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 8,
+      "community_name": "upload-dropzone.tsx",
       "norm_label": "dialogdescription"
     },
     {
@@ -4564,8 +4575,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_ui_select",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 24,
+      "community_name": "CloudAdapter",
       "norm_label": "select.tsx"
     },
     {
@@ -4575,8 +4586,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "components_ui_select_selecttrigger",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 24,
+      "community_name": "CloudAdapter",
       "norm_label": "selecttrigger"
     },
     {
@@ -4586,8 +4597,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "components_ui_select_selectscrollupbutton",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 24,
+      "community_name": "CloudAdapter",
       "norm_label": "selectscrollupbutton"
     },
     {
@@ -4597,8 +4608,8 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "components_ui_select_selectscrolldownbutton",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 24,
+      "community_name": "CloudAdapter",
       "norm_label": "selectscrolldownbutton"
     },
     {
@@ -4608,8 +4619,8 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "components_ui_select_selectcontent",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 24,
+      "community_name": "CloudAdapter",
       "norm_label": "selectcontent"
     },
     {
@@ -4619,8 +4630,8 @@
       "source_location": "L102",
       "_origin": "ast",
       "id": "components_ui_select_selectlabel",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 24,
+      "community_name": "CloudAdapter",
       "norm_label": "selectlabel"
     },
     {
@@ -4630,8 +4641,8 @@
       "source_location": "L114",
       "_origin": "ast",
       "id": "components_ui_select_selectitem",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 24,
+      "community_name": "CloudAdapter",
       "norm_label": "selectitem"
     },
     {
@@ -4641,8 +4652,8 @@
       "source_location": "L136",
       "_origin": "ast",
       "id": "components_ui_select_selectseparator",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 24,
+      "community_name": "CloudAdapter",
       "norm_label": "selectseparator"
     },
     {
@@ -4674,8 +4685,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_ui_sheet",
-      "community": 25,
-      "community_name": "terabox.ts",
+      "community": 2,
+      "community_name": "sidebar.tsx",
       "norm_label": "sheet.tsx"
     },
     {
@@ -4685,8 +4696,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "components_ui_sheet_sheetoverlay",
-      "community": 25,
-      "community_name": "terabox.ts",
+      "community": 2,
+      "community_name": "sidebar.tsx",
       "norm_label": "sheetoverlay"
     },
     {
@@ -4696,8 +4707,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "components_ui_sheet_sheetvariants",
-      "community": 25,
-      "community_name": "terabox.ts",
+      "community": 2,
+      "community_name": "sidebar.tsx",
       "norm_label": "sheetvariants"
     },
     {
@@ -4707,8 +4718,8 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "components_ui_sheet_sheetcontentprops",
-      "community": 25,
-      "community_name": "terabox.ts",
+      "community": 2,
+      "community_name": "sidebar.tsx",
       "norm_label": "sheetcontentprops"
     },
     {
@@ -4718,8 +4729,8 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "components_ui_sheet_sheetcontent",
-      "community": 25,
-      "community_name": "terabox.ts",
+      "community": 2,
+      "community_name": "sidebar.tsx",
       "norm_label": "sheetcontent"
     },
     {
@@ -4729,8 +4740,8 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "components_ui_sheet_sheetheader",
-      "community": 25,
-      "community_name": "terabox.ts",
+      "community": 2,
+      "community_name": "sidebar.tsx",
       "norm_label": "sheetheader()"
     },
     {
@@ -4740,8 +4751,8 @@
       "source_location": "L91",
       "_origin": "ast",
       "id": "components_ui_sheet_sheetfooter",
-      "community": 25,
-      "community_name": "terabox.ts",
+      "community": 2,
+      "community_name": "sidebar.tsx",
       "norm_label": "sheetfooter()"
     },
     {
@@ -4751,8 +4762,8 @@
       "source_location": "L105",
       "_origin": "ast",
       "id": "components_ui_sheet_sheettitle",
-      "community": 25,
-      "community_name": "terabox.ts",
+      "community": 2,
+      "community_name": "sidebar.tsx",
       "norm_label": "sheettitle"
     },
     {
@@ -4762,8 +4773,8 @@
       "source_location": "L117",
       "_origin": "ast",
       "id": "components_ui_sheet_sheetdescription",
-      "community": 25,
-      "community_name": "terabox.ts",
+      "community": 2,
+      "community_name": "sidebar.tsx",
       "norm_label": "sheetdescription"
     },
     {
@@ -5081,8 +5092,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_ui_skeleton",
-      "community": 18,
-      "community_name": "cn",
+      "community": 2,
+      "community_name": "sidebar.tsx",
       "norm_label": "skeleton.tsx"
     },
     {
@@ -5092,8 +5103,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "components_ui_skeleton_skeleton",
-      "community": 18,
-      "community_name": "cn",
+      "community": 2,
+      "community_name": "sidebar.tsx",
       "norm_label": "skeleton()"
     },
     {
@@ -5158,8 +5169,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_ui_switch",
-      "community": 46,
-      "community_name": "tabs.tsx",
+      "community": 25,
+      "community_name": "terabox.ts",
       "norm_label": "switch.tsx"
     },
     {
@@ -5169,8 +5180,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "components_ui_switch_switch",
-      "community": 46,
-      "community_name": "tabs.tsx",
+      "community": 25,
+      "community_name": "terabox.ts",
       "norm_label": "switch"
     },
     {
@@ -5279,8 +5290,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_ui_tabs",
-      "community": 26,
-      "community_name": "command.tsx",
+      "community": 46,
+      "community_name": "tabs.tsx",
       "norm_label": "tabs.tsx"
     },
     {
@@ -5290,8 +5301,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "components_ui_tabs_tabslist",
-      "community": 26,
-      "community_name": "command.tsx",
+      "community": 46,
+      "community_name": "tabs.tsx",
       "norm_label": "tabslist"
     },
     {
@@ -5301,8 +5312,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "components_ui_tabs_tabstrigger",
-      "community": 26,
-      "community_name": "command.tsx",
+      "community": 46,
+      "community_name": "tabs.tsx",
       "norm_label": "tabstrigger"
     },
     {
@@ -5312,8 +5323,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "components_ui_tabs_tabscontent",
-      "community": 26,
-      "community_name": "command.tsx",
+      "community": 46,
+      "community_name": "tabs.tsx",
       "norm_label": "tabscontent"
     },
     {
@@ -5499,8 +5510,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "lib_adapters_config_provider_labels",
-      "community": 35,
-      "community_name": "FileExplorer",
+      "community": 29,
+      "community_name": "upload-dropzone.tsx",
       "norm_label": "provider_labels"
     },
     {
@@ -5510,8 +5521,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "lib_adapters_config_credentials_providers",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 21,
+      "community_name": "database.ts",
       "norm_label": "credentials_providers"
     },
     {
@@ -6302,8 +6313,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "lib_adapters_types_cloudadapter",
-      "community": 16,
-      "community_name": "types.ts",
+      "community": 23,
+      "community_name": "TeraBoxApp",
       "norm_label": "cloudadapter"
     },
     {
@@ -6313,8 +6324,8 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "lib_adapters_types_cloudadapter_listfiles",
-      "community": 16,
-      "community_name": "types.ts",
+      "community": 23,
+      "community_name": "TeraBoxApp",
       "norm_label": ".listfiles()"
     },
     {
@@ -6324,8 +6335,8 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "lib_adapters_types_cloudadapter_getfile",
-      "community": 16,
-      "community_name": "types.ts",
+      "community": 23,
+      "community_name": "TeraBoxApp",
       "norm_label": ".getfile()"
     },
     {
@@ -6335,8 +6346,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "lib_adapters_types_cloudadapter_createfolder",
-      "community": 16,
-      "community_name": "types.ts",
+      "community": 23,
+      "community_name": "TeraBoxApp",
       "norm_label": ".createfolder()"
     },
     {
@@ -6346,8 +6357,8 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "lib_adapters_types_cloudadapter_rename",
-      "community": 16,
-      "community_name": "types.ts",
+      "community": 23,
+      "community_name": "TeraBoxApp",
       "norm_label": ".rename()"
     },
     {
@@ -6357,8 +6368,8 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "lib_adapters_types_cloudadapter_move",
-      "community": 16,
-      "community_name": "types.ts",
+      "community": 23,
+      "community_name": "TeraBoxApp",
       "norm_label": ".move()"
     },
     {
@@ -6368,8 +6379,8 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "lib_adapters_types_cloudadapter_deletefile",
-      "community": 16,
-      "community_name": "types.ts",
+      "community": 23,
+      "community_name": "TeraBoxApp",
       "norm_label": ".deletefile()"
     },
     {
@@ -6379,8 +6390,8 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "lib_adapters_types_cloudadapter_download",
-      "community": 16,
-      "community_name": "types.ts",
+      "community": 23,
+      "community_name": "TeraBoxApp",
       "norm_label": ".download()"
     },
     {
@@ -6390,8 +6401,8 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "lib_adapters_types_cloudadapter_upload",
-      "community": 16,
-      "community_name": "types.ts",
+      "community": 23,
+      "community_name": "TeraBoxApp",
       "norm_label": ".upload()"
     },
     {
@@ -6401,8 +6412,8 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "lib_adapters_types_cloudadapter_getquota",
-      "community": 16,
-      "community_name": "types.ts",
+      "community": 23,
+      "community_name": "TeraBoxApp",
       "norm_label": ".getquota()"
     },
     {
@@ -6412,8 +6423,8 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "lib_adapters_types_cloudadapter_refreshtoken",
-      "community": 16,
-      "community_name": "types.ts",
+      "community": 23,
+      "community_name": "TeraBoxApp",
       "norm_label": ".refreshtoken()"
     },
     {
@@ -6423,8 +6434,8 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "lib_adapters_types_cloudadapter_getauthurl",
-      "community": 16,
-      "community_name": "types.ts",
+      "community": 23,
+      "community_name": "TeraBoxApp",
       "norm_label": ".getauthurl()"
     },
     {
@@ -6434,8 +6445,8 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "lib_adapters_types_cloudadapter_exchangecode",
-      "community": 16,
-      "community_name": "types.ts",
+      "community": 23,
+      "community_name": "TeraBoxApp",
       "norm_label": ".exchangecode()"
     },
     {
@@ -6533,8 +6544,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_i18n_dictionaries_en",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 26,
+      "community_name": "command.tsx",
       "norm_label": "en.ts"
     },
     {
@@ -6544,8 +6555,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "lib_i18n_dictionaries_en_en",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 26,
+      "community_name": "command.tsx",
       "norm_label": "en"
     },
     {
@@ -6555,8 +6566,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_i18n_dictionaries_id",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 26,
+      "community_name": "command.tsx",
       "norm_label": "id.ts"
     },
     {
@@ -6566,8 +6577,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "lib_i18n_dictionaries_id_id",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 26,
+      "community_name": "command.tsx",
       "norm_label": "id"
     },
     {
@@ -6577,8 +6588,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_i18n_index",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 26,
+      "community_name": "command.tsx",
       "norm_label": "index.ts"
     },
     {
@@ -6588,8 +6599,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "lib_i18n_index_dictionaries",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 26,
+      "community_name": "command.tsx",
       "norm_label": "dictionaries"
     },
     {
@@ -6599,8 +6610,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "lib_i18n_index_getdictionary",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 26,
+      "community_name": "command.tsx",
       "norm_label": "getdictionary()"
     },
     {
@@ -6610,8 +6621,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "lib_i18n_index_translate",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 26,
+      "community_name": "command.tsx",
       "norm_label": "translate()"
     },
     {
@@ -6621,8 +6632,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "lib_i18n_index_islanguage",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 26,
+      "community_name": "command.tsx",
       "norm_label": "islanguage()"
     },
     {
@@ -6632,8 +6643,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "lib_i18n_index_detectbrowserlanguage",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 26,
+      "community_name": "command.tsx",
       "norm_label": "detectbrowserlanguage()"
     },
     {
@@ -6643,8 +6654,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_i18n_types",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 26,
+      "community_name": "command.tsx",
       "norm_label": "types.ts"
     },
     {
@@ -6654,8 +6665,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_i18n_types_language",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 26,
+      "community_name": "command.tsx",
       "norm_label": "language"
     },
     {
@@ -6665,8 +6676,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "lib_i18n_types_translationkey",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 26,
+      "community_name": "command.tsx",
       "norm_label": "translationkey"
     },
     {
@@ -6676,8 +6687,8 @@
       "source_location": "L250",
       "_origin": "ast",
       "id": "lib_i18n_types_dictionary",
-      "community": 33,
-      "community_name": "onedrive.ts",
+      "community": 26,
+      "community_name": "command.tsx",
       "norm_label": "dictionary"
     },
     {
@@ -6687,8 +6698,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_oauth_popup",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 35,
+      "community_name": "FileExplorer",
       "norm_label": "popup.ts"
     },
     {
@@ -6698,8 +6709,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "lib_oauth_popup_oauthmessagepayload",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 35,
+      "community_name": "FileExplorer",
       "norm_label": "oauthmessagepayload"
     },
     {
@@ -6709,7 +6720,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "lib_oauth_popup_isoauthmessage",
-      "community": 0,
+      "community": 37,
       "community_name": "accounts-panel.tsx",
       "norm_label": "isoauthmessage()"
     },
@@ -6720,8 +6731,8 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "lib_oauth_popup_buildoauthreturnurl",
-      "community": 75,
-      "community_name": "@radix-ui/react-switch",
+      "community": 35,
+      "community_name": "FileExplorer",
       "norm_label": "buildoauthreturnurl()"
     },
     {
@@ -6731,7 +6742,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "lib_oauth_popup_openoauthpopup",
-      "community": 0,
+      "community": 37,
       "community_name": "accounts-panel.tsx",
       "norm_label": "openoauthpopup()"
     },
@@ -6775,8 +6786,8 @@
       "source_location": "L92",
       "_origin": "ast",
       "id": "lib_services_accounts_saveaccount",
-      "community": 1,
-      "community_name": "file-explorer.tsx",
+      "community": 34,
+      "community_name": "sidebar.tsx",
       "norm_label": "saveaccount()"
     },
     {
@@ -7083,8 +7094,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "lib_services_provider_config_providerstatus",
-      "community": 35,
-      "community_name": "FileExplorer",
+      "community": 25,
+      "community_name": "terabox.ts",
       "norm_label": "providerstatus"
     },
     {
@@ -7171,8 +7182,8 @@
       "source_location": "L178",
       "_origin": "ast",
       "id": "lib_services_provider_config_saveproviderconfig",
-      "community": 35,
-      "community_name": "FileExplorer",
+      "community": 34,
+      "community_name": "sidebar.tsx",
       "norm_label": "saveproviderconfig()"
     },
     {
@@ -7259,8 +7270,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_services_upload",
-      "community": 38,
-      "community_name": "chart.tsx",
+      "community": 28,
+      "community_name": "alert-dialog.tsx",
       "norm_label": "upload.ts"
     },
     {
@@ -7270,8 +7281,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "lib_services_upload_supabase",
-      "community": 38,
-      "community_name": "chart.tsx",
+      "community": 28,
+      "community_name": "alert-dialog.tsx",
       "norm_label": "supabase"
     },
     {
@@ -7281,8 +7292,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "lib_services_upload_initiateupload",
-      "community": 38,
-      "community_name": "chart.tsx",
+      "community": 28,
+      "community_name": "alert-dialog.tsx",
       "norm_label": "initiateupload()"
     },
     {
@@ -7292,9 +7303,31 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "lib_services_upload_processupload",
-      "community": 38,
-      "community_name": "chart.tsx",
+      "community": 28,
+      "community_name": "alert-dialog.tsx",
       "norm_label": "processupload()"
+    },
+    {
+      "label": "admin.ts",
+      "file_type": "code",
+      "source_file": "lib/supabase/admin.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "lib_supabase_admin",
+      "community": 34,
+      "community_name": "sidebar.tsx",
+      "norm_label": "admin.ts"
+    },
+    {
+      "label": "createAdminClient()",
+      "file_type": "code",
+      "source_file": "lib/supabase/admin.ts",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "lib_supabase_admin_createadminclient",
+      "community": 34,
+      "community_name": "sidebar.tsx",
+      "norm_label": "createadminclient()"
     },
     {
       "label": "client.ts",
@@ -7369,8 +7402,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_types_database",
-      "community": 38,
-      "community_name": "chart.tsx",
+      "community": 28,
+      "community_name": "alert-dialog.tsx",
       "norm_label": "database.ts"
     },
     {
@@ -7391,8 +7424,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "lib_types_database_accountstatus",
-      "community": 38,
-      "community_name": "chart.tsx",
+      "community": 28,
+      "community_name": "alert-dialog.tsx",
       "norm_label": "accountstatus"
     },
     {
@@ -7402,8 +7435,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "lib_types_database_uploadstatus",
-      "community": 38,
-      "community_name": "chart.tsx",
+      "community": 28,
+      "community_name": "alert-dialog.tsx",
       "norm_label": "uploadstatus"
     },
     {
@@ -7424,8 +7457,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "lib_types_database_profile",
-      "community": 38,
-      "community_name": "chart.tsx",
+      "community": 28,
+      "community_name": "alert-dialog.tsx",
       "norm_label": "profile"
     },
     {
@@ -7435,8 +7468,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "lib_types_database_cloudaccount",
-      "community": 38,
-      "community_name": "chart.tsx",
+      "community": 24,
+      "community_name": "CloudAdapter",
       "norm_label": "cloudaccount"
     },
     {
@@ -7446,8 +7479,8 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "lib_types_database_filemetadata",
-      "community": 21,
-      "community_name": "database.ts",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "filemetadata"
     },
     {
@@ -7457,8 +7490,8 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "lib_types_database_filemetadatawithaccount",
-      "community": 21,
-      "community_name": "database.ts",
+      "community": 101,
+      "community_name": "file-explorer.tsx",
       "norm_label": "filemetadatawithaccount"
     },
     {
@@ -7468,8 +7501,8 @@
       "source_location": "L64",
       "_origin": "ast",
       "id": "lib_types_database_uploadsession",
-      "community": 38,
-      "community_name": "chart.tsx",
+      "community": 28,
+      "community_name": "alert-dialog.tsx",
       "norm_label": "uploadsession"
     },
     {
@@ -7479,8 +7512,8 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "lib_types_database_allocationconfig",
-      "community": 38,
-      "community_name": "chart.tsx",
+      "community": 28,
+      "community_name": "alert-dialog.tsx",
       "norm_label": "allocationconfig"
     },
     {
@@ -7490,8 +7523,8 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "lib_types_database_json",
-      "community": 38,
-      "community_name": "chart.tsx",
+      "community": 28,
+      "community_name": "alert-dialog.tsx",
       "norm_label": "json"
     },
     {
@@ -7501,8 +7534,8 @@
       "source_location": "L86",
       "_origin": "ast",
       "id": "lib_types_database_database",
-      "community": 38,
-      "community_name": "chart.tsx",
+      "community": 28,
+      "community_name": "alert-dialog.tsx",
       "norm_label": "database"
     },
     {
@@ -7534,8 +7567,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_utils_account_display",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 29,
+      "community_name": "upload-dropzone.tsx",
       "norm_label": "account-display.ts"
     },
     {
@@ -7545,8 +7578,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "lib_utils_account_display_accountlike",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 35,
+      "community_name": "FileExplorer",
       "norm_label": "accountlike"
     },
     {
@@ -7556,8 +7589,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "lib_utils_account_display_getaccountdisplayname",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 29,
+      "community_name": "upload-dropzone.tsx",
       "norm_label": "getaccountdisplayname()"
     },
     {
@@ -7567,8 +7600,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "lib_utils_account_display_getfileaccountlabel",
-      "community": 0,
-      "community_name": "accounts-panel.tsx",
+      "community": 29,
+      "community_name": "upload-dropzone.tsx",
       "norm_label": "getfileaccountlabel()"
     },
     {
@@ -7776,7 +7809,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_utils_invalidate_file_queries",
-      "community": 0,
+      "community": 37,
       "community_name": "accounts-panel.tsx",
       "norm_label": "invalidate-file-queries.ts"
     },
@@ -7787,7 +7820,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "lib_utils_invalidate_file_queries_file_query_keys",
-      "community": 0,
+      "community": 37,
       "community_name": "accounts-panel.tsx",
       "norm_label": "file_query_keys"
     },
@@ -7798,7 +7831,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "lib_utils_invalidate_file_queries_invalidatefilequeries",
-      "community": 0,
+      "community": 37,
       "community_name": "accounts-panel.tsx",
       "norm_label": "invalidatefilequeries()"
     },
@@ -7985,8 +8018,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "package_dependencies_aws_sdk_client_s3",
-      "community": 22,
-      "community_name": "dependencies",
+      "community": 42,
+      "community_name": "@aws-sdk/client-s3",
       "norm_label": "@aws-sdk/client-s3"
     },
     {
@@ -7996,8 +8029,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "aws_sdk_client_s3",
-      "community": 22,
-      "community_name": "dependencies",
+      "community": 42,
+      "community_name": "@aws-sdk/client-s3",
       "norm_label": "@aws-sdk/client-s3"
     },
     {
@@ -8711,8 +8744,8 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "package_dependencies_class_variance_authority",
-      "community": 28,
-      "community_name": "alert-dialog.tsx",
+      "community": 22,
+      "community_name": "dependencies",
       "norm_label": "class-variance-authority"
     },
     {
@@ -8722,8 +8755,8 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "class_variance_authority",
-      "community": 28,
-      "community_name": "alert-dialog.tsx",
+      "community": 22,
+      "community_name": "dependencies",
       "norm_label": "class-variance-authority"
     },
     {
@@ -12868,7 +12901,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/api/accounts/route.ts",
-      "source_location": "L19",
+      "source_location": "L67",
       "weight": 1.0,
       "_origin": "ast",
       "source": "app_api_accounts_route",
@@ -12879,7 +12912,18 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/api/accounts/route.ts",
-      "source_location": "L5",
+      "source_location": "L22",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "app_api_accounts_route",
+      "target": "app_api_accounts_route_deletefilemetadatabatched",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/api/accounts/route.ts",
+      "source_location": "L8",
       "weight": 1.0,
       "_origin": "ast",
       "source": "app_api_accounts_route",
@@ -12891,7 +12935,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/api/accounts/route.ts",
-      "source_location": "L3",
+      "source_location": "L4",
       "weight": 1.0,
       "_origin": "ast",
       "source": "app_api_accounts_route",
@@ -12903,7 +12947,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "app/api/accounts/route.ts",
-      "source_location": "L3",
+      "source_location": "L4",
       "weight": 1.0,
       "_origin": "ast",
       "source": "app_api_accounts_route",
@@ -12919,7 +12963,7 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "app_api_accounts_route",
-      "target": "lib_supabase_server",
+      "target": "lib_supabase_admin",
       "confidence_score": 1.0
     },
     {
@@ -12928,6 +12972,30 @@
       "confidence": "EXTRACTED",
       "source_file": "app/api/accounts/route.ts",
       "source_location": "L2",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "app_api_accounts_route",
+      "target": "lib_supabase_admin_createadminclient",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/api/accounts/route.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "app_api_accounts_route",
+      "target": "lib_supabase_server",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/api/accounts/route.ts",
+      "source_location": "L3",
       "weight": 1.0,
       "_origin": "ast",
       "source": "app_api_accounts_route",
@@ -12940,7 +13008,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/api/accounts/route.ts",
-      "source_location": "L15",
+      "source_location": "L18",
       "weight": 1.0,
       "_origin": "ast",
       "source": "app_api_accounts_route_get",
@@ -12952,7 +13020,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/api/accounts/route.ts",
-      "source_location": "L6",
+      "source_location": "L9",
       "weight": 1.0,
       "_origin": "ast",
       "source": "app_api_accounts_route_get",
@@ -12962,9 +13030,33 @@
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
+      "source_file": "app/api/accounts/route.ts",
+      "source_location": "L105",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "app_api_accounts_route_delete",
+      "target": "app_api_accounts_route_deletefilemetadatabatched",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/api/accounts/route.ts",
-      "source_location": "L20",
+      "source_location": "L103",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "app_api_accounts_route_delete",
+      "target": "lib_supabase_admin_createadminclient"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/api/accounts/route.ts",
+      "source_location": "L68",
       "weight": 1.0,
       "_origin": "ast",
       "source": "app_api_accounts_route_delete",
@@ -30426,6 +30518,17 @@
       "_origin": "ast",
       "source": "lib_services_upload",
       "target": "lib_types_database_uploadsession",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/supabase/admin.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "lib_supabase_admin",
+      "target": "lib_supabase_admin_createadminclient",
       "confidence_score": 1.0
     },
     {

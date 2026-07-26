@@ -3,6 +3,13 @@ export type Language = "en" | "id";
 export type TranslationKey =
   | "nav.home"
   | "nav.myDrive"
+  | "myDrive.title"
+  | "myDrive.subtitle"
+  | "myDrive.providerFilter"
+  | "myDrive.providerAll"
+  | "myDrive.accountFilter"
+  | "myDrive.accountAll"
+  | "myDrive.empty"
   | "nav.recent"
   | "nav.starred"
   | "nav.shared"

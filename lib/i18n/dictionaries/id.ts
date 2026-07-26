@@ -3,6 +3,13 @@ import type { Dictionary } from "@/lib/i18n/types";
 export const id: Dictionary = {
   "nav.home": "Beranda",
   "nav.myDrive": "Drive Saya",
+  "myDrive.title": "Drive Saya",
+  "myDrive.subtitle": "Jelajahi dan kelola file dari akun yang terhubung",
+  "myDrive.providerFilter": "Provider",
+  "myDrive.providerAll": "Semua provider",
+  "myDrive.accountFilter": "Akun",
+  "myDrive.accountAll": "Semua akun",
+  "myDrive.empty": "Belum ada file. Hubungkan akun lalu sinkron, atau unggah file.",
   "nav.recent": "Terbaru",
   "nav.starred": "Berbintang",
   "nav.shared": "Dibagikan ke Saya",

@@ -22,11 +22,21 @@ export async function GET(request: Request) {
   const starred = searchParams.get("starred");
   const shared = searchParams.get("shared");
   const accountId = searchParams.get("accountId");
+  const provider = searchParams.get("provider");
+
+  // Inner join when filtering by provider so PostgREST can match cloud_accounts.provider
+  const select = provider
+    ? "*, cloud_accounts!inner(provider, label, email)"
+    : "*, cloud_accounts(provider, label, email)";
 
   let query = supabase
     .from("file_metadata")
-    .select("*, cloud_accounts(provider, label, email)")
+    .select(select)
     .eq("user_id", user.id);
+
+  if (provider) {
+    query = query.eq("cloud_accounts.provider", provider);
+  }
 
   if (recent) {
     query = query.order("modified_at", { ascending: false }).limit(50);

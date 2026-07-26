@@ -3,6 +3,13 @@ import type { Dictionary } from "@/lib/i18n/types";
 export const en: Dictionary = {
   "nav.home": "Home",
   "nav.myDrive": "My Drive",
+  "myDrive.title": "My Drive",
+  "myDrive.subtitle": "Browse and manage files across connected accounts",
+  "myDrive.providerFilter": "Provider",
+  "myDrive.providerAll": "All providers",
+  "myDrive.accountFilter": "Account",
+  "myDrive.accountAll": "All accounts",
+  "myDrive.empty": "No files yet. Connect an account and sync, or upload files.",
   "nav.recent": "Recent",
   "nav.starred": "Starred",
   "nav.shared": "Shared with Me",
