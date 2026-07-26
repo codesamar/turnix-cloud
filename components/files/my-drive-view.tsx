@@ -3,7 +3,15 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { FileExplorer } from "@/components/files/file-explorer";
+import {
+  DEFAULT_SORT_MODE,
+  DEFAULT_VIEW_MODE,
+  FileExplorer,
+  parseSortMode,
+  parseViewMode,
+  type SortMode,
+  type ViewMode,
+} from "@/components/files/file-explorer";
 import { UploadDropzone } from "@/components/files/upload-dropzone";
 import { Label } from "@/components/ui/label";
 import {
@@ -60,6 +68,8 @@ export function MyDriveView() {
   const folderId = searchParams.get("folder");
   const providerFilter = searchParams.get("provider") ?? "all";
   const accountFilter = searchParams.get("account") ?? "all";
+  const sortMode = parseSortMode(searchParams.get("sort"));
+  const viewMode = parseViewMode(searchParams.get("view"));
 
   const updateUrl = useCallback(
     (
@@ -67,6 +77,8 @@ export function MyDriveView() {
         folder?: string | null;
         provider?: string | null;
         account?: string | null;
+        sort?: SortMode | null;
+        view?: ViewMode | null;
       },
       mode: "push" | "replace" = "push"
     ) => {
@@ -88,6 +100,20 @@ export function MyDriveView() {
           params.set("account", updates.account);
         } else {
           params.delete("account");
+        }
+      }
+      if ("sort" in updates) {
+        if (updates.sort && updates.sort !== DEFAULT_SORT_MODE) {
+          params.set("sort", updates.sort);
+        } else {
+          params.delete("sort");
+        }
+      }
+      if ("view" in updates) {
+        if (updates.view && updates.view !== DEFAULT_VIEW_MODE) {
+          params.set("view", updates.view);
+        } else {
+          params.delete("view");
         }
       }
 
@@ -201,6 +227,14 @@ export function MyDriveView() {
     if (target) updateUrl({ folder: target.id });
   }
 
+  function handleSortModeChange(mode: SortMode) {
+    updateUrl({ sort: mode }, "replace");
+  }
+
+  function handleViewModeChange(mode: ViewMode) {
+    updateUrl({ view: mode }, "replace");
+  }
+
   function handleUploadComplete() {
     queryClient.invalidateQueries({ queryKey: ["my-drive"] });
   }
@@ -281,6 +315,10 @@ export function MyDriveView() {
         breadcrumbs={breadcrumbs}
         onBreadcrumbClick={handleBreadcrumbClick}
         emptyMessage={t("myDrive.empty")}
+        sortMode={sortMode}
+        onSortModeChange={handleSortModeChange}
+        viewMode={viewMode}
+        onViewModeChange={handleViewModeChange}
       />
     </div>
   );

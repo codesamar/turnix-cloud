@@ -1,3 +1,4 @@
+import { createRequire } from "node:module";
 import type { ProviderCredentials } from "@/lib/adapters/types";
 import type { TeraBoxApp } from "terabox-api";
 import { withTimeout } from "@/lib/utils/with-timeout";
@@ -12,6 +13,36 @@ export const DEFAULT_TERABOX_BASE_URL = "https://www.terabox.com";
 
 /** Keep connect/login responsive if terabox.com hangs. */
 const TERABOX_SESSION_TIMEOUT_MS = 20_000;
+/** CDN connect often exceeds undici's default 10s connectTimeout. */
+const TERABOX_UNDICI_CONNECT_TIMEOUT_MS = 60_000;
+
+const requireFromHere = createRequire(import.meta.url);
+let undiciTimeoutsConfigured = false;
+
+function configureTeraboxUndiciTimeouts() {
+  if (undiciTimeoutsConfigured) return;
+  undiciTimeoutsConfigured = true;
+
+  try {
+    const undiciPath = requireFromHere.resolve("undici", {
+      paths: [requireFromHere.resolve("terabox-api/package.json")],
+    });
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const undici = requireFromHere(undiciPath) as {
+      Agent: new (options: Record<string, unknown>) => unknown;
+      setGlobalDispatcher: (dispatcher: unknown) => void;
+    };
+    undici.setGlobalDispatcher(
+      new undici.Agent({
+        connectTimeout: TERABOX_UNDICI_CONNECT_TIMEOUT_MS,
+        headersTimeout: 120_000,
+        bodyTimeout: 300_000,
+      })
+    );
+  } catch {
+    // Best-effort — retries in upload still cover transient CDN failures.
+  }
+}
 
 export function parseNdusToken(input: string): string {
   const trimmed = input.trim();
@@ -29,6 +60,8 @@ export async function createTeraboxApp(
   if (!ndusToken) {
     throw new Error("NDUS token is required");
   }
+
+  configureTeraboxUndiciTimeouts();
 
   const { TeraBoxApp } = await import("terabox-api");
   const app = new TeraBoxApp(ndusToken);

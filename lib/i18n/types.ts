@@ -261,6 +261,8 @@ export type TranslationKey =
   | "files.sortNameDesc"
   | "files.sortDateNewest"
   | "files.sortDateOldest"
+  | "files.selectedCount"
+  | "files.unselectAll"
   | "common.placeholder.name";
 
 export type Dictionary = Record<TranslationKey, string>;

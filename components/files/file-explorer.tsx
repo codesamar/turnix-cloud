@@ -52,18 +52,31 @@ import { FilePreviewDialog } from "@/components/files/file-preview-dialog";
 import { MoveFileDialog } from "@/components/files/move-file-dialog";
 import { useLanguage } from "@/components/providers/language-provider";
 
-type ViewMode = "list" | "grid";
-type SortMode = "name-asc" | "name-desc" | "date-newest" | "date-oldest";
+export type ViewMode = "list" | "grid";
+export type SortMode = "name-asc" | "name-desc" | "date-newest" | "date-oldest";
 
 const VIEW_STORAGE_KEY = "samarcloud.fileView";
 const SORT_STORAGE_KEY = "samarcloud.fileSort";
 
-const SORT_MODES: SortMode[] = [
+export const SORT_MODES: SortMode[] = [
   "name-asc",
   "name-desc",
   "date-newest",
   "date-oldest",
 ];
+
+export const DEFAULT_SORT_MODE: SortMode = "name-asc";
+export const DEFAULT_VIEW_MODE: ViewMode = "list";
+
+export function parseSortMode(value: string | null | undefined): SortMode {
+  return SORT_MODES.includes(value as SortMode)
+    ? (value as SortMode)
+    : DEFAULT_SORT_MODE;
+}
+
+export function parseViewMode(value: string | null | undefined): ViewMode {
+  return value === "grid" || value === "list" ? value : DEFAULT_VIEW_MODE;
+}
 
 interface FileExplorerProps {
   queryKey: string;
@@ -73,6 +86,11 @@ interface FileExplorerProps {
   onNavigate?: (folder: FileMetadata) => void;
   breadcrumbs?: FileMetadata[];
   onBreadcrumbClick?: (index: number) => void;
+  /** When set with onSortModeChange, sort is controlled by the parent (e.g. URL). */
+  sortMode?: SortMode;
+  onSortModeChange?: (mode: SortMode) => void;
+  viewMode?: ViewMode;
+  onViewModeChange?: (mode: ViewMode) => void;
 }
 
 async function fetchFiles(url: string) {
@@ -94,6 +112,21 @@ function readStoredSortMode(): SortMode {
   return SORT_MODES.includes(stored as SortMode)
     ? (stored as SortMode)
     : "name-asc";
+}
+
+function formatFileDate(
+  value: string | null | undefined,
+  language: string
+): string {
+  if (!value) return "—";
+  const locale = language === "id" ? "id-ID" : "en-US";
+  return new Date(value).toLocaleString(locale, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 function sortFiles(
@@ -301,31 +334,54 @@ export function FileExplorer({
   onNavigate,
   breadcrumbs,
   onBreadcrumbClick,
+  sortMode: sortModeProp,
+  onSortModeChange,
+  viewMode: viewModeProp,
+  onViewModeChange,
 }: FileExplorerProps) {
-  const { t } = useLanguage();
-  const [viewMode, setViewMode] = useState<ViewMode>("list");
-  const [sortMode, setSortMode] = useState<SortMode>("name-asc");
+  const { t, language } = useLanguage();
+  const [internalViewMode, setInternalViewMode] =
+    useState<ViewMode>(DEFAULT_VIEW_MODE);
+  const [internalSortMode, setInternalSortMode] =
+    useState<SortMode>(DEFAULT_SORT_MODE);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [previewFile, setPreviewFile] = useState<FileMetadata | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [moveOpen, setMoveOpen] = useState(false);
   const [moveFiles, setMoveFiles] = useState<FileMetadata[]>([]);
 
+  const sortControlled = sortModeProp !== undefined;
+  const viewControlled = viewModeProp !== undefined;
+  const sortMode = sortControlled ? sortModeProp : internalSortMode;
+  const viewMode = viewControlled ? viewModeProp : internalViewMode;
+
   useEffect(() => {
-    setViewMode(readStoredViewMode());
-    setSortMode(readStoredSortMode());
-  }, []);
+    if (!viewControlled) setInternalViewMode(readStoredViewMode());
+    if (!sortControlled) setInternalSortMode(readStoredSortMode());
+  }, [sortControlled, viewControlled]);
+
+  useEffect(() => {
+    setSelected(new Set());
+  }, [fetchUrl]);
 
   function handleViewModeChange(value: string) {
     if (value !== "list" && value !== "grid") return;
-    setViewMode(value);
+    if (onViewModeChange) {
+      onViewModeChange(value);
+      return;
+    }
+    setInternalViewMode(value);
     window.localStorage.setItem(VIEW_STORAGE_KEY, value);
   }
 
   function handleSortModeChange(value: string) {
     if (!SORT_MODES.includes(value as SortMode)) return;
     const next = value as SortMode;
-    setSortMode(next);
+    if (onSortModeChange) {
+      onSortModeChange(next);
+      return;
+    }
+    setInternalSortMode(next);
     window.localStorage.setItem(SORT_STORAGE_KEY, next);
   }
 
@@ -347,6 +403,10 @@ export function FileExplorer({
       return next;
     });
   }, []);
+
+  function clearSelection() {
+    setSelected(new Set());
+  }
 
   async function handleStar(file: FileMetadata) {
     await fetch(`/api/files/${file.id}`, {
@@ -472,10 +532,13 @@ export function FileExplorer({
       </div>
 
       {selected.size > 0 && (
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <span className="text-sm text-muted-foreground">
-            {selected.size} selected
+            {t("files.selectedCount").replace("{count}", String(selected.size))}
           </span>
+          <Button variant="ghost" size="sm" onClick={clearSelection}>
+            {t("files.unselectAll")}
+          </Button>
           <Button
             variant="outline"
             size="sm"
@@ -556,10 +619,8 @@ export function FileExplorer({
                   <TableCell className="text-muted-foreground text-sm">
                     {file.is_folder ? "—" : formatBytes(file.size)}
                   </TableCell>
-                  <TableCell className="text-muted-foreground text-sm">
-                    {file.modified_at
-                      ? new Date(file.modified_at).toLocaleDateString()
-                      : "—"}
+                  <TableCell className="text-muted-foreground text-sm whitespace-nowrap">
+                    {formatFileDate(file.modified_at, language)}
                   </TableCell>
                   <TableCell onClick={(e) => e.stopPropagation()}>
                     <div className="flex items-center justify-end gap-1">
@@ -655,12 +716,23 @@ export function FileExplorer({
                           )}
                         </div>
                         {showProvider && (
-                          <p className="truncate text-xs text-muted-foreground">
+                          <p
+                            className="break-all text-xs leading-snug text-muted-foreground"
+                            title={getFileAccountLabel(file.cloud_accounts)}
+                          >
                             {getFileAccountLabel(file.cloud_accounts)}
                           </p>
                         )}
                         <p className="text-xs text-muted-foreground">
-                          {file.is_folder ? "—" : formatBytes(file.size)}
+                          <span>
+                            {file.is_folder ? "—" : formatBytes(file.size)}
+                          </span>
+                          <span className="mx-1.5 text-muted-foreground/50">
+                            ·
+                          </span>
+                          <span>
+                            {formatFileDate(file.modified_at, language)}
+                          </span>
                         </p>
                       </div>
                       <div

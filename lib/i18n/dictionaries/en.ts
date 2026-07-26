@@ -269,5 +269,7 @@ export const en: Dictionary = {
   "files.sortNameDesc": "Name (Z–A)",
   "files.sortDateNewest": "Date (newest)",
   "files.sortDateOldest": "Date (oldest)",
+  "files.selectedCount": "{count} selected",
+  "files.unselectAll": "Unselect all",
   "common.placeholder.name": "Your name",
 };

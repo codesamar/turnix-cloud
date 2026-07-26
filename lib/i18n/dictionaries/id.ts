@@ -269,5 +269,7 @@ export const id: Dictionary = {
   "files.sortNameDesc": "Nama (Z–A)",
   "files.sortDateNewest": "Tanggal (terbaru)",
   "files.sortDateOldest": "Tanggal (terlama)",
+  "files.selectedCount": "{count} dipilih",
+  "files.unselectAll": "Batalkan pilihan",
   "common.placeholder.name": "Nama Anda",
 };

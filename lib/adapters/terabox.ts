@@ -4,6 +4,7 @@ import type {
   OAuthProviderConfig,
   ProviderCredentials,
 } from "@/lib/adapters/types";
+import type { TeraBoxApp } from "terabox-api";
 import { getChunkSize, hashBuffer } from "@/lib/adapters/terabox-hash";
 import { createTeraboxApp } from "@/lib/adapters/terabox-client";
 
@@ -15,6 +16,83 @@ interface TeraboxListEntry {
   size: number;
   server_mtime?: number;
   share?: number;
+}
+
+/** Chunk uploads to CDN hosts often need longer than the library's 10s default. */
+const TERABOX_UPLOAD_TIMEOUT_MS = 120_000;
+const TERABOX_UPLOAD_CHUNK_RETRIES = 5;
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function isTransientTeraboxUploadError(error: unknown): boolean {
+  const parts: string[] = [];
+  let current: unknown = error;
+  for (let depth = 0; depth < 6 && current; depth++) {
+    if (current instanceof Error) {
+      parts.push(current.message, current.name);
+      const code = (current as Error & { code?: string }).code;
+      if (code) parts.push(code);
+      current = current.cause;
+      continue;
+    }
+    if (typeof current === "object" && current !== null) {
+      const obj = current as { code?: string; message?: string };
+      if (obj.code) parts.push(obj.code);
+      if (obj.message) parts.push(obj.message);
+    }
+    break;
+  }
+
+  const text = parts.join(" ").toLowerCase();
+  return (
+    text.includes("und_err_connect_timeout") ||
+    text.includes("connect timeout") ||
+    text.includes("und_err_headers_timeout") ||
+    text.includes("und_err_body_timeout") ||
+    text.includes("econnreset") ||
+    text.includes("etimedout") ||
+    text.includes("socket hang up") ||
+    text.includes("fetch failed") ||
+    text.includes("aborted")
+  );
+}
+
+async function uploadChunkWithRetry(
+  app: TeraBoxApp,
+  uploadData: {
+    remote_dir: string;
+    file: string;
+    upload_id: string;
+  },
+  index: number,
+  chunk: Blob
+) {
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= TERABOX_UPLOAD_CHUNK_RETRIES; attempt++) {
+    try {
+      return await app.uploadChunk(uploadData, index, chunk);
+    } catch (error) {
+      lastError = error;
+      if (
+        !isTransientTeraboxUploadError(error) ||
+        attempt === TERABOX_UPLOAD_CHUNK_RETRIES
+      ) {
+        break;
+      }
+      // CDN host can change / be temporarily unreachable — refresh + backoff.
+      await app.getUploadHost().catch(() => undefined);
+      await sleep(1000 * attempt);
+    }
+  }
+
+  const detail =
+    lastError instanceof Error ? lastError.message : String(lastError);
+  throw new Error(
+    `TeraBox upload timed out connecting to the CDN host. Retry later or check network access to terabox.com. (${detail})`
+  );
 }
 
 function toRemoteDir(path: string): string {
@@ -174,6 +252,9 @@ export const teraboxAdapter: CloudAdapter = {
 
   async upload(credentials, parentPath, filename, data, size, onProgress) {
     const app = await createTeraboxApp(credentials);
+    // Library default (10s) is too short for CDN connect + multi-MB chunks.
+    app.TERABOX_TIMEOUT = TERABOX_UPLOAD_TIMEOUT_MS;
+
     const buffer = await readStreamToBuffer(data, size, (progress) =>
       onProgress?.(Math.min(progress, 90))
     );
@@ -204,7 +285,11 @@ export const teraboxAdapter: CloudAdapter = {
       for (let index = 0; index < hash.chunks.length; index++) {
         const start = index * chunkSize;
         const end = Math.min(start + chunkSize, buffer.length);
-        await app.uploadChunk(uploadData, index, buffer.subarray(start, end));
+        // Node FormData.append requires Blob — Buffer is rejected at runtime.
+        const chunk = new Blob([
+          new Uint8Array(buffer.subarray(start, end)),
+        ]);
+        await uploadChunkWithRetry(app, uploadData, index, chunk);
         onProgress?.(
           90 + Math.round(((index + 1) / hash.chunks.length) * 10)
         );

@@ -11,6 +11,8 @@ declare module "terabox-api" {
 
   export class TeraBoxApp {
     constructor(authData: string, authType?: string);
+    /** Default 10000ms — bump for large chunk uploads. */
+    TERABOX_TIMEOUT: number;
     params: {
       whost: string;
       uhost: string;
@@ -58,7 +60,7 @@ declare module "terabox-api" {
     uploadChunk(
       data: { remote_dir: string; file: string; upload_id: string },
       partseq: number,
-      blob: Buffer
+      blob: Blob
     ): Promise<unknown>;
     createFile(data: {
       remote_dir: string;
