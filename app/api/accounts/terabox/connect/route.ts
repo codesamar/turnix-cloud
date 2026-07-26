@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { buildTeraboxCredentials } from "@/lib/adapters/terabox-client";
 import { saveAccount } from "@/lib/services/accounts";
 import { syncUserAccounts } from "@/lib/services/sync";
+import { withTimeout } from "@/lib/utils/with-timeout";
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -22,7 +23,14 @@ export async function POST(request: Request) {
   }
 
   try {
-    const credentials = await buildTeraboxCredentials({ ndusToken, baseUrl });
+    // Validate session + save only. Full sync runs in background so the UI
+    // does not stay on "Connecting..." while TeraBox lists thousands of files.
+    const credentials = await withTimeout(
+      buildTeraboxCredentials({ ndusToken, baseUrl }),
+      25_000,
+      "TeraBox did not respond in time. Check the NDUS token and try again."
+    );
+
     const account = await saveAccount(
       supabase,
       user.id,
@@ -31,10 +39,14 @@ export async function POST(request: Request) {
       label ?? credentials.email ?? "TeraBox"
     );
 
-    const syncResults = await syncUserAccounts(supabase, user.id, account.id);
-    const syncError = syncResults[0]?.error;
+    syncUserAccounts(supabase, user.id, account.id).catch((error) => {
+      console.error("[terabox:connect] background sync failed", error);
+    });
 
-    return NextResponse.json({ account, syncResults, syncError });
+    return NextResponse.json({
+      account,
+      syncStarted: true,
+    });
   } catch (err) {
     return NextResponse.json(
       { error: err instanceof Error ? err.message : "Connection failed" },

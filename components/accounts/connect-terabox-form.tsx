@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,6 +17,7 @@ interface ConnectTeraboxFormProps {
 export function ConnectTeraboxForm({ onConnected, onCancel }: ConnectTeraboxFormProps) {
   const { t } = useLanguage();
   const [isLoading, setIsLoading] = useState(false);
+  const [showToken, setShowToken] = useState(false);
   const [form, setForm] = useState({
     label: "",
     ndusToken: "",
@@ -26,6 +28,9 @@ export function ConnectTeraboxForm({ onConnected, onCancel }: ConnectTeraboxForm
     event.preventDefault();
     setIsLoading(true);
 
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), 30_000);
+
     try {
       const response = await fetch("/api/accounts/terabox/connect", {
         method: "POST",
@@ -35,23 +40,29 @@ export function ConnectTeraboxForm({ onConnected, onCancel }: ConnectTeraboxForm
           ndusToken: form.ndusToken,
           baseUrl: form.baseUrl || undefined,
         }),
+        signal: controller.signal,
       });
 
       if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error ?? "Connection failed");
+        const data = await response.json().catch(() => ({}));
+        throw new Error(
+          (data as { error?: string }).error ?? "Connection failed"
+        );
       }
 
-      const data = await response.json();
-      if (data.syncError) {
-        toast.warning(`${t("providers.terabox.syncFailed")}: ${data.syncError}`);
-      } else {
-        toast.success(t("providers.connectSuccess"));
-      }
+      toast.success(t("providers.connectSuccess"));
+      toast.message(t("providers.terabox.syncInBackground"));
       onConnected();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : t("providers.connectFailed"));
+      if (err instanceof DOMException && err.name === "AbortError") {
+        toast.error(t("providers.terabox.connectTimeout"));
+      } else {
+        toast.error(
+          err instanceof Error ? err.message : t("providers.connectFailed")
+        );
+      }
     } finally {
+      window.clearTimeout(timeoutId);
       setIsLoading(false);
     }
   }
@@ -72,14 +83,27 @@ export function ConnectTeraboxForm({ onConnected, onCancel }: ConnectTeraboxForm
       </div>
 
       <div className="space-y-2">
-        <Label>{t("providers.terabox.ndusToken")}</Label>
-        <Input
-          type="password"
-          placeholder={t("providers.terabox.ndusTokenPlaceholder")}
-          value={form.ndusToken}
-          onChange={(e) => setForm({ ...form, ndusToken: e.target.value })}
-          required
-        />
+        <Label htmlFor="terabox-ndus-token">{t("providers.terabox.ndusToken")}</Label>
+        <div className="relative">
+          <Input
+            id="terabox-ndus-token"
+            type={showToken ? "text" : "password"}
+            placeholder={t("providers.terabox.ndusTokenPlaceholder")}
+            value={form.ndusToken}
+            onChange={(e) => setForm({ ...form, ndusToken: e.target.value })}
+            className="pr-10"
+            required
+            autoComplete="off"
+          />
+          <button
+            type="button"
+            onClick={() => setShowToken((prev) => !prev)}
+            className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground hover:text-foreground"
+            aria-label={showToken ? "Hide token" : "Show token"}
+          >
+            {showToken ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+          </button>
+        </div>
         <p className="text-xs text-muted-foreground">{t("providers.terabox.ndusTokenHint")}</p>
       </div>
 

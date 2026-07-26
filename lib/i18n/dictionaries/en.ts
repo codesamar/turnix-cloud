@@ -181,6 +181,8 @@ export const en: Dictionary = {
   "providers.terabox.sessionWarning":
     "Unofficial integration — session tokens expire when you log out of TeraBox. Reconnect to refresh.",
   "providers.terabox.syncFailed": "Connected but file sync failed",
+  "providers.terabox.syncInBackground": "Syncing files in the background — use Sync All if files do not appear yet.",
+  "providers.terabox.connectTimeout": "TeraBox connection timed out. Check the NDUS token and try again.",
   "guide.title": "How to Connect Cloud Storage",
   "guide.subtitle": "Step-by-step guide to configure providers and connect your accounts",
   "guide.flowTitle": "Three steps overview",

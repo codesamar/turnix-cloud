@@ -1,5 +1,6 @@
 import type { ProviderCredentials } from "@/lib/adapters/types";
 import type { TeraBoxApp } from "terabox-api";
+import { withTimeout } from "@/lib/utils/with-timeout";
 
 export interface TeraboxSessionExtra {
   ndusToken: string;
@@ -8,6 +9,9 @@ export interface TeraboxSessionExtra {
 }
 
 export const DEFAULT_TERABOX_BASE_URL = "https://www.terabox.com";
+
+/** Keep connect/login responsive if terabox.com hangs. */
+const TERABOX_SESSION_TIMEOUT_MS = 20_000;
 
 export function parseNdusToken(input: string): string {
   const trimmed = input.trim();
@@ -34,12 +38,17 @@ export async function createTeraboxApp(
     app.params.whost = savedHost.replace(/\/$/, "");
   }
 
-  await app.updateAppData();
-  const login = await app.checkLogin();
-
-  if (login.errno !== 0) {
-    throw new Error("TeraBox session is invalid or expired");
-  }
+  await withTimeout(
+    (async () => {
+      await app.updateAppData();
+      const login = await app.checkLogin();
+      if (login.errno !== 0) {
+        throw new Error("TeraBox session is invalid or expired");
+      }
+    })(),
+    TERABOX_SESSION_TIMEOUT_MS,
+    "TeraBox did not respond in time. Check the NDUS token and try again."
+  );
 
   return app;
 }

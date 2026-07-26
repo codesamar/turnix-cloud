@@ -178,6 +178,8 @@ export type TranslationKey =
   | "providers.terabox.baseUrl"
   | "providers.terabox.sessionWarning"
   | "providers.terabox.syncFailed"
+  | "providers.terabox.syncInBackground"
+  | "providers.terabox.connectTimeout"
   | "guide.title"
   | "guide.subtitle"
   | "guide.flowTitle"

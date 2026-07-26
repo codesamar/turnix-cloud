@@ -181,6 +181,8 @@ export const id: Dictionary = {
   "providers.terabox.sessionWarning":
     "Integrasi tidak resmi — token session kadaluarsa saat logout dari TeraBox. Connect ulang untuk refresh.",
   "providers.terabox.syncFailed": "Terhubung tapi sinkronisasi file gagal",
+  "providers.terabox.syncInBackground": "File sedang disinkronkan di background — pakai Sinkron Semua jika belum muncul.",
+  "providers.terabox.connectTimeout": "Koneksi TeraBox timeout. Cek token NDUS lalu coba lagi.",
   "guide.title": "Cara Connect Cloud Storage",
   "guide.subtitle": "Panduan langkah demi langkah konfigurasi provider dan hubungkan akun Anda",
   "guide.flowTitle": "Ringkasan tiga langkah",
