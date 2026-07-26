@@ -5,12 +5,12 @@
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1027 nodes · 1886 edges · 97 communities (44 shown, 53 thin omitted)
+- 1027 nodes · 1886 edges · 102 communities (49 shown, 53 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 8 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `1dd19332`
+- Built from commit: `2953745c`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -55,10 +55,14 @@
 - page.tsx
 - accordion.tsx
 - avatar.tsx
+- sidebar.tsx
 - extends
+- form.tsx
+- chart.tsx
 - classnames
 - clsx
 - cmdk
+- react
 - embla-carousel-react
 - framer-motion
 - @hookform/resolvers
@@ -105,6 +109,7 @@
 - zod
 - postcss.config.mjs
 - tailwind.config.ts
+- class-variance-authority
 - file-explorer.tsx
 - dropdown-menu.tsx
 - file-preview.ts
@@ -137,7 +142,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (97 total, 53 thin omitted)
+## Communities (102 total, 53 thin omitted)
 
 ### Community 0 - "accounts-panel.tsx"
 Cohesion: 0.06
@@ -148,8 +153,8 @@ Cohesion: 0.23
 Nodes (14): FileExplorerProps, FilePreviewDialogProps, fetchAccounts(), fetchFolders(), MoveFileDialog(), MoveFileDialogProps, DialogContent, DialogDescription (+6 more)
 
 ### Community 2 - "sidebar.tsx"
-Cohesion: 0.06
-Nodes (44): DashboardLayout(), AppSidebarProps, DashboardShell(), DashboardShellProps, helpNavItems, navItems, SidebarNavItem, Separator (+36 more)
+Cohesion: 0.09
+Nodes (20): DashboardLayout(), AppSidebarProps, DashboardShell(), DashboardShellProps, helpNavItems, navItems, SidebarNavItem, Separator (+12 more)
 
 ### Community 3 - "TurnixCloud"
 Cohesion: 0.04
@@ -160,8 +165,8 @@ Cohesion: 0.05
 Nodes (36): 1.1 Environment variables (Vercel / hosting), 1.2 Supabase Auth URLs, 2.1 Redirect URI production, 2.2 Branding & kebijakan (wajib verifikasi), 2.3 Submit App Verification, 2.4 Publish app (In Production), Checklist production, Configure vs Connect (TurnixCloud) (+28 more)
 
 ### Community 5 - "carousel.tsx"
-Cohesion: 0.05
-Nodes (34): Carousel, CarouselApi, CarouselContent, CarouselContext, CarouselContextProps, CarouselItem, CarouselNext, CarouselOptions (+26 more)
+Cohesion: 0.15
+Nodes (12): Carousel, CarouselApi, CarouselContent, CarouselContext, CarouselContextProps, CarouselItem, CarouselNext, CarouselOptions (+4 more)
 
 ### Community 6 - "OmniCloud"
 Cohesion: 0.05
@@ -184,8 +189,8 @@ Cohesion: 0.12
 Nodes (22): inter, metadata, ProviderSetupCardProps, applyDocumentLanguage(), LanguageContext, LanguageContextValue, LanguageProvider(), readStoredLanguage() (+14 more)
 
 ### Community 11 - "provider-config.ts"
-Cohesion: 0.27
-Nodes (7): fetchAccounts(), HomeDashboard(), toGb(), StorageChartRow, StorageChartTooltip(), FilePreviewDialog(), formatBytes()
+Cohesion: 0.18
+Nodes (8): fetchAccounts(), HomeDashboard(), toGb(), StorageChartRow, StorageChartTooltip(), fetchFiles(), FileExplorer(), formatBytes()
 
 ### Community 12 - "getAdapter"
 Cohesion: 0.36
@@ -225,7 +230,7 @@ Nodes (3): Badge(), BadgeProps, badgeVariants
 
 ### Community 22 - "dependencies"
 Cohesion: 0.13
-Nodes (15): class-variance-authority, next-themes, dependencies, class-variance-authority, next-themes, @radix-ui/react-hover-card, @radix-ui/react-slot, @radix-ui/react-tabs (+7 more)
+Nodes (15): clsx, next-themes, dependencies, clsx, next-themes, @radix-ui/react-hover-card, @radix-ui/react-slot, @radix-ui/react-tabs (+7 more)
 
 ### Community 23 - "TeraBoxApp"
 Cohesion: 0.13
@@ -273,7 +278,7 @@ Nodes (4): InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot
 
 ### Community 36 - "middleware.ts"
 Cohesion: 0.60
-Nodes (3): updateSession(), config, middleware()
+Nodes (3): updateSession(), config, proxy()
 
 ### Community 37 - "page.tsx"
 Cohesion: 0.50
@@ -283,21 +288,41 @@ Nodes (3): TabsContent, TabsList, TabsTrigger
 Cohesion: 0.50
 Nodes (3): Avatar, AvatarFallback, AvatarImage
 
+### Community 40 - "sidebar.tsx"
+Cohesion: 0.12
+Nodes (15): SidebarContext, SidebarContextProps, SidebarGroupAction, SidebarInput, SidebarInset, SidebarMenuAction, SidebarMenuBadge, sidebarMenuButtonVariants (+7 more)
+
 ### Community 41 - "extends"
 Cohesion: 0.50
 Nodes (3): extends, next/core-web-vitals, next/typescript
 
+### Community 42 - "form.tsx"
+Cohesion: 0.18
+Nodes (9): FormControl, FormDescription, FormFieldContext, FormFieldContextValue, FormItem, FormItemContext, FormItemContextValue, FormLabel (+1 more)
+
+### Community 44 - "chart.tsx"
+Cohesion: 0.20
+Nodes (7): ChartConfig, ChartContainer, ChartContext, ChartContextProps, ChartLegendContent, ChartTooltipContent, THEMES
+
+### Community 46 - "clsx"
+Cohesion: 0.22
+Nodes (8): SheetContent, SheetContentProps, SheetDescription, SheetFooter(), SheetHeader(), SheetOverlay, SheetTitle, sheetVariants
+
+### Community 48 - "react"
+Cohesion: 0.25
+Nodes (7): useCarousel(), useChart(), useFormField(), useSidebar(), useIsMobile(), react, react
+
 ### Community 101 - "file-explorer.tsx"
-Cohesion: 0.16
-Nodes (11): fetchFiles(), FileExplorer(), Checkbox, Table, TableBody, TableCaption, TableCell, TableFooter (+3 more)
+Cohesion: 0.22
+Nodes (9): Checkbox, Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader (+1 more)
 
 ### Community 104 - "dropdown-menu.tsx"
 Cohesion: 0.20
 Nodes (9): DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuShortcut(), DropdownMenuSubContent (+1 more)
 
 ### Community 106 - "file-preview.ts"
-Cohesion: 0.39
-Nodes (8): AUDIO_EXTENSIONS, canPreviewFile(), getPreviewKind(), IMAGE_EXTENSIONS, PreviewKind, TEXT_EXTENSIONS, TEXT_MIME_PREFIXES, VIDEO_EXTENSIONS
+Cohesion: 0.33
+Nodes (9): FilePreviewDialog(), AUDIO_EXTENSIONS, canPreviewFile(), getPreviewKind(), IMAGE_EXTENSIONS, PreviewKind, TEXT_EXTENSIONS, TEXT_MIME_PREFIXES (+1 more)
 
 ### Community 107 - "toggle-group.tsx"
 Cohesion: 0.33
@@ -311,17 +336,17 @@ Nodes (5): ToggleGroup, ToggleGroupContext, ToggleGroupItem, Toggle, toggleVaria
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `dependencies` connect `dependencies` to `carousel.tsx`, `devDependencies`, `createClient`, `accordion.tsx`, `classnames`, `clsx`, `cmdk`, `embla-carousel-react`, `framer-motion`, `@hookform/resolvers`, `input-otp`, `lucide-react`, `next`, `@radix-ui/react-accordion`, `@radix-ui/react-alert-dialog`, `@radix-ui/react-aspect-ratio`, `@radix-ui/react-avatar`, `@radix-ui/react-checkbox`, `@radix-ui/react-collapsible`, `@radix-ui/react-context-menu`, `@radix-ui/react-dialog`, `@radix-ui/react-dropdown-menu`, `@radix-ui/react-label`, `@radix-ui/react-menubar`, `@radix-ui/react-navigation-menu`, `@radix-ui/react-popover`, `@radix-ui/react-progress`, `@radix-ui/react-radio-group`, `@radix-ui/react-scroll-area`, `@radix-ui/react-select`, `@radix-ui/react-separator`, `@radix-ui/react-slider`, `@radix-ui/react-switch`, `@radix-ui/react-toggle`, `@radix-ui/react-toggle-group`, `@radix-ui/react-tooltip`, `react-dom`, `react-resizable-panels`, `recharts`, `shadcn-ui`, `sonner`, `@supabase/ssr`, `@supabase/supabase-js`, `tailwind-merge`, `tailwindcss-animate`, `@tanstack/react-query`, `@tanstack/react-table`, `terabox-api`, `vaul`, `zod`?**
-  _High betweenness centrality (0.185) - this node is a cross-community bridge._
-- **Why does `react` connect `carousel.tsx` to `sidebar.tsx`, `dependencies`?**
-  _High betweenness centrality (0.169) - this node is a cross-community bridge._
-- **Why does `cn()` connect `cn` to `accounts-panel.tsx`, `file-explorer.tsx`, `sidebar.tsx`, `carousel.tsx`, `utils.ts`, `menubar.tsx`, `database.ts`, `command.tsx`, `context-menu.tsx`, `alert-dialog.tsx`, `breadcrumb.tsx`, `drawer.tsx`, `navigation-menu.tsx`, `onedrive.ts`, `input-otp.tsx`, `page.tsx`, `avatar.tsx`, `file-explorer.tsx`, `dropdown-menu.tsx`, `toggle-group.tsx`?**
-  _High betweenness centrality (0.116) - this node is a cross-community bridge._
+- **Why does `dependencies` connect `dependencies` to `devDependencies`, `createClient`, `accordion.tsx`, `classnames`, `cmdk`, `react`, `embla-carousel-react`, `framer-motion`, `@hookform/resolvers`, `input-otp`, `lucide-react`, `next`, `@radix-ui/react-accordion`, `@radix-ui/react-alert-dialog`, `@radix-ui/react-aspect-ratio`, `@radix-ui/react-avatar`, `@radix-ui/react-checkbox`, `@radix-ui/react-collapsible`, `@radix-ui/react-context-menu`, `@radix-ui/react-dialog`, `@radix-ui/react-dropdown-menu`, `@radix-ui/react-label`, `@radix-ui/react-menubar`, `@radix-ui/react-navigation-menu`, `@radix-ui/react-popover`, `@radix-ui/react-progress`, `@radix-ui/react-radio-group`, `@radix-ui/react-scroll-area`, `@radix-ui/react-select`, `@radix-ui/react-separator`, `@radix-ui/react-slider`, `@radix-ui/react-switch`, `@radix-ui/react-toggle`, `@radix-ui/react-toggle-group`, `@radix-ui/react-tooltip`, `react-dom`, `react-resizable-panels`, `recharts`, `shadcn-ui`, `sonner`, `@supabase/ssr`, `@supabase/supabase-js`, `tailwind-merge`, `tailwindcss-animate`, `@tanstack/react-query`, `@tanstack/react-table`, `terabox-api`, `vaul`, `zod`, `class-variance-authority`?**
+  _High betweenness centrality (0.186) - this node is a cross-community bridge._
+- **Why does `react` connect `react` to `dependencies`?**
+  _High betweenness centrality (0.171) - this node is a cross-community bridge._
+- **Why does `cn()` connect `cn` to `accounts-panel.tsx`, `file-explorer.tsx`, `sidebar.tsx`, `carousel.tsx`, `utils.ts`, `menubar.tsx`, `database.ts`, `command.tsx`, `context-menu.tsx`, `alert-dialog.tsx`, `breadcrumb.tsx`, `drawer.tsx`, `navigation-menu.tsx`, `onedrive.ts`, `input-otp.tsx`, `page.tsx`, `avatar.tsx`, `sidebar.tsx`, `form.tsx`, `chart.tsx`, `clsx`, `file-explorer.tsx`, `dropdown-menu.tsx`, `toggle-group.tsx`?**
+  _High betweenness centrality (0.117) - this node is a cross-community bridge._
 - **What connects `next/core-web-vitals`, `next/typescript`, `PROVIDER_PARAM_MAP` to the rest of the system?**
   _434 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `accounts-panel.tsx` be split into smaller, more focused modules?**
   _Cohesion score 0.06187202538339503 - nodes in this community are weakly interconnected._
 - **Should `sidebar.tsx` be split into smaller, more focused modules?**
-  _Cohesion score 0.05647058823529412 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.09486166007905138 - nodes in this community are weakly interconnected._
 - **Should `TurnixCloud` be split into smaller, more focused modules?**
   _Cohesion score 0.044444444444444446 - nodes in this community are weakly interconnected._

@@ -645,8 +645,8 @@
     "semantic_hash": ""
   },
   "lib/supabase/server.ts": {
-    "mtime": 1785040424.7157154,
-    "ast_hash": "70a0c12bb255ce2536adc7b6109b13f7",
+    "mtime": 1785040710.3233495,
+    "ast_hash": "d31d6a4bbd61c52e63f3915e6abaf2ab",
     "semantic_hash": ""
   },
   "lib/types/database.ts": {
@@ -682,11 +682,6 @@
   "lib/utils/invalidate-file-queries.ts": {
     "mtime": 1781483051.4264123,
     "ast_hash": "5cec14048e89317337be2de16baf130c",
-    "semantic_hash": ""
-  },
-  "middleware.ts": {
-    "mtime": 1781453391.1572156,
-    "ast_hash": "a7ae5be740bedcfa5a07461fdd44de40",
     "semantic_hash": ""
   },
   "next.config.mjs": {
@@ -772,6 +767,11 @@
   "image.png": {
     "mtime": 1781453577.5320802,
     "ast_hash": "16ba44dbf7271ae486b8cf7777f5ed63",
+    "semantic_hash": ""
+  },
+  "proxy.ts": {
+    "mtime": 1785040709.8440716,
+    "ast_hash": "76caf7fc1c9f6f85bec3de8e70e2f6a1",
     "semantic_hash": ""
   }
 }
