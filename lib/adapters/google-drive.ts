@@ -143,7 +143,10 @@ export const googleDriveAdapter: CloudAdapter = {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to refresh Google token");
+      const body = await response.text().catch(() => "");
+      throw new Error(
+        `Failed to refresh Google token${body ? `: ${body}` : ""}`
+      );
     }
 
     const data = await response.json();

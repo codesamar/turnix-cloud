@@ -71,6 +71,7 @@ export async function saveAccount(
         quota_total: quota.total,
         credentials_encrypted: encryptCredentials(credentials),
         status: "active" as const,
+        error_message: null,
       },
       { onConflict: "user_id,provider,email" }
     )
@@ -87,7 +88,9 @@ export async function saveAccount(
 export async function listAccounts(supabase: Supabase, userId: string) {
   const { data, error } = await supabase
     .from("cloud_accounts")
-    .select("id, provider, label, email, quota_used, quota_total, status, last_synced_at, created_at")
+    .select(
+      "id, provider, label, email, quota_used, quota_total, status, error_message, last_synced_at, created_at"
+    )
     .eq("user_id", userId)
     .order("created_at", { ascending: true });
 

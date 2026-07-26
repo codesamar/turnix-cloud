@@ -55,6 +55,12 @@ export const en: Dictionary = {
   "accounts.syncSuccess": "Sync completed",
   "accounts.syncFailed": "Sync failed",
   "accounts.disconnectSuccess": "Account disconnected",
+  "accounts.statusError": "error",
+  "accounts.errorTokenExpired":
+    "Access token expired or revoked. Reconnect this account to authorize again.",
+  "accounts.errorGeneric": "This account hit an error and needs attention.",
+  "accounts.reconnect": "Reconnect",
+  "accounts.reconnectHint": "Open the provider login to refresh credentials.",
   "allocation.title": "Upload Allocation",
   "allocation.desc": "Choose which connected cloud account receives new uploads from My Drive (drag-and-drop).",
   "allocation.note": "This only affects new uploads. Sync All, file preview, and browsing are unchanged — they still use each file's original account.",

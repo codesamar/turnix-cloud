@@ -1,28 +1,188 @@
 # TurnixCloud
 
-Unified cloud drive aggregation platform — kelola Google Drive, OneDrive, Dropbox, Yandex, dan S3-compatible storage dari satu workspace.
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/) [![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/) [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/) [![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/) [![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
 
-Dibangun dengan **Next.js 16**, **Supabase** (Postgres, Auth, Realtime), dan **shadcn/ui**.
+TurnixCloud is a cloud drive aggregation platform that presents multiple storage providers through a single, consistent workspace. Built with **Next.js 16** and **Supabase** (Auth, Postgres, RLS, Realtime), it lets users browse, upload, download, and manage files across connected cloud accounts from one interface.
 
-## Tech Stack
+![TurnixCloud Overview](image.png)
 
-- Next.js 16 (App Router) + React 18 + TypeScript
-- Supabase (Auth, Postgres, RLS, Realtime)
-- Tailwind CSS + shadcn/ui
-- TanStack Query, react-hook-form, zod, recharts
+## ✨ Key features
 
-## Prasyarat
+### ☁️ Multi-provider cloud aggregation
+- Connect multiple cloud storage accounts in one application
+- All providers are normalized through a consistent adapter layer
+- Active support includes OAuth, session-token, and access-key connections
+- Provider OAuth credentials can be configured per deployment via the dashboard or environment variables
 
-- Node.js 20+ (disarankan LTS)
+### 🗂️ Unified file workspace
+- `Home`, `My Drive`, `Recent`, `Starred`, `Shared with Me`, and `Quota` views
+- Virtual-path-based file navigation across providers
+- File metadata is presented consistently across different provider sources
+
+### 📁 File management
+- Browse files and folders from connected accounts
+- Create folders, rename, delete (including bulk delete)
+- Download provider files
+- View file details and previews for supported file types
+- Star / unstar files on providers that support it
+
+### ⬆️ Upload system
+- Browser-based drag-and-drop uploads
+- Folder upload support
+- Upload destination selection via the allocation service
+- Automatic account allocation based on storage selection strategy
+
+### 🔄 Sync and metadata mirror
+- File metadata is stored in Supabase Postgres for fast navigation
+- Scheduled sync via Vercel Cron (`POST /api/sync/run` every 5 minutes)
+- Manual sync trigger from the dashboard (`Sync All`)
+
+### 👤 Auth and multi-user
+- Supabase Auth with email register / login
+- Account data, file mirrors, allocation config, and settings scoped per user (RLS)
+
+### ⚙️ User settings and storage allocation
+- Language and theme settings
+- Storage allocation strategies:
+  - `round_robin`
+  - `weighted_round_robin`
+  - `least_used`
+  - `most_free`
+  - `manual`
+- Account priority order can be configured for the manual strategy
+
+## ☁️ Supported providers
+
+| Provider | Status | Integration model |
+| --- | --- | --- |
+| Google Drive | Active | OAuth + Google Drive API |
+| OneDrive | Active | OAuth + Microsoft Graph |
+| Dropbox | Active | OAuth + Dropbox API |
+| Yandex Disk | Active | OAuth + Yandex Disk API |
+| TeraBox | Active | NDUS session token |
+| S3-compatible storage | Active | Access key / secret key / endpoint |
+| MEGA | Stub | Not yet implemented |
+| pCloud | Stub | Not yet implemented |
+
+> Detailed provider setup guides:
+> - [Google OAuth (production)](docs/google-oauth-production.md)
+> - [Dropbox setup](docs/dropbox-setup.md)
+> - [TeraBox setup](docs/terabox-setup.md)
+> - Interactive guide in-app: **Help → How to Connect** (`/connect-guide`)
+
+## 🏗️ Project structure
+
+```text
+turnix-cloud/
+├─ app/
+│  ├─ (auth)/            # Login & register
+│  ├─ (dashboard)/       # Home, My Drive, Recent, Starred, Quota, Settings
+│  ├─ api/               # REST API route handlers
+│  └─ oauth/             # OAuth completion page
+├─ components/
+│  ├─ ui/                # shadcn/ui components
+│  ├─ files/             # File explorer, upload
+│  ├─ accounts/          # Connect cloud accounts
+│  ├─ providers/         # Provider configuration UI
+│  └─ settings/          # User & allocation settings
+├─ lib/
+│  ├─ adapters/          # Cloud provider adapters
+│  ├─ services/          # Sync, upload, allocation, crypto
+│  ├─ supabase/          # Supabase client helpers
+│  └─ i18n/              # English / Indonesian dictionaries
+├─ supabase/migrations/  # Database schema SQL
+├─ docs/                 # Provider setup documentation
+├─ docker-compose.yaml
+├─ vercel.json           # Cron schedule for sync
+└─ README.md
+```
+
+## 🔄 How TurnixCloud works
+
+```mermaid
+flowchart TD
+    U[User] --> F[Next.js App<br/>App Router + React]
+    F -->|Route handlers / REST| API[API Routes<br/>app/api]
+
+    subgraph App Features
+        F1[Auth]
+        F2[Accounts]
+        F3[File Explorer]
+        F4[Uploads]
+        F5[Settings]
+        F6[Allocation]
+    end
+
+    F --> F1
+    F --> F2
+    F --> F3
+    F --> F4
+    F --> F5
+    F --> F6
+
+    API --> A[Adapter Registry]
+    A --> G[Google Drive]
+    A --> O[OneDrive]
+    A --> D[Dropbox]
+    A --> Y[Yandex]
+    A --> T[TeraBox]
+    A --> S[S3]
+
+    G --> CP[Cloud Providers]
+    O --> CP
+    D --> CP
+    Y --> CP
+    T --> CP
+    S --> CP
+
+    API --> N[Normalized Turnix Data Model]
+    CP --> N
+
+    N --> DB[(Supabase Postgres<br/>Metadata Mirror)]
+    API --> DB
+    F1 --> SA[Supabase Auth]
+    SA --> DB
+
+    API --> SY[Sync Service]
+    SY --> CRON[Vercel Cron]
+    SY --> CP
+    SY --> DB
+
+    API --> AL[Allocation Service]
+    AL --> ACC[Target Account Selection<br/>round_robin / weighted / least_used / most_free / manual]
+    ACC --> CP
+```
+
+At a high level:
+
+1. The Next.js app calls API route handlers for auth, accounts, files, uploads, settings, and allocation
+2. The API selects the appropriate provider adapter (`google_drive`, `onedrive`, `dropbox`, `yandex`, `terabox`, `s3`)
+3. Provider responses are normalized into the Turnix data model
+4. File metadata is mirrored into Supabase Postgres for fast access
+5. The sync service keeps mirrored metadata aligned with provider state (manual or cron)
+
+## 🧩 Current application views
+
+- `/` → Home dashboard
+- `/my-drive` → main file explorer
+- `/shared-with-me` → shared files from supported providers
+- `/recent` → recent files
+- `/starred` → starred files
+- `/quota` → quota overview, account management, provider config, allocation
+- `/settings` → user settings
+- `/connect-guide` → interactive provider connect guide
+- `/login` and `/register` → authentication
+
+## 📋 Requirements
+
+- Node.js 20+ (LTS recommended)
 - npm
-- Akun [Supabase](https://supabase.com) (gratis)
-- (Opsional) OAuth credentials untuk cloud provider yang ingin dihubungkan
+- A [Supabase](https://supabase.com) project
+- Provider credentials for the cloud services you want to use
 
----
+## 🛠️ Local setup
 
-## Step-by-Step Setup
-
-### 1. Clone & install dependencies
+### 1. Clone and install
 
 ```bash
 git clone <repo-url> turnix-cloud
@@ -30,69 +190,47 @@ cd turnix-cloud
 npm install
 ```
 
-### 2. Buat project Supabase
+### 2. Create a Supabase project
 
-1. Buka [Supabase Dashboard](https://supabase.com/dashboard)
-2. Klik **New project**
-3. Isi nama project, password database, dan region
-4. Tunggu hingga project selesai provisioning
+1. Open [Supabase Dashboard](https://supabase.com/dashboard) → **New project**
+2. From **Project Settings → API**, copy:
+   - **Project URL** → `NEXT_PUBLIC_SUPABASE_URL`
+   - **anon public key** → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - **service_role key** → `SUPABASE_SERVICE_ROLE_KEY` (server only)
 
-Catat dari **Project Settings → API**:
-- **Project URL** → `NEXT_PUBLIC_SUPABASE_URL`
-- **anon public key** → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- **service_role key** → `SUPABASE_SERVICE_ROLE_KEY` (jangan expose ke browser)
+### 3. Run database migrations
 
-### 3. Jalankan migrasi database
+Migrations live in [`supabase/migrations/`](supabase/migrations/).
 
-Migrasi schema ada di folder [`supabase/migrations/`](supabase/migrations/).
-
-#### Cara A — SQL Editor (disarankan)
+**Option A — SQL Editor (recommended)**
 
 1. Supabase Dashboard → **SQL Editor** → **New query**
-2. Copy seluruh isi file `supabase/migrations/001_initial.sql` → **Run**
-3. Ulangi untuk `supabase/migrations/002_provider_config.sql` → **Run**
+2. Run in order:
+   - `001_initial.sql`
+   - `002_provider_config.sql`
+   - `003_terabox_provider.sql`
 
-#### Cara B — Supabase CLI
-
-CLI sudah tersedia sebagai dev dependency project (tidak perlu install global):
+**Option B — Supabase CLI**
 
 ```bash
-# Login ke Supabase
 npx supabase login
-
-# Link ke project (ganti dengan project ref Anda)
 npx supabase link --project-ref <your-project-ref>
-
-# Push migrasi
 npm run db:push
 ```
 
-Jika koneksi langsung gagal (mis. error IPv6), gunakan connection string dari Dashboard:
+If direct connection fails (e.g. IPv6), use the Session pooler connection string:
 
 ```bash
 npm run db:push:url "postgresql://postgres.[project-ref]:[password]@aws-0-[region].pooler.supabase.com:5432/postgres"
 ```
 
-> Connection string ada di **Project Settings → Database → Connection string** (mode **Session pooler**).
+Expected tables: `profiles`, `cloud_accounts`, `file_metadata`, `upload_sessions`, `allocation_config`, `provider_config`.
 
-#### Verifikasi migrasi
-
-Di Supabase Dashboard → **Table Editor**, pastikan tabel berikut ada:
-
-- `profiles`
-- `cloud_accounts`
-- `file_metadata`
-- `upload_sessions`
-- `allocation_config`
-- `provider_config` (dari migrasi `002`)
-
-### 4. Konfigurasi environment variables
+### 4. Environment variables
 
 ```bash
 cp .env.example .env.local
 ```
-
-Isi `.env.local`:
 
 ```env
 # Supabase
@@ -102,357 +240,213 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 
 # App
 NEXT_PUBLIC_APP_URL=http://localhost:3000
-TURNIX_SECRET_KEY=generate-a-random-secret-min-32-chars
-CRON_SECRET=generate-another-random-secret
+TURNIX_SECRET_KEY=replace-with-a-strong-random-secret-at-least-32-chars
+CRON_SECRET=replace-with-cron-secret
+
+# Optional OAuth fallbacks (can also be set in dashboard → /quota)
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+ONEDRIVE_CLIENT_ID=
+ONEDRIVE_CLIENT_SECRET=
+ONEDRIVE_TENANT_ID=common
+DROPBOX_CLIENT_ID=
+DROPBOX_CLIENT_SECRET=
+YANDEX_CLIENT_ID=
+YANDEX_CLIENT_SECRET=
 ```
 
-| Variable | Keterangan |
-|---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | URL project Supabase |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public anon key (aman di browser) |
-| `SUPABASE_SERVICE_ROLE_KEY` | Service role key (server only, jangan commit) |
-| `NEXT_PUBLIC_APP_URL` | URL app lokal/production — dipakai OAuth redirect |
-| `TURNIX_SECRET_KEY` | Enkripsi token cloud provider di database (min. 32 karakter) |
-| `CRON_SECRET` | Auth untuk Vercel Cron sync (production) |
-
-Generate secret acak:
+Generate secrets:
 
 ```bash
 openssl rand -base64 32
 ```
 
-### 5. Konfigurasi Supabase Auth
+| Variable | Description |
+| --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public anon key (safe in browser) |
+| `SUPABASE_SERVICE_ROLE_KEY` | Service role key (server only) |
+| `NEXT_PUBLIC_APP_URL` | App URL used for OAuth redirects |
+| `TURNIX_SECRET_KEY` | Encrypts provider tokens at rest (min. 32 chars) |
+| `CRON_SECRET` | Auth for Vercel Cron sync in production |
 
-Di Supabase Dashboard → **Authentication → URL Configuration**:
+Notes:
+- TeraBox and S3 do not use `.env` OAuth credentials; they are connected from the UI
+- Dashboard provider config on `/quota` takes precedence over env fallbacks for OAuth apps
 
-| Setting | Local dev | Production |
-|---|---|---|
+### 5. Configure Supabase Auth
+
+In **Authentication → URL Configuration**:
+
+| Setting | Local | Production |
+| --- | --- | --- |
 | **Site URL** | `http://localhost:3000` | `https://your-domain.com` |
 | **Redirect URLs** | `http://localhost:3000/auth/callback` | `https://your-domain.com/auth/callback` |
 
-Pastikan **Enable email signup** aktif di **Authentication → Providers → Email**.
+Enable email signup. For local development, disable **Confirm email** so you can log in immediately after register.
 
-> Untuk development, nonaktifkan **Confirm email** di **Authentication → Providers → Email** agar user bisa langsung login setelah register.
+### 6. Connect a provider (example: Google Drive)
 
----
+TurnixCloud separates **Configure** (OAuth app credentials) from **Connect** (authorize a personal account):
 
-## Connect Google Drive (Step-by-Step)
+1. Create a Google Cloud OAuth Web client; enable Google Drive API
+2. Redirect URI must match exactly, e.g. `http://localhost:3000/api/accounts/google_drive/callback`
+3. In TurnixCloud → `/quota` → **Configure Cloud Providers** → save Client ID / Secret
+4. **Add Account → Connect** → authorize → **Sync All** → open **My Drive**
 
-TurnixCloud punya **dua langkah terpisah** untuk Google Drive:
+For Testing-mode Google apps, add your Gmail under **Google Auth platform → Audience → Test users**, or see [docs/google-oauth-production.md](docs/google-oauth-production.md).
 
-| Langkah | Arti | Di dashboard |
-|---|---|---|
-| **Configure** | Simpan OAuth Client ID & Secret app Anda | Badge **Configured** |
-| **Connect** | Authorize akun Google Drive pribadi | Muncul di **Connected Accounts** |
-| **Sync** | Mirror metadata file ke database | File tampil di **My Drive** |
-
-Badge **Configured** saja **belum** menampilkan file Drive.
-
-> Panduan interaktif juga tersedia di dashboard: sidebar **Help → How to Connect** (`/connect-guide`).
-
----
-
-### Bagian A — Setup Google Cloud Console
-
-#### A1. Buat project & enable API
-
-1. Buka [Google Cloud Console](https://console.cloud.google.com/)
-2. Buat project baru (mis. `TurnixCloud`)
-3. **APIs & Services → Library** → cari **Google Drive API** → **Enable**
-
-#### A2. Setup Google Auth platform (OAuth consent)
-
-1. Menu kiri → **Google Auth platform**  
-   (alternatif: **APIs & Services → OAuth consent screen**)
-2. Jika belum pernah setup, klik **Get Started** dan isi:
-   - **App name**: `TurnixCloud`
-   - **User support email**: email Anda
-   - **Audience**: **External**
-   - **Contact email**: email Anda
-3. Klik **Create**
-
-#### A3. Tambah Test users (wajib untuk mode Testing)
-
-> Mode **Production** (tanpa Test users): lihat [docs/google-oauth-production.md](docs/google-oauth-production.md)
-
-1. Buka tab **Audience** di **Google Auth platform**
-   Link langsung: `https://console.cloud.google.com/auth/audience`
-2. Pastikan **Publishing status** = **Testing**
-3. Scroll ke **Test users** → **Add users**
-4. Tambahkan email Google yang dipakai untuk connect (mis. `you@gmail.com`)
-5. **Save**
-
-> Tanpa test user, Google akan menolak dengan **Error 403: access_denied**.
-
-#### A4. Buat OAuth Client ID
-
-1. **Google Auth platform → Clients** (atau **APIs & Services → Credentials**)
-2. **+ Create Credentials → OAuth client ID**
-3. Application type: **Web application**
-4. **Authorized redirect URIs** → tambahkan (sesuai `NEXT_PUBLIC_APP_URL`):
-
-   ```
-   http://localhost:3500/api/accounts/google_drive/callback
-   ```
-
-   Ganti `3500` dengan port Anda. Production: `https://domain-anda.com/api/accounts/google_drive/callback`
-
-5. **Create** → copy **Client ID** dan **Client Secret**
-
-> Client Secret hanya ditampilkan **sekali** saat create. Jika terlewat: buka client → **Reset secret**.
-
----
-
-### Bagian B — Konfigurasi di Dashboard TurnixCloud
-
-1. Login ke TurnixCloud
-2. Buka **Storage & Accounts** (`/quota`) dari sidebar
-3. Section **Configure Cloud Providers** → expand **Google Drive**
-4. Isi form:
-   - **Enable provider**: ON
-   - **Client ID**: paste dari Google Cloud
-   - **Client Secret**: paste dari Google Cloud
-5. Copy **Redirect URI** yang ditampilkan → paste ke Google Console (harus **exact match**)
-6. Klik **Save configuration**
-7. Badge berubah menjadi **Configured**
-
-Alternatif: isi `GOOGLE_CLIENT_ID` dan `GOOGLE_CLIENT_SECRET` di `.env.local` (fallback jika belum set lewat dashboard).
-
----
-
-### Bagian C — Connect akun Google Drive
-
-1. Di halaman `/quota`, klik tombol **Add Account**
-2. Pilih **Google Drive** → klik **Connect**
-3. Login dengan akun Google (harus ada di **Test users**)
-4. Klik **Allow** / **Continue**
-5. Redirect kembali ke `/quota?connected=google_drive`
-6. Di **Connected Accounts**, muncul entry Google Drive (email + quota bar)
-
----
-
-### Bagian D — Sync & lihat file
-
-1. Klik **Sync All** di section **Connected Accounts**
-2. Tunggu toast **Sync completed**
-3. Buka **My Drive** dari sidebar — file Google Drive tampil di explorer
-4. (Opsional) Upload file via drag-and-drop di **My Drive**
-
----
-
-### Diagram alur Google Drive
-
-```
-Google Cloud Console          TurnixCloud Dashboard
-─────────────────────         ─────────────────────
-Enable Drive API      →
-Setup Auth platform   →
-Add Test users        →
-Create OAuth Client   →       Configure provider (Client ID/Secret)
-                              Add Account → Connect (OAuth login)
-                              Sync All
-                              My Drive ✓
-```
-
----
-
-### 6. Provider cloud lainnya (opsional)
-
-Selain Google Drive, provider OAuth lain bisa dikonfigurasi lewat dashboard (`/quota → Configure Cloud Providers`) atau `.env.local`.
-
-#### OneDrive
-
-1. [Azure App Registration](https://portal.azure.com/) → New registration
-2. Redirect URI (Web) — copy dari dashboard TurnixCloud saat expand **OneDrive**:
-   ```
-   {NEXT_PUBLIC_APP_URL}/api/accounts/onedrive/callback
-   ```
-3. API permissions: `Files.ReadWrite.All`, `User.Read`, `offline_access`
-4. Simpan di dashboard: Client ID, Client Secret, Tenant ID (`common`)
-
-#### Dropbox
-
-> Panduan lengkap: [docs/dropbox-setup.md](docs/dropbox-setup.md)
-
-1. [Dropbox App Console](https://www.dropbox.com/developers/apps) → Create app (**Scoped access**)
-2. Tab **Permissions** → aktifkan `account_info.read`, `files.metadata.read/write`, `files.content.read/write` → **Submit**
-3. Tab **Settings** → copy **App key** & **App secret**; tambah Redirect URI:
-   ```
-   {NEXT_PUBLIC_APP_URL}/api/accounts/dropbox/callback
-   ```
-4. Simpan di dashboard `/quota`: Client ID (= App key), Client Secret (= App secret)
-5. **Add Account → Connect** → **Sync All**
-
-#### Yandex Disk
-
-1. [Yandex OAuth](https://oauth.yandex.com/) → buat aplikasi
-2. Redirect URI dari dashboard TurnixCloud
-3. Simpan Client ID & Secret di dashboard
-
-#### S3 Compatible
-
-Tidak perlu OAuth app config. Connect langsung via **Add Account → Connect** → isi endpoint, bucket, access key.
-
-> Ganti `{NEXT_PUBLIC_APP_URL}` dengan URL app Anda (mis. `http://localhost:3500`).
-
-### 7. Jalankan development server
+## 💻 Development
 
 ```bash
 npm run dev
 ```
 
-App berjalan di [http://localhost:3000](http://localhost:3000).
+App: [http://localhost:3000](http://localhost:3000)
 
-Jika port sudah terpakai:
+If the port is taken:
 
 ```bash
 npm run dev -- -p 3500
 ```
 
-Pastikan `NEXT_PUBLIC_APP_URL` di `.env.local` sesuai port yang dipakai.
+Keep `NEXT_PUBLIC_APP_URL` in sync with the port you use.
 
-### 8. First run — uji alur dasar
+### First-run checklist
 
-1. Buka app → **Register** akun baru (atau **Login**)
-2. Buka **Storage & Accounts** (`/quota`)
-3. Ikuti section [Connect Google Drive](#connect-google-drive-step-by-step) di atas
-4. Klik **Sync All** → buka **My Drive**
-5. Upload file via drag-and-drop di **My Drive**
+1. Register / login
+2. Open **Storage & Accounts** (`/quota`)
+3. Configure + connect at least one provider
+4. **Sync All** → open **My Drive**
+5. Upload via drag-and-drop
 
----
-
-## Deploy ke Production (Vercel + Supabase)
-
-> **Google Drive OAuth production** (connect tanpa Test users): lihat [docs/google-oauth-production.md](docs/google-oauth-production.md)  
-> **Dropbox setup lengkap**: lihat [docs/dropbox-setup.md](docs/dropbox-setup.md)
-
-### Vercel
-
-1. Push repo ke GitHub
-2. Import project di [Vercel](https://vercel.com)
-3. Set semua environment variables dari `.env.local`
-4. Update `NEXT_PUBLIC_APP_URL` ke domain production
-5. Deploy
-
-Vercel Cron sudah dikonfigurasi di [`vercel.json`](vercel.json) — sync otomatis setiap 5 menit via `POST /api/sync/run`.
-
-Set `CRON_SECRET` di Vercel env vars. Vercel otomatis mengirim header `Authorization: Bearer <CRON_SECRET>`.
-
-### Supabase Production
-
-1. Update **Site URL** dan **Redirect URLs** di Supabase Auth ke domain production
-2. Update OAuth redirect URIs di masing-masing provider ke domain production
-
----
-
-## Available Scripts
-
-| Script | Deskripsi |
-|---|---|
-| `npm run dev` | Development server |
-| `npm run build` | Build production |
-| `npm run start` | Jalankan build production |
-| `npm run lint` | ESLint |
-| `npm run supabase` | Supabase CLI (via npx) |
-| `npm run db:push` | Push migrasi ke linked Supabase project |
-| `npm run db:push:url` | Push migrasi dengan connection string |
-
----
-
-## Struktur Folder
-
-```
-turnix-cloud/
-├── app/
-│   ├── (auth)/          # Login & register
-│   ├── (dashboard)/     # Home, My Drive, Recent, Starred, Quota, dll.
-│   └── api/             # REST API route handlers
-├── components/
-│   ├── ui/              # shadcn/ui components
-│   ├── files/           # File explorer, upload
-│   ├── accounts/        # Connect cloud accounts
-│   └── settings/        # User & allocation settings
-├── lib/
-│   ├── supabase/        # Supabase client helpers
-│   ├── adapters/        # Cloud provider adapters
-│   └── services/        # Sync, upload, allocation, crypto
-├── supabase/
-│   └── migrations/      # Database schema SQL
-└── .env.local           # Environment variables (jangan commit)
-```
-
----
-
-## Menjalankan dengan Docker
+## 🐳 Docker setup
 
 ```bash
 docker compose up --build
 ```
 
-Port mapping default: host `3200` → container `3000`  
-Akses di [http://localhost:3200](http://localhost:3200)
+- Host port `3200` → container `3000`
+- Open [http://localhost:3200](http://localhost:3200)
+- Point `NEXT_PUBLIC_APP_URL` (and OAuth redirect URIs) at the URL you actually use
 
----
-
-## Troubleshooting
-
-### `supabase: command not found`
-
-CLI tidak terinstall global. Gunakan:
+Stop:
 
 ```bash
-npx supabase --version
-# atau
-npm run supabase -- --version
+docker compose down
 ```
 
-### Error koneksi database saat `db push`
+## 🚀 Deploy (Vercel + Supabase)
 
-Host Supabase direct connection (`db.xxx.supabase.co`) sering hanya IPv6. Solusi:
+1. Push the repo to GitHub and import it in [Vercel](https://vercel.com)
+2. Set all env vars from `.env.local`
+3. Set `NEXT_PUBLIC_APP_URL` to the production domain
+4. Deploy
 
-1. **Gunakan SQL Editor** di Supabase Dashboard (cara termudah), atau
-2. **Gunakan Session pooler** connection string dengan `npm run db:push:url`
+[`vercel.json`](vercel.json) schedules sync every 5 minutes via `POST /api/sync/run`. Set `CRON_SECRET` in Vercel; Vercel sends `Authorization: Bearer <CRON_SECRET>`.
 
-### Register/login gagal
+Also update:
+- Supabase Auth Site URL / Redirect URLs to production
+- OAuth redirect URIs on each provider console to the production domain
 
-- Pastikan migrasi database sudah dijalankan
-- Cek **Site URL** dan **Redirect URLs** di Supabase Auth
-- Pastikan `NEXT_PUBLIC_SUPABASE_URL` dan `NEXT_PUBLIC_SUPABASE_ANON_KEY` benar
+## 📌 Available scripts
 
-### OAuth redirect error
+| Script | Description |
+| --- | --- |
+| `npm run dev` | Next.js development server |
+| `npm run build` | Production build |
+| `npm run start` | Run production build |
+| `npm run lint` | ESLint |
+| `npm run supabase` | Supabase CLI (via local dependency) |
+| `npm run db:push` | Push migrations to linked Supabase project |
+| `npm run db:push:url` | Push migrations with an explicit DB URL |
 
-- Pastikan redirect URI di provider **exact match** dengan **Redirect URI** di dashboard TurnixCloud
-- Pastikan `NEXT_PUBLIC_APP_URL` sesuai port/domain yang dipakai (termasuk `http` vs `https`)
+## 🔌 API overview
 
-### Google OAuth: Error 403 access_denied
+### Health and sync
+- `GET /api/health`
+- `POST /api/sync/run`
 
-- App masih **Testing** → tambahkan email di **Google Auth platform → Audience → Test users**
-- Setiap Gmail baru perlu ditambah sendiri saat masih Testing
-- Email connect harus **sama persis** dengan yang ada di test users list
-- Token test user expire **7 hari** → connect ulang jika sudah lewat
-- **Production:** publish app + App Verification — lihat [docs/google-oauth-production.md](docs/google-oauth-production.md)
+### Authentication
+- `GET /api/auth/me`
 
-### Google Drive "Configured" tapi file tidak tampil
+### Accounts
+- `GET /api/accounts`
+- `POST /api/accounts/connect`
+- `GET /api/accounts/[provider]/connect`
+- `GET /api/accounts/[provider]/callback`
+- `POST /api/accounts/terabox/connect`
 
-- **Configured ≠ Connected** — klik **Add Account → Connect** setelah save config
-- Setelah connect, klik **Sync All**
-- Cek **Connected Accounts**: status harus `active`, bukan `error`
+### Providers
+- `GET /api/providers`
+- `GET|PUT /api/providers/[provider]`
 
-### Client Secret tidak muncul di Google Console
+### Files
+- `GET /api/files`
+- `GET|PATCH|DELETE /api/files/[id]`
+- `GET /api/files/[id]/download`
+- `GET /api/files/[id]/preview`
 
-- Secret hanya ditampilkan sekali saat create OAuth client
-- Buka client di **Google Auth platform → Clients** → **Reset secret** → copy secret baru → update di dashboard TurnixCloud
+### Uploads
+- `POST /api/uploads`
+- `GET /api/uploads/destination`
 
-### Sync tidak menampilkan file
+### Settings and allocation
+- `GET|PATCH /api/settings`
+- `GET|PATCH /api/allocation`
 
-- Klik **Sync All** di halaman `/quota` setelah connect account
-- Cek status account (harus `active`, bukan `error`)
-- Pastikan OAuth scopes sudah benar per provider
+## 🧠 Storage allocation behavior
 
----
+When an upload starts, the allocation service selects the target account based on the user's configuration. This only affects **new uploads**; sync, browse, and preview still use each file's original account.
 
-## Referensi
+Example use cases:
+- Rotate uploads across accounts (`round_robin`)
+- Prefer the account with the most free space (`most_free`)
+- Enforce a fixed priority list (`manual`)
 
-- Spesifikasi fitur lengkap: [`README-OmniCloud.md`](README-OmniCloud.md)
-- Supabase docs: [https://supabase.com/docs](https://supabase.com/docs)
-- Next.js docs: [https://nextjs.org/docs](https://nextjs.org/docs)
+## 🗄️ Data persistence
+
+Important data stored in Supabase includes:
+
+- Mirrored file metadata (`file_metadata`)
+- Linked cloud accounts (`cloud_accounts`)
+- Encrypted provider credentials / token material
+- Per-provider OAuth app config (`provider_config`)
+- User settings and allocation config
+- Auth identities (Supabase Auth + `profiles`)
+
+## 🔒 Security notes
+
+- Do not commit `.env.local` or service-role keys
+- Treat OAuth client secrets, refresh tokens, S3 keys, and TeraBox NDUS tokens as sensitive
+- `TURNIX_SECRET_KEY` is used to encrypt provider credentials at rest
+- `SUPABASE_SERVICE_ROLE_KEY` must never be exposed to the browser
+- Keep OAuth redirect URIs exact-match with `NEXT_PUBLIC_APP_URL`
+
+## 🧯 Troubleshooting
+
+### `supabase: command not found`
+Use `npx supabase` or `npm run supabase -- --version`.
+
+### Database push connection errors
+Prefer the SQL Editor, or Session pooler URL with `npm run db:push:url`.
+
+### Register / login fails
+- Confirm migrations ran
+- Check Supabase Auth Site URL / Redirect URLs
+- Verify `NEXT_PUBLIC_SUPABASE_*` values
+
+### OAuth redirect errors
+Redirect URI in the provider console must **exact-match** the Redirect URI shown in `/quota`, and `NEXT_PUBLIC_APP_URL` must match the running origin.
+
+### Google `403: access_denied`
+App is still in Testing — add the Gmail under Test users, or publish for production ([guide](docs/google-oauth-production.md)).
+
+### Provider shows "Configured" but no files
+**Configured ≠ Connected.** Use **Add Account → Connect**, then **Sync All**.
+
+## 📄 Reference
+
+- Feature parity reference (original OmniCloud): [`README-OmniCloud.md`](README-OmniCloud.md)
+- Supabase docs: https://supabase.com/docs
+- Next.js docs: https://nextjs.org/docs

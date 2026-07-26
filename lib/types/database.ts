@@ -35,6 +35,7 @@ export interface CloudAccount {
   quota_total: number;
   credentials_encrypted: string;
   status: AccountStatus;
+  error_message: string | null;
   last_synced_at: string | null;
   created_at: string;
 }
@@ -109,6 +110,7 @@ export interface Database {
           quota_total?: number;
           credentials_encrypted?: string;
           status?: AccountStatus;
+          error_message?: string | null;
           last_synced_at?: string | null;
           created_at?: string;
         };

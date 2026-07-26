@@ -1,8 +1,10 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   HardDrive,
+  Link2,
   RefreshCw,
   Trash2,
 } from "lucide-react";
@@ -20,7 +22,7 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { OAUTH_PROVIDERS, PROVIDER_LABELS } from "@/lib/adapters/config";
 import { getAccountDisplayName } from "@/lib/utils/account-display";
-import type { CloudAccount } from "@/lib/types/database";
+import type { CloudAccount, CloudProvider } from "@/lib/types/database";
 import { formatBytes } from "@/lib/utils/format";
 import { AllocationSettings } from "@/components/settings/allocation-settings";
 import { ConnectAccountDialog } from "@/components/accounts/connect-account-dialog";
@@ -28,6 +30,8 @@ import { ProviderConfigPanel } from "@/components/accounts/provider-config-panel
 import { useLanguage } from "@/components/providers/language-provider";
 import { invalidateFileQueries } from "@/lib/utils/invalidate-file-queries";
 import type { ProviderStatus } from "@/lib/services/provider-config";
+import { isTokenExpiredError } from "@/lib/utils/account-error";
+import { isOAuthMessage, openOAuthPopup } from "@/lib/oauth/popup";
 
 async function fetchAccounts() {
   const response = await fetch("/api/accounts");
@@ -46,6 +50,9 @@ async function fetchProviders() {
 export function AccountsPanel() {
   const queryClient = useQueryClient();
   const { t, language } = useLanguage();
+  const [reconnectingProvider, setReconnectingProvider] =
+    useState<CloudProvider | null>(null);
+  const popupPollRef = useRef<number | null>(null);
 
   const { data: accounts = [], isLoading } = useQuery({
     queryKey: ["accounts"],
@@ -65,6 +72,44 @@ export function AccountsPanel() {
         OAUTH_PROVIDERS.includes(provider.provider))
   );
 
+  function clearPopupPoll() {
+    if (popupPollRef.current !== null) {
+      window.clearInterval(popupPollRef.current);
+      popupPollRef.current = null;
+    }
+  }
+
+  function refreshAccounts() {
+    queryClient.invalidateQueries({ queryKey: ["accounts"] });
+    invalidateFileQueries(queryClient);
+  }
+
+  useEffect(() => {
+    function handleOAuthMessage(event: MessageEvent) {
+      if (event.origin !== window.location.origin) return;
+      if (!isOAuthMessage(event.data)) return;
+
+      clearPopupPoll();
+      setReconnectingProvider(null);
+
+      if (event.data.error) {
+        toast.error(t("providers.connectFailed"));
+        return;
+      }
+
+      if (event.data.connected) {
+        toast.success(t("providers.connectSuccess"));
+        refreshAccounts();
+      }
+    }
+
+    window.addEventListener("message", handleOAuthMessage);
+    return () => {
+      window.removeEventListener("message", handleOAuthMessage);
+      clearPopupPoll();
+    };
+  }, [queryClient, t]);
+
   const syncMutation = useMutation({
     mutationFn: async (accountId?: string) => {
       const response = await fetch("/api/sync/run", {
@@ -75,17 +120,22 @@ export function AccountsPanel() {
       if (!response.ok) throw new Error("Sync failed");
       return response.json();
     },
-    onSuccess: (data: { results?: Array<{ provider: string; filesSynced: number; error?: string }> }) => {
+    onSuccess: (data: {
+      results?: Array<{ provider: string; filesSynced: number; error?: string }>;
+    }) => {
       const errors = (data.results ?? []).filter((result) => result.error);
       if (errors.length > 0) {
-        toast.error(
-          errors.map((result) => `${result.provider}: ${result.error}`).join(" · ")
-        );
+        const friendly = errors.map((result) => {
+          const detail = isTokenExpiredError(result.error)
+            ? t("accounts.errorTokenExpired")
+            : result.error;
+          return `${PROVIDER_LABELS[result.provider as CloudProvider] ?? result.provider}: ${detail}`;
+        });
+        toast.error(friendly.join(" · "));
       } else {
         toast.success(t("accounts.syncSuccess"));
       }
-      queryClient.invalidateQueries({ queryKey: ["accounts"] });
-      invalidateFileQueries(queryClient);
+      refreshAccounts();
     },
     onError: () => toast.error(t("accounts.syncFailed")),
   });
@@ -96,6 +146,29 @@ export function AccountsPanel() {
       toast.success(t("accounts.disconnectSuccess"));
       queryClient.invalidateQueries({ queryKey: ["accounts"] });
     }
+  }
+
+  function handleReconnect(provider: CloudProvider) {
+    if (!OAUTH_PROVIDERS.includes(provider)) {
+      document.getElementById("provider-config")?.scrollIntoView({ behavior: "smooth" });
+      toast.message(t("accounts.reconnectHint"));
+      return;
+    }
+
+    clearPopupPoll();
+    const popup = openOAuthPopup(provider);
+    if (!popup) {
+      toast.error(t("providers.popupBlocked"));
+      return;
+    }
+
+    setReconnectingProvider(provider);
+    popupPollRef.current = window.setInterval(() => {
+      if (popup.closed) {
+        clearPopupPoll();
+        setReconnectingProvider(null);
+      }
+    }, 500);
   }
 
   return (
@@ -170,59 +243,91 @@ export function AccountsPanel() {
               account.quota_total > 0
                 ? Math.round((account.quota_used / account.quota_total) * 100)
                 : 0;
+            const isError = account.status === "error";
+            const tokenExpired = isError && isTokenExpiredError(account.error_message);
+            const errorText = tokenExpired
+              ? t("accounts.errorTokenExpired")
+              : account.error_message || t("accounts.errorGeneric");
+            const isReconnecting = reconnectingProvider === account.provider;
 
             return (
               <div
                 key={account.id}
-                className="flex items-start justify-between rounded-lg border p-4"
+                className={`space-y-3 rounded-lg border p-4 ${
+                  isError ? "border-destructive/40 bg-destructive/5" : ""
+                }`}
               >
-                <div className="space-y-2 flex-1 mr-4">
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium">{getAccountDisplayName(account)}</span>
-                    <Badge variant="outline">
-                      {PROVIDER_LABELS[account.provider]}
-                    </Badge>
-                    <Badge
-                      variant={account.status === "active" ? "default" : "destructive"}
-                    >
-                      {account.status}
-                    </Badge>
-                  </div>
-                  {account.email && (
-                    <p className="text-xs text-muted-foreground">{account.email}</p>
-                  )}
-                  <div className="space-y-1">
-                    <div className="flex justify-between text-xs text-muted-foreground">
-                      <span>
-                        {formatBytes(account.quota_used)} / {formatBytes(account.quota_total)}
-                      </span>
-                      <span>{usagePercent}%</span>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="space-y-2 flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="font-medium">{getAccountDisplayName(account)}</span>
+                      <Badge variant="outline">
+                        {PROVIDER_LABELS[account.provider]}
+                      </Badge>
+                      <Badge variant={isError ? "destructive" : "default"}>
+                        {isError ? t("accounts.statusError") : account.status}
+                      </Badge>
                     </div>
-                    <Progress value={usagePercent} />
+                    {account.email && (
+                      <p className="text-xs text-muted-foreground">{account.email}</p>
+                    )}
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-xs text-muted-foreground">
+                        <span>
+                          {formatBytes(account.quota_used)} / {formatBytes(account.quota_total)}
+                        </span>
+                        <span>{usagePercent}%</span>
+                      </div>
+                      <Progress value={usagePercent} />
+                    </div>
+                    {account.last_synced_at && (
+                      <p className="text-xs text-muted-foreground">
+                        {t("accounts.lastSynced")}:{" "}
+                        {new Date(account.last_synced_at).toLocaleString()}
+                      </p>
+                    )}
                   </div>
-                  {account.last_synced_at && (
-                    <p className="text-xs text-muted-foreground">
-                      {t("accounts.lastSynced")}: {new Date(account.last_synced_at).toLocaleString()}
-                    </p>
-                  )}
+                  <div className="flex gap-1 shrink-0">
+                    {!isError && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => syncMutation.mutate(account.id)}
+                        disabled={syncMutation.isPending}
+                      >
+                        <RefreshCw className="size-4" />
+                      </Button>
+                    )}
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleDisconnect(account.id)}
+                    >
+                      <Trash2 className="size-4 text-destructive" />
+                    </Button>
+                  </div>
                 </div>
-                <div className="flex gap-1">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => syncMutation.mutate(account.id)}
-                    disabled={syncMutation.isPending}
-                  >
-                    <RefreshCw className="size-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleDisconnect(account.id)}
-                  >
-                    <Trash2 className="size-4 text-destructive" />
-                  </Button>
-                </div>
+
+                {isError && (
+                  <Alert variant="destructive">
+                    <AlertDescription className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                      <span>{errorText}</span>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="shrink-0 border-destructive/40"
+                        onClick={() => handleReconnect(account.provider)}
+                        disabled={isReconnecting}
+                        title={t("accounts.reconnectHint")}
+                      >
+                        <Link2
+                          className={`size-4 mr-1 ${isReconnecting ? "animate-pulse" : ""}`}
+                        />
+                        {t("accounts.reconnect")}
+                      </Button>
+                    </AlertDescription>
+                  </Alert>
+                )}
               </div>
             );
           })}

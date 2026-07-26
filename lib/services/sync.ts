@@ -8,6 +8,7 @@ import {
 import type { ProviderCredentials } from "@/lib/adapters/types";
 import { OAUTH_PROVIDERS } from "@/lib/adapters/config";
 import { resolveOAuthConfig } from "@/lib/services/provider-config";
+import { classifyAccountError } from "@/lib/utils/account-error";
 
 type Supabase = SupabaseClient;
 
@@ -105,11 +106,13 @@ export async function syncUserAccounts(
   let query = supabase
     .from("cloud_accounts")
     .select("*")
-    .eq("user_id", userId)
-    .eq("status", "active");
+    .eq("user_id", userId);
 
   if (accountId) {
     query = query.eq("id", accountId);
+  } else {
+    // Sync All skips accounts already in error — they need reconnect first
+    query = query.eq("status", "active");
   }
 
   const { data: accounts, error } = await query;
@@ -140,6 +143,8 @@ export async function syncUserAccounts(
           quota_used: quota.used,
           quota_total: quota.total,
           last_synced_at: new Date().toISOString(),
+          status: "active",
+          error_message: null,
         })
         .eq("id", account.id);
 
@@ -149,16 +154,17 @@ export async function syncUserAccounts(
         filesSynced,
       });
     } catch (err) {
+      const errorMessage = classifyAccountError(err);
       await supabase
         .from("cloud_accounts")
-        .update({ status: "error" })
+        .update({ status: "error", error_message: errorMessage })
         .eq("id", account.id);
 
       results.push({
         accountId: account.id,
         provider: account.provider,
         filesSynced: 0,
-        error: err instanceof Error ? err.message : "Sync failed",
+        error: errorMessage,
       });
     }
   }

@@ -55,6 +55,12 @@ export const id: Dictionary = {
   "accounts.syncSuccess": "Sinkronisasi selesai",
   "accounts.syncFailed": "Sinkronisasi gagal",
   "accounts.disconnectSuccess": "Akun terputus",
+  "accounts.statusError": "error",
+  "accounts.errorTokenExpired":
+    "Token akses sudah kedaluwarsa atau dicabut. Hubungkan ulang akun ini untuk otorisasi kembali.",
+  "accounts.errorGeneric": "Akun ini mengalami error dan perlu diperbaiki.",
+  "accounts.reconnect": "Hubungkan ulang",
+  "accounts.reconnectHint": "Buka login provider untuk memperbarui kredensial.",
   "allocation.title": "Alokasi Upload",
   "allocation.desc": "Tentukan akun cloud mana yang menerima file baru saat upload di Drive Saya (drag-and-drop).",
   "allocation.note": "Hanya memengaruhi upload baru. Sinkron Semua, preview file, dan browse tidak berubah — tetap dari akun asal masing-masing file.",
