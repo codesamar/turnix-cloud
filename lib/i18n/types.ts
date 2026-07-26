@@ -216,6 +216,9 @@ export type TranslationKey =
   | "move.moving"
   | "move.success"
   | "move.action"
+  | "move.accountDisconnected"
+  | "move.accountNeedsReconnect"
+  | "move.accountDisconnectedBadge"
   | "common.placeholder.name";
 
 export type Dictionary = Record<TranslationKey, string>;

@@ -202,18 +202,25 @@ export const oneDriveAdapter: CloudAdapter = {
   },
 
   async move(credentials, fileId, destinationParentPath) {
-    const body =
-      destinationParentPath === "/"
-        ? { parentReference: { path: "/drive/root" } }
-        : { parentReference: { id: destinationParentPath } };
+    let parentReference: { id: string };
+    if (destinationParentPath === "/") {
+      const rootResponse = await graphFetch(
+        credentials,
+        "/me/drive/root?$select=id"
+      );
+      const root = await rootResponse.json();
+      parentReference = { id: root.id as string };
+    } else {
+      parentReference = { id: destinationParentPath };
+    }
 
     const response = await graphFetch(
       credentials,
-      `/me/drive/items/${fileId}/move`,
+      `/me/drive/items/${fileId}`,
       {
-        method: "POST",
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+        body: JSON.stringify({ parentReference }),
       }
     );
     return normalizeItem(await response.json());
@@ -245,41 +252,84 @@ export const oneDriveAdapter: CloudAdapter = {
   },
 
   async upload(credentials, parentPath, filename, data, size, onProgress) {
-    const endpoint =
+    // Simple PUT /content is capped at 4MB; upload sessions support larger files.
+    const sessionPath =
       parentPath === "/"
-        ? `/me/drive/root:/${encodeURIComponent(filename)}:/content`
-        : `/me/drive/items/${parentPath}:/${encodeURIComponent(filename)}:/content`;
+        ? `/me/drive/root:/${encodeURIComponent(filename)}:/createUploadSession`
+        : `/me/drive/items/${parentPath}:/${encodeURIComponent(filename)}:/createUploadSession`;
 
     const reader = data.getReader();
     const chunks: Uint8Array[] = [];
-    let uploaded = 0;
+    let readBytes = 0;
 
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
       chunks.push(value);
-      uploaded += value.length;
-      onProgress?.(Math.round((uploaded / size) * 100));
+      readBytes += value.length;
+      if (size > 0) {
+        onProgress?.(Math.min(40, Math.round((readBytes / size) * 40)));
+      }
     }
 
-    const body = Buffer.concat(chunks.map((c) => Buffer.from(c)));
-    const response = await fetch(
-      `https://graph.microsoft.com/v1.0${endpoint}`,
-      {
+    const fileData = Buffer.concat(chunks.map((c) => Buffer.from(c)));
+    const contentLength = fileData.length;
+
+    const sessionResponse = await graphFetch(credentials, sessionPath, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        item: {
+          "@microsoft.graph.conflictBehavior": "rename",
+          name: filename,
+        },
+      }),
+    });
+    const session = await sessionResponse.json();
+    const uploadUrl = session.uploadUrl as string | undefined;
+    if (!uploadUrl) {
+      throw new Error("OneDrive upload session URL missing");
+    }
+
+    // Fragments must be multiples of 320 KiB, except the last.
+    const CHUNK_SIZE = 320 * 1024 * 16; // 5 MiB
+    let offset = 0;
+
+    while (offset < contentLength) {
+      const end = Math.min(offset + CHUNK_SIZE, contentLength);
+      const chunk = fileData.subarray(offset, end);
+      const uploadResponse = await fetch(uploadUrl, {
         method: "PUT",
         headers: {
-          Authorization: `Bearer ${credentials.accessToken}`,
-          "Content-Type": "application/octet-stream",
+          "Content-Length": String(chunk.length),
+          "Content-Range": `bytes ${offset}-${end - 1}/${contentLength}`,
         },
-        body,
-      }
-    );
+        body: chunk,
+      });
 
-    if (!response.ok) {
-      throw new Error("Failed to upload to OneDrive");
+      if (end === contentLength) {
+        if (!uploadResponse.ok) {
+          const body = await uploadResponse.text();
+          throw new Error(
+            `Failed to upload to OneDrive: ${uploadResponse.status} ${body}`
+          );
+        }
+        onProgress?.(100);
+        return normalizeItem(await uploadResponse.json());
+      }
+
+      if (uploadResponse.status !== 202 && !uploadResponse.ok) {
+        const body = await uploadResponse.text();
+        throw new Error(
+          `Failed to upload to OneDrive: ${uploadResponse.status} ${body}`
+        );
+      }
+
+      offset = end;
+      onProgress?.(Math.min(99, Math.round(40 + (offset / contentLength) * 60)));
     }
 
-    return normalizeItem(await response.json());
+    throw new Error("Failed to upload to OneDrive");
   },
 
   async getQuota(credentials) {

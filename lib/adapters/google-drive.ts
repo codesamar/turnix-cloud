@@ -263,51 +263,90 @@ export const googleDriveAdapter: CloudAdapter = {
       parents: [parentId],
     };
 
-    const boundary = "samar_boundary";
-    const metaPart = `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(metadata)}\r\n`;
-    const fileHeader = `--${boundary}\r\nContent-Type: application/octet-stream\r\n\r\n`;
-
     const reader = data.getReader();
     const chunks: Uint8Array[] = [];
-    let uploaded = 0;
+    let readBytes = 0;
 
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
       chunks.push(value);
-      uploaded += value.length;
+      readBytes += value.length;
       if (size > 0) {
-        onProgress?.(Math.min(95, Math.round((uploaded / size) * 95)));
+        onProgress?.(Math.min(40, Math.round((readBytes / size) * 40)));
       }
     }
 
     const fileData = Buffer.concat(chunks.map((c) => Buffer.from(c)));
-    const body = Buffer.concat([
-      Buffer.from(metaPart),
-      Buffer.from(fileHeader),
-      fileData,
-      Buffer.from(`\r\n--${boundary}--`),
-    ]);
+    const contentLength = fileData.length;
 
-    const response = await fetch(
-      "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,mimeType,size,modifiedTime,starred,shared,parents",
+    // Multipart is capped at 5MB; resumable works for all sizes.
+    const initResponse = await fetch(
+      "https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable&fields=id,name,mimeType,size,modifiedTime,starred,shared,parents",
       {
         method: "POST",
         headers: {
           Authorization: `Bearer ${credentials.accessToken}`,
-          "Content-Type": `multipart/related; boundary=${boundary}`,
+          "Content-Type": "application/json; charset=UTF-8",
+          "X-Upload-Content-Type": "application/octet-stream",
+          "X-Upload-Content-Length": String(contentLength),
         },
-        body,
+        body: JSON.stringify(metadata),
       }
     );
 
-    if (!response.ok) {
-      throw new Error("Failed to upload to Google Drive");
+    if (!initResponse.ok) {
+      const body = await initResponse.text();
+      throw new Error(
+        `Failed to initiate Google Drive upload: ${initResponse.status} ${body}`
+      );
     }
 
-    onProgress?.(100);
+    const sessionUri = initResponse.headers.get("Location");
+    if (!sessionUri) {
+      throw new Error("Google Drive upload session URI missing");
+    }
 
-    return normalizeFile(await response.json());
+    const CHUNK_SIZE = 5 * 1024 * 1024;
+    let offset = 0;
+
+    while (offset < contentLength) {
+      const end = Math.min(offset + CHUNK_SIZE, contentLength);
+      const chunk = fileData.subarray(offset, end);
+      const uploadResponse = await fetch(sessionUri, {
+        method: "PUT",
+        headers: {
+          "Content-Length": String(chunk.length),
+          "Content-Range": `bytes ${offset}-${end - 1}/${contentLength}`,
+          "Content-Type": "application/octet-stream",
+        },
+        body: chunk,
+      });
+
+      if (end === contentLength) {
+        if (!uploadResponse.ok) {
+          const body = await uploadResponse.text();
+          throw new Error(
+            `Failed to upload to Google Drive: ${uploadResponse.status} ${body}`
+          );
+        }
+        onProgress?.(100);
+        return normalizeFile(await uploadResponse.json());
+      }
+
+      // Incomplete chunks return 308 Resume Incomplete.
+      if (uploadResponse.status !== 308 && !uploadResponse.ok) {
+        const body = await uploadResponse.text();
+        throw new Error(
+          `Failed to upload to Google Drive: ${uploadResponse.status} ${body}`
+        );
+      }
+
+      offset = end;
+      onProgress?.(Math.min(99, Math.round(40 + (offset / contentLength) * 60)));
+    }
+
+    throw new Error("Failed to upload to Google Drive");
   },
 
   async getQuota(credentials) {

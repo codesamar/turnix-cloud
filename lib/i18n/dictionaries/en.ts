@@ -221,5 +221,10 @@ export const en: Dictionary = {
   "move.moving": "Moving...",
   "move.success": "Items moved successfully",
   "move.action": "Move",
+  "move.accountDisconnected":
+    "{account} is no longer connected. Reconnect it in Accounts, then try again.",
+  "move.accountNeedsReconnect":
+    "This account is disconnected. Reconnect it in Accounts before moving here.",
+  "move.accountDisconnectedBadge": "disconnected",
   "common.placeholder.name": "Your name",
 };

@@ -221,5 +221,10 @@ export const id: Dictionary = {
   "move.moving": "Memindahkan...",
   "move.success": "Item berhasil dipindahkan",
   "move.action": "Pindahkan",
+  "move.accountDisconnected":
+    "{account} sudah tidak terhubung. Hubungkan ulang di halaman Accounts, lalu coba lagi.",
+  "move.accountNeedsReconnect":
+    "Akun ini sudah tidak terhubung. Hubungkan ulang di halaman Accounts sebelum memindahkan ke sini.",
+  "move.accountDisconnectedBadge": "terputus",
   "common.placeholder.name": "Nama Anda",
 };

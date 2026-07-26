@@ -1,9 +1,10 @@
 "use client";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { ChevronRight, Folder, FolderInput, Loader2 } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AlertCircle, ChevronRight, Folder, FolderInput, Loader2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -23,7 +24,11 @@ import {
 } from "@/components/ui/select";
 import { useLanguage } from "@/components/providers/language-provider";
 import type { CloudAccount, FileMetadata, FileMetadataWithAccount } from "@/lib/types/database";
-import { getAccountDisplayName } from "@/lib/utils/account-display";
+import {
+  ACCOUNT_DISCONNECTED_CODE,
+  isTokenExpiredError,
+} from "@/lib/utils/account-error";
+import { getFileAccountLabel } from "@/lib/utils/account-display";
 
 interface MoveFileDialogProps {
   open: boolean;
@@ -53,6 +58,7 @@ export function MoveFileDialog({
   onMoved,
 }: MoveFileDialogProps) {
   const { t } = useLanguage();
+  const queryClient = useQueryClient();
   const [destinationAccountId, setDestinationAccountId] = useState("");
   const [folderStack, setFolderStack] = useState<FileMetadata[]>([]);
 
@@ -67,17 +73,33 @@ export function MoveFileDialog({
     enabled: open,
   });
 
+  const isAccountDisconnected = (account: CloudAccount) =>
+    account.status === "error" && isTokenExpiredError(account.error_message);
+
   useEffect(() => {
     if (!open || accounts.length === 0) return;
 
-    const defaultAccount =
-      files[0]?.account_id && accounts.some((account) => account.id === files[0].account_id)
-        ? files[0].account_id
-        : accounts[0].id;
+    const preferredId = files[0]?.account_id;
+    const preferred = preferredId
+      ? accounts.find((account) => account.id === preferredId)
+      : undefined;
+    const firstActive = accounts.find((account) => !isAccountDisconnected(account));
+    const defaultAccountId =
+      (preferred && !isAccountDisconnected(preferred) ? preferred.id : undefined) ??
+      firstActive?.id ??
+      preferred?.id ??
+      accounts[0].id;
 
-    setDestinationAccountId(defaultAccount);
+    setDestinationAccountId(defaultAccountId);
     setFolderStack([]);
   }, [open, accounts, files]);
+
+  const selectedAccount = accounts.find(
+    (account) => account.id === destinationAccountId
+  );
+  const selectedDisconnected = selectedAccount
+    ? isAccountDisconnected(selectedAccount)
+    : false;
 
   const currentFolder = folderStack[folderStack.length - 1] ?? null;
   const foldersUrl = currentFolder
@@ -87,11 +109,18 @@ export function MoveFileDialog({
   const { data: folders = [], isLoading: foldersLoading } = useQuery({
     queryKey: ["move-folders", destinationAccountId, currentFolder?.id ?? "root"],
     queryFn: () => fetchFolders(foldersUrl),
-    enabled: open && Boolean(destinationAccountId),
+    enabled: open && Boolean(destinationAccountId) && !selectedDisconnected,
   });
 
   const moveMutation = useMutation({
     mutationFn: async () => {
+      if (selectedDisconnected && selectedAccount) {
+        throw Object.assign(new Error(ACCOUNT_DISCONNECTED_CODE), {
+          code: ACCOUNT_DISCONNECTED_CODE,
+          accountLabel: getFileAccountLabel(selectedAccount),
+        });
+      }
+
       const response = await fetch("/api/files", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -105,7 +134,10 @@ export function MoveFileDialog({
 
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.error ?? "Move failed");
+        throw Object.assign(new Error(data.error ?? "Move failed"), {
+          code: data.code as string | undefined,
+          accountLabel: data.accountLabel as string | undefined,
+        });
       }
 
       return data;
@@ -115,7 +147,17 @@ export function MoveFileDialog({
       onOpenChange(false);
       onMoved();
     },
-    onError: (error: Error) => {
+    onError: (error: Error & { code?: string; accountLabel?: string }) => {
+      if (error.code === ACCOUNT_DISCONNECTED_CODE) {
+        const label =
+          error.accountLabel ||
+          (selectedAccount
+            ? getFileAccountLabel(selectedAccount)
+            : t("move.destinationAccount"));
+        void queryClient.invalidateQueries({ queryKey: ["accounts"] });
+        toast.error(t("move.accountDisconnected").replace("{account}", label));
+        return;
+      }
       toast.error(error.message);
     },
   });
@@ -179,13 +221,29 @@ export function MoveFileDialog({
                 <SelectValue placeholder={t("move.selectAccount")} />
               </SelectTrigger>
               <SelectContent>
-                {accounts.map((account) => (
-                  <SelectItem key={account.id} value={account.id}>
-                    {getAccountDisplayName(account)}
-                  </SelectItem>
-                ))}
+                {accounts.map((account) => {
+                  const disconnected = isAccountDisconnected(account);
+                  return (
+                    <SelectItem key={account.id} value={account.id}>
+                      <span className="flex items-center gap-2">
+                        <span>{getFileAccountLabel(account)}</span>
+                        {disconnected && (
+                          <span className="text-xs text-destructive">
+                            ({t("move.accountDisconnectedBadge")})
+                          </span>
+                        )}
+                      </span>
+                    </SelectItem>
+                  );
+                })}
               </SelectContent>
             </Select>
+            {selectedDisconnected && (
+              <Alert variant="destructive">
+                <AlertCircle className="size-4" />
+                <AlertDescription>{t("move.accountNeedsReconnect")}</AlertDescription>
+              </Alert>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -196,6 +254,7 @@ export function MoveFileDialog({
                   type="button"
                   className="hover:text-foreground"
                   onClick={() => handleBreadcrumbClick(-1)}
+                  disabled={selectedDisconnected}
                 >
                   {t("move.rootFolder")}
                 </button>
@@ -206,6 +265,7 @@ export function MoveFileDialog({
                       type="button"
                       className="hover:text-foreground truncate max-w-[140px]"
                       onClick={() => handleBreadcrumbClick(index)}
+                      disabled={selectedDisconnected}
                     >
                       {folder.name}
                     </button>
@@ -214,20 +274,27 @@ export function MoveFileDialog({
               </div>
 
               <div className="max-h-52 overflow-y-auto">
-                {foldersLoading && (
+                {selectedDisconnected && (
+                  <p className="px-3 py-6 text-center text-sm text-muted-foreground">
+                    {t("move.accountNeedsReconnect")}
+                  </p>
+                )}
+
+                {!selectedDisconnected && foldersLoading && (
                   <div className="flex items-center justify-center gap-2 py-8 text-sm text-muted-foreground">
                     <Loader2 className="size-4 animate-spin" />
                     {t("move.loadingFolders")}
                   </div>
                 )}
 
-                {!foldersLoading && folders.length === 0 && (
+                {!selectedDisconnected && !foldersLoading && folders.length === 0 && (
                   <p className="px-3 py-6 text-center text-sm text-muted-foreground">
                     {t("move.noSubfolders")}
                   </p>
                 )}
 
-                {!foldersLoading &&
+                {!selectedDisconnected &&
+                  !foldersLoading &&
                   folders.map((folder) => {
                     const blocked = isBlockedDestination(folder);
                     return (
@@ -255,7 +322,11 @@ export function MoveFileDialog({
           </Button>
           <Button
             onClick={() => moveMutation.mutate()}
-            disabled={!destinationAccountId || moveMutation.isPending}
+            disabled={
+              !destinationAccountId ||
+              selectedDisconnected ||
+              moveMutation.isPending
+            }
           >
             {moveMutation.isPending ? (
               <>

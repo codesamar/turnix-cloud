@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getAccountCredentials } from "@/lib/services/accounts";
 import { moveFiles } from "@/lib/services/move";
 import { getAdapter } from "@/lib/adapters/registry";
+import { toAccountApiError } from "@/lib/utils/account-error";
 
 export async function GET(request: Request) {
   const supabase = await createClient();
@@ -105,10 +106,8 @@ export async function POST(request: Request) {
       });
       return NextResponse.json(result);
     } catch (err) {
-      return NextResponse.json(
-        { error: err instanceof Error ? err.message : "Move failed" },
-        { status: 400 }
-      );
+      console.error("[move]", err);
+      return NextResponse.json(toAccountApiError(err), { status: 400 });
     }
   }
 
