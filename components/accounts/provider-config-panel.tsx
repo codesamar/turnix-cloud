@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Copy, Settings2 } from "lucide-react";
 import { toast } from "sonner";
@@ -84,12 +84,16 @@ export function ProviderConfigPanel({ stepLabel }: { stepLabel?: string }) {
     toast.success(t("providers.redirectCopied"));
   }
 
-  function handleSave(provider: CloudProvider, form: ProviderFormState, hasSecret: boolean) {
+  function handleSave(provider: CloudProvider, form: ProviderFormState) {
+    // First-time save (secret entered) auto-enables so badge/Connect unlock.
+    // Later saves respect the Enable switch.
+    const enabled = form.enabled || form.clientSecret.trim().length > 0;
+
     saveMutation.mutate({
       provider,
       payload: {
-        enabled: form.enabled,
-        clientId: form.clientId,
+        enabled,
+        clientId: form.clientId.trim(),
         clientSecret: form.clientSecret || undefined,
         extra: provider === "onedrive" ? { tenantId: form.tenantId || "common" } : {},
       },
@@ -135,7 +139,7 @@ export function ProviderConfigPanel({ stepLabel }: { stepLabel?: string }) {
 
 interface ProviderConfigItemProps {
   provider: ProviderStatus;
-  onSave: (provider: CloudProvider, form: ProviderFormState, hasSecret: boolean) => void;
+  onSave: (provider: CloudProvider, form: ProviderFormState) => void;
   onCopyRedirect: (uri: string) => void;
   isSaving: boolean;
 }
@@ -153,6 +157,16 @@ function ProviderConfigItem({
     clientSecret: "",
     tenantId: provider.extra?.tenantId ?? "common",
   });
+
+  useEffect(() => {
+    setForm((prev) => ({
+      enabled: provider.enabled,
+      // Prefer server value after save; keep in-progress draft otherwise.
+      clientId: provider.clientId ?? prev.clientId,
+      clientSecret: provider.configured ? "" : prev.clientSecret,
+      tenantId: provider.extra?.tenantId ?? prev.tenantId,
+    }));
+  }, [provider.enabled, provider.clientId, provider.extra?.tenantId, provider.configured]);
 
   const canSave =
     form.clientId.trim().length > 0 &&
@@ -201,6 +215,11 @@ function ProviderConfigItem({
                 : t("providers.secretPlaceholder")
             }
           />
+          {provider.configured && (
+            <p className="text-xs text-muted-foreground">
+              {t("providers.secretPlaceholderKeep")}
+            </p>
+          )}
         </div>
 
         {provider.provider === "onedrive" && (
@@ -231,7 +250,7 @@ function ProviderConfigItem({
         </div>
 
         <Button
-          onClick={() => onSave(provider.provider, form, provider.configured)}
+          onClick={() => onSave(provider.provider, form)}
           disabled={isSaving || !canSave}
         >
           {t("providers.saveConfig")}

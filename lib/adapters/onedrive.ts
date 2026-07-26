@@ -6,6 +6,9 @@ import type {
 } from "@/lib/adapters/types";
 
 const SCOPES = [
+  "openid",
+  "profile",
+  "email",
   "offline_access",
   "Files.ReadWrite.All",
   "User.Read",
@@ -88,15 +91,26 @@ export const oneDriveAdapter: CloudAdapter = {
           client_secret: clientSecret,
           redirect_uri: redirectUri,
           grant_type: "authorization_code",
+          scope: SCOPES.join(" "),
         }),
       }
     );
 
+    const data = await response.json();
     if (!response.ok) {
-      throw new Error("Failed to exchange OneDrive OAuth code");
+      const detail =
+        typeof data?.error_description === "string"
+          ? data.error_description
+          : typeof data?.error === "string"
+            ? data.error
+            : "token_exchange_failed";
+      throw new Error(`OneDrive token exchange failed: ${detail}`);
     }
 
-    const data = await response.json();
+    if (!data.access_token) {
+      throw new Error("OneDrive token exchange returned no access_token");
+    }
+
     const profileRes = await graphFetch(
       { accessToken: data.access_token },
       "/me"
