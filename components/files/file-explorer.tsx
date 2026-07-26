@@ -17,7 +17,7 @@ import {
   Star,
   Trash2,
 } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -27,6 +27,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -46,8 +53,17 @@ import { MoveFileDialog } from "@/components/files/move-file-dialog";
 import { useLanguage } from "@/components/providers/language-provider";
 
 type ViewMode = "list" | "grid";
+type SortMode = "name-asc" | "name-desc" | "date-newest" | "date-oldest";
 
 const VIEW_STORAGE_KEY = "samarcloud.fileView";
+const SORT_STORAGE_KEY = "samarcloud.fileSort";
+
+const SORT_MODES: SortMode[] = [
+  "name-asc",
+  "name-desc",
+  "date-newest",
+  "date-oldest",
+];
 
 interface FileExplorerProps {
   queryKey: string;
@@ -70,6 +86,45 @@ function readStoredViewMode(): ViewMode {
   if (typeof window === "undefined") return "list";
   const stored = window.localStorage.getItem(VIEW_STORAGE_KEY);
   return stored === "grid" ? "grid" : "list";
+}
+
+function readStoredSortMode(): SortMode {
+  if (typeof window === "undefined") return "name-asc";
+  const stored = window.localStorage.getItem(SORT_STORAGE_KEY);
+  return SORT_MODES.includes(stored as SortMode)
+    ? (stored as SortMode)
+    : "name-asc";
+}
+
+function sortFiles(
+  files: FileMetadataWithAccount[],
+  sortMode: SortMode
+): FileMetadataWithAccount[] {
+  const sorted = [...files];
+  sorted.sort((a, b) => {
+    if (a.is_folder !== b.is_folder) {
+      return a.is_folder ? -1 : 1;
+    }
+
+    if (sortMode === "name-asc" || sortMode === "name-desc") {
+      const cmp = a.name.localeCompare(b.name, undefined, {
+        sensitivity: "base",
+        numeric: true,
+      });
+      return sortMode === "name-asc" ? cmp : -cmp;
+    }
+
+    const aTime = a.modified_at ? new Date(a.modified_at).getTime() : 0;
+    const bTime = b.modified_at ? new Date(b.modified_at).getTime() : 0;
+    if (aTime !== bTime) {
+      return sortMode === "date-newest" ? bTime - aTime : aTime - bTime;
+    }
+    return a.name.localeCompare(b.name, undefined, {
+      sensitivity: "base",
+      numeric: true,
+    });
+  });
+  return sorted;
 }
 
 function GridMediaLoading() {
@@ -249,6 +304,7 @@ export function FileExplorer({
 }: FileExplorerProps) {
   const { t } = useLanguage();
   const [viewMode, setViewMode] = useState<ViewMode>("list");
+  const [sortMode, setSortMode] = useState<SortMode>("name-asc");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [previewFile, setPreviewFile] = useState<FileMetadata | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -257,6 +313,7 @@ export function FileExplorer({
 
   useEffect(() => {
     setViewMode(readStoredViewMode());
+    setSortMode(readStoredSortMode());
   }, []);
 
   function handleViewModeChange(value: string) {
@@ -265,10 +322,22 @@ export function FileExplorer({
     window.localStorage.setItem(VIEW_STORAGE_KEY, value);
   }
 
+  function handleSortModeChange(value: string) {
+    if (!SORT_MODES.includes(value as SortMode)) return;
+    const next = value as SortMode;
+    setSortMode(next);
+    window.localStorage.setItem(SORT_STORAGE_KEY, next);
+  }
+
   const { data: files = [], isLoading, refetch } = useQuery({
     queryKey: [queryKey, fetchUrl],
     queryFn: () => fetchFiles(fetchUrl),
   });
+
+  const sortedFiles = useMemo(
+    () => sortFiles(files, sortMode),
+    [files, sortMode]
+  );
 
   const toggleSelect = useCallback((id: string) => {
     setSelected((prev) => {
@@ -364,21 +433,42 @@ export function FileExplorer({
           )}
         </div>
 
-        <ToggleGroup
-          type="single"
-          value={viewMode}
-          onValueChange={handleViewModeChange}
-          variant="outline"
-          size="sm"
-          className="justify-end"
-        >
-          <ToggleGroupItem value="list" aria-label={t("files.viewList")} title={t("files.viewList")}>
-            <List className="size-4" />
-          </ToggleGroupItem>
-          <ToggleGroupItem value="grid" aria-label={t("files.viewGrid")} title={t("files.viewGrid")}>
-            <LayoutGrid className="size-4" />
-          </ToggleGroupItem>
-        </ToggleGroup>
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          <Select value={sortMode} onValueChange={handleSortModeChange}>
+            <SelectTrigger
+              className="w-[11.5rem]"
+              aria-label={t("files.sortBy")}
+              title={t("files.sortBy")}
+            >
+              <SelectValue placeholder={t("files.sortBy")} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="name-asc">{t("files.sortNameAsc")}</SelectItem>
+              <SelectItem value="name-desc">{t("files.sortNameDesc")}</SelectItem>
+              <SelectItem value="date-newest">
+                {t("files.sortDateNewest")}
+              </SelectItem>
+              <SelectItem value="date-oldest">
+                {t("files.sortDateOldest")}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+          <ToggleGroup
+            type="single"
+            value={viewMode}
+            onValueChange={handleViewModeChange}
+            variant="outline"
+            size="sm"
+            className="justify-end"
+          >
+            <ToggleGroupItem value="list" aria-label={t("files.viewList")} title={t("files.viewList")}>
+              <List className="size-4" />
+            </ToggleGroupItem>
+            <ToggleGroupItem value="grid" aria-label={t("files.viewGrid")} title={t("files.viewGrid")}>
+              <LayoutGrid className="size-4" />
+            </ToggleGroupItem>
+          </ToggleGroup>
+        </div>
       </div>
 
       {selected.size > 0 && (
@@ -390,7 +480,9 @@ export function FileExplorer({
             variant="outline"
             size="sm"
             onClick={() =>
-              openMoveDialog(files.filter((file) => selected.has(file.id)))
+              openMoveDialog(
+                sortedFiles.filter((file) => selected.has(file.id))
+              )
             }
           >
             <FolderInput className="size-4 mr-1" />
@@ -424,14 +516,14 @@ export function FileExplorer({
                   </TableCell>
                 </TableRow>
               )}
-              {!isLoading && files.length === 0 && (
+              {!isLoading && sortedFiles.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={columnCount} className="text-center py-8 text-muted-foreground">
                     {emptyMessage}
                   </TableCell>
                 </TableRow>
               )}
-              {files.map((file) => (
+              {sortedFiles.map((file) => (
                 <TableRow
                   key={file.id}
                   className="cursor-pointer"
@@ -517,14 +609,14 @@ export function FileExplorer({
               Loading files...
             </p>
           )}
-          {!isLoading && files.length === 0 && (
+          {!isLoading && sortedFiles.length === 0 && (
             <p className="py-10 text-center text-sm text-muted-foreground">
               {emptyMessage}
             </p>
           )}
-          {!isLoading && files.length > 0 && (
+          {!isLoading && sortedFiles.length > 0 && (
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-              {files.map((file) => {
+              {sortedFiles.map((file) => {
                 const isSelected = selected.has(file.id);
                 return (
                   <div

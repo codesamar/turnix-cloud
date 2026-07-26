@@ -264,5 +264,10 @@ export const id: Dictionary = {
   "move.accountDisconnectedBadge": "terputus",
   "files.viewList": "Tampilan daftar",
   "files.viewGrid": "Tampilan grid",
+  "files.sortBy": "Urutkan",
+  "files.sortNameAsc": "Nama (A–Z)",
+  "files.sortNameDesc": "Nama (Z–A)",
+  "files.sortDateNewest": "Tanggal (terbaru)",
+  "files.sortDateOldest": "Tanggal (terlama)",
   "common.placeholder.name": "Nama Anda",
 };

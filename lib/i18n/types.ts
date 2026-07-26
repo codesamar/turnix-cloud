@@ -256,6 +256,11 @@ export type TranslationKey =
   | "move.accountDisconnectedBadge"
   | "files.viewList"
   | "files.viewGrid"
+  | "files.sortBy"
+  | "files.sortNameAsc"
+  | "files.sortNameDesc"
+  | "files.sortDateNewest"
+  | "files.sortDateOldest"
   | "common.placeholder.name";
 
 export type Dictionary = Record<TranslationKey, string>;

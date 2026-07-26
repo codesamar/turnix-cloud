@@ -264,5 +264,10 @@ export const en: Dictionary = {
   "move.accountDisconnectedBadge": "disconnected",
   "files.viewList": "List view",
   "files.viewGrid": "Grid view",
+  "files.sortBy": "Sort by",
+  "files.sortNameAsc": "Name (A–Z)",
+  "files.sortNameDesc": "Name (Z–A)",
+  "files.sortDateNewest": "Date (newest)",
+  "files.sortDateOldest": "Date (oldest)",
   "common.placeholder.name": "Your name",
 };

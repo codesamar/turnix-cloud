@@ -1,7 +1,7 @@
 # Graph Report - turnix-cloud  (2026-07-26)
 
 ## Corpus Check
-- 159 files · ~80,132 words
+- 159 files · ~80,172 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
