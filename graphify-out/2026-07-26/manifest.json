@@ -215,8 +215,8 @@
     "semantic_hash": ""
   },
   "components/files/file-explorer.tsx": {
-    "mtime": 1785050734.1060355,
-    "ast_hash": "746a58c75cd0713c041d6dd5fbf269a2",
+    "mtime": 1785050953.770084,
+    "ast_hash": "521c2c526f1a559d9e89ddfd802b540f",
     "semantic_hash": ""
   },
   "components/files/file-preview-dialog.tsx": {

@@ -55,13 +55,18 @@ declare module "terabox-api" {
         crc32: number;
         chunks: string[];
       };
-    }): Promise<{ errno: number; uploadid?: string; return_type?: number }>;
+    }): Promise<{
+      errno: number;
+      uploadid?: string;
+      return_type?: number;
+      path?: string;
+    }>;
     getUploadHost(): Promise<{ host: string }>;
     uploadChunk(
       data: { remote_dir: string; file: string; upload_id: string },
       partseq: number,
       blob: Blob
-    ): Promise<unknown>;
+    ): Promise<{ md5?: string; error_code?: number }>;
     createFile(data: {
       remote_dir: string;
       file: string;

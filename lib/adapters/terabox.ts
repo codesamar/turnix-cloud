@@ -100,7 +100,14 @@ function toRemoteDir(path: string): string {
 }
 
 function toUploadDir(parentPath: string): string {
-  return parentPath === "/" ? "" : parentPath;
+  if (!parentPath || parentPath === "/") return "";
+  return parentPath.replace(/\/+$/, "");
+}
+
+function toRemoteFilePath(remoteDir: string, filename: string): string {
+  if (!remoteDir) return `/${filename}`;
+  const base = remoteDir.startsWith("/") ? remoteDir : `/${remoteDir}`;
+  return `${base.replace(/\/+$/, "")}/${filename}`;
 }
 
 function normalizeEntry(entry: TeraboxListEntry): NormalizedFile {
@@ -125,6 +132,29 @@ function assertOk(errno: number, action: string) {
   if (errno !== 0) {
     throw new Error(`TeraBox ${action} failed (errno: ${errno})`);
   }
+}
+
+async function resolveUploadedFile(
+  app: TeraBoxApp,
+  remotePath: string,
+  fallback: {
+    filename: string;
+    size: number;
+    pathHint?: string;
+  }
+): Promise<NormalizedFile> {
+  const meta = await app.getFileMeta([{ path: remotePath }]);
+  if (meta.errno === 0 && meta.info?.[0]) {
+    return normalizeEntry(meta.info[0]);
+  }
+
+  return normalizeEntry({
+    fs_id: 0,
+    path: fallback.pathHint ?? remotePath,
+    server_filename: fallback.filename,
+    isdir: 0,
+    size: fallback.size,
+  });
 }
 
 async function readStreamToBuffer(
@@ -258,13 +288,19 @@ export const teraboxAdapter: CloudAdapter = {
     const buffer = await readStreamToBuffer(data, size, (progress) =>
       onProgress?.(Math.min(progress, 90))
     );
+    // Always use actual bytes read — mirrored metadata size can be stale/wrong.
+    const actualSize = buffer.length;
+    if (actualSize <= 0) {
+      throw new Error("TeraBox upload failed: empty file");
+    }
 
     const remoteDir = toUploadDir(parentPath);
+    const remotePath = toRemoteFilePath(remoteDir, filename);
     const hash = hashBuffer(buffer, app.params.is_vip);
     const uploadData = {
       remote_dir: remoteDir,
       file: filename,
-      size,
+      size: actualSize,
       hash,
       upload_id: "",
     };
@@ -272,39 +308,74 @@ export const teraboxAdapter: CloudAdapter = {
     const precreate = await app.precreateFile(uploadData);
     assertOk(precreate.errno, "precreate upload");
 
+    // return_type 2 = identical file already on TeraBox (rapid upload).
+    // Skip chunk upload + create — calling create again often yields errno 2.
+    if (precreate.return_type === 2) {
+      onProgress?.(100);
+      return resolveUploadedFile(app, precreate.path ?? remotePath, {
+        filename,
+        size: actualSize,
+        pathHint: precreate.path,
+      });
+    }
+
     if (!precreate.uploadid) {
       throw new Error("TeraBox upload initialization failed");
     }
 
     uploadData.upload_id = precreate.uploadid;
 
-    if (precreate.return_type !== 2) {
-      await app.getUploadHost();
+    await app.getUploadHost();
 
-      const chunkSize = getChunkSize(size, app.params.is_vip);
-      for (let index = 0; index < hash.chunks.length; index++) {
-        const start = index * chunkSize;
-        const end = Math.min(start + chunkSize, buffer.length);
-        // Node FormData.append requires Blob — Buffer is rejected at runtime.
-        const chunk = new Blob([
-          new Uint8Array(buffer.subarray(start, end)),
-        ]);
-        await uploadChunkWithRetry(app, uploadData, index, chunk);
-        onProgress?.(
-          90 + Math.round(((index + 1) / hash.chunks.length) * 10)
-        );
+    const chunkSize = getChunkSize(actualSize, app.params.is_vip);
+    for (let index = 0; index < hash.chunks.length; index++) {
+      const start = index * chunkSize;
+      const end = Math.min(start + chunkSize, buffer.length);
+      // Node FormData.append requires Blob — Buffer is rejected at runtime.
+      const chunk = new Blob([new Uint8Array(buffer.subarray(start, end))], {
+        type: "application/octet-stream",
+      });
+      const uploaded = await uploadChunkWithRetry(
+        app,
+        uploadData,
+        index,
+        chunk
+      );
+      // Server MD5 is authoritative for createFile block_list.
+      if (
+        typeof uploaded.md5 === "string" &&
+        /^[a-f0-9]{32}$/i.test(uploaded.md5)
+      ) {
+        hash.chunks[index] = uploaded.md5.toLowerCase();
       }
+      onProgress?.(
+        90 + Math.round(((index + 1) / hash.chunks.length) * 10)
+      );
     }
 
     const created = await app.createFile(uploadData);
+
+    // errno 2 = parameter error / already exists — recover via metadata when possible.
+    if (created.errno === 2) {
+      const meta = await app.getFileMeta([{ path: remotePath }]);
+      if (meta.errno === 0 && meta.info?.[0]) {
+        onProgress?.(100);
+        return normalizeEntry(meta.info[0]);
+      }
+      throw new Error(
+        "TeraBox finalize upload failed (errno: 2). Path/size/hash may be inconsistent — try again."
+      );
+    }
+
     assertOk(created.errno, "finalize upload");
+    onProgress?.(100);
 
     return normalizeEntry({
       fs_id: created.fs_id ?? 0,
-      path: created.path ?? `${remoteDir}/${filename}`.replace("//", "/"),
+      path: created.path ?? remotePath,
       server_filename: created.server_filename ?? filename,
       isdir: 0,
-      size,
+      size: actualSize,
     });
   },
 

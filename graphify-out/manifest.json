@@ -540,8 +540,8 @@
     "semantic_hash": ""
   },
   "lib/adapters/terabox-api.d.ts": {
-    "mtime": 1785050574.469265,
-    "ast_hash": "0e9c749682aba29f0d6896ac46cb4c9e",
+    "mtime": 1785051119.1066413,
+    "ast_hash": "1574994acf186ba539222779ebc74f23",
     "semantic_hash": ""
   },
   "lib/adapters/terabox-client.ts": {
@@ -555,8 +555,8 @@
     "semantic_hash": ""
   },
   "lib/adapters/terabox.ts": {
-    "mtime": 1785050583.6029687,
-    "ast_hash": "a96b8e9370ce80eb7f645e69bf640206",
+    "mtime": 1785051138.9146206,
+    "ast_hash": "e766b1174c62da95791228135ec0c4f5",
     "semantic_hash": ""
   },
   "lib/adapters/types.ts": {
