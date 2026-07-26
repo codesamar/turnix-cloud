@@ -71,6 +71,8 @@ Brand assets live in [`public/logo/`](public/logo/) and are used app-wide via `S
 | MEGA | Stub | Not yet implemented |
 | pCloud | Stub | Not yet implemented |
 
+**OneDrive Photos:** Sync includes Microsoft Graph special folders **Photos** and **Camera Roll** (when present) so they appear at the My Drive root for that account. This is file-folder sync only — not parity with [onedrive.live.com/photos](https://onedrive.live.com/photos) (albums, memories, faces). Existing connects keep working with **Sync All**; no re-auth required.
+
 > Detailed provider setup guides:
 > - [Google OAuth (production)](docs/google-oauth-production.md)
 > - [Dropbox setup](docs/dropbox-setup.md)

@@ -170,8 +170,8 @@
     "semantic_hash": ""
   },
   "components/accounts/accounts-panel.tsx": {
-    "mtime": 1785047065.8903975,
-    "ast_hash": "f4a4ef1407d9817c3575f4470666ebb7",
+    "mtime": 1785049125.776586,
+    "ast_hash": "f7340f483f9c9b819277c714d74bbe6b",
     "semantic_hash": ""
   },
   "components/accounts/connect-account-dialog.tsx": {
@@ -230,8 +230,8 @@
     "semantic_hash": ""
   },
   "components/files/my-drive-view.tsx": {
-    "mtime": 1785047992.6256883,
-    "ast_hash": "e962ff12e33f899b435c875173668c0e",
+    "mtime": 1785048129.1168804,
+    "ast_hash": "7ba0e173b7bb930a3a4c00b3e56ca3b7",
     "semantic_hash": ""
   },
   "components/files/upload-dropzone.tsx": {
@@ -240,8 +240,8 @@
     "semantic_hash": ""
   },
   "components/guide/connect-guide-content.tsx": {
-    "mtime": 1781482403.7179348,
-    "ast_hash": "6373257e930659e536199b3570c6f791",
+    "mtime": 1785048780.6618912,
+    "ast_hash": "6f2877d9046ab862ff5ad466e95243d0",
     "semantic_hash": ""
   },
   "components/layout/app-sidebar.tsx": {
@@ -525,8 +525,8 @@
     "semantic_hash": ""
   },
   "lib/adapters/onedrive.ts": {
-    "mtime": 1785041842.9186327,
-    "ast_hash": "f6c3cab5bf008258d1e119b149b79804",
+    "mtime": 1785048732.1990716,
+    "ast_hash": "dba52e97280b02c8c18bccd4ca8be40a",
     "semantic_hash": ""
   },
   "lib/adapters/registry.ts": {
@@ -570,13 +570,13 @@
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/en.ts": {
-    "mtime": 1785047997.7508237,
-    "ast_hash": "7da9ac8bea15ef75920d3661f4c98f07",
+    "mtime": 1785048768.110236,
+    "ast_hash": "a9b3832f9bcad0bcedc2fc81584a6c76",
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/id.ts": {
-    "mtime": 1785047998.7256842,
-    "ast_hash": "6b37a1487be778878b4a8f0ce6b52adb",
+    "mtime": 1785048777.6558983,
+    "ast_hash": "ca74d4ebc44a1751594a6c87c5d9bd57",
     "semantic_hash": ""
   },
   "lib/i18n/index.ts": {
@@ -585,8 +585,8 @@
     "semantic_hash": ""
   },
   "lib/i18n/types.ts": {
-    "mtime": 1785047997.4131289,
-    "ast_hash": "e0c2bcb4889267c70dfd92a62f4ac9bc",
+    "mtime": 1785048762.9037411,
+    "ast_hash": "56940eb93728d1ef0d2633c0c9016278",
     "semantic_hash": ""
   },
   "lib/oauth/popup.ts": {
@@ -620,8 +620,8 @@
     "semantic_hash": ""
   },
   "lib/services/sync.ts": {
-    "mtime": 1785040412.548575,
-    "ast_hash": "c6466a3fd3c2c647bf877d7b242e9f7c",
+    "mtime": 1785048747.6891196,
+    "ast_hash": "daad9903db1eac480347ca635658ae8a",
     "semantic_hash": ""
   },
   "lib/services/upload.ts": {
@@ -735,8 +735,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1785046302.2229605,
-    "ast_hash": "e261391267cdd3b81288cb24908060fc",
+    "mtime": 1785048761.195649,
+    "ast_hash": "2e05a868afcadc01bcff57c3b949a70e",
     "semantic_hash": ""
   },
   "docker-compose.yaml": {

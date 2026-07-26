@@ -227,6 +227,7 @@ export const id: Dictionary = {
   "guide.troubleshootTitle": "Masalah umum",
   "guide.troubleshootGoogle": "Google Drive",
   "guide.troubleshootDropbox": "Dropbox",
+  "guide.troubleshootOneDrive": "OneDrive",
   "guide.troubleshootTerabox": "TeraBox",
   "guide.troubleshootGeneral": "Semua provider",
   "guide.tip403": "403 access_denied: tambah Gmail yang ingin di-connect ke Test users (Audience). Setiap akun Google baru perlu ditambah sendiri saat app masih Testing.",
@@ -235,6 +236,8 @@ export const id: Dictionary = {
   "guide.tipDropboxScope": "Error scope/permission: buka Permissions di Dropbox App Console, aktifkan scope yang diperlukan, klik Submit, lalu Connect ulang",
   "guide.tipDropboxDevUsers": "Hanya pemilik app yang bisa connect: Settings → Enable additional users (development, maks. ~500 user)",
   "guide.tipDropboxRedirect": "OAuth redirect gagal: Redirect URI di Dropbox harus exact match dengan URL di bawah dan NEXT_PUBLIC_APP_URL",
+  "guide.tipOneDrivePhotos":
+    "Photos / Camera Roll: Sinkron Semua mengimpor folder khusus tersebut ke Drive Saya jika ada. Ini bukan pengalaman penuh OneDrive Photos di web (album, memories, faces).",
   "guide.tipTeraboxSession":
     "Session expired: login ulang ke TeraBox, copy token ndus baru, lalu connect ulang akun",
   "guide.tipTeraboxUnofficial":

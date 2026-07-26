@@ -80,8 +80,8 @@
     "semantic_hash": ""
   },
   "app/api/accounts/terabox/connect/route.ts": {
-    "mtime": 1781483035.6109746,
-    "ast_hash": "d6dd488580845283bb0159a7186156eb",
+    "mtime": 1785047826.0570312,
+    "ast_hash": "544e5d194b4860b343cdb6b5b1fd3bfc",
     "semantic_hash": ""
   },
   "app/api/allocation/route.ts": {
@@ -110,8 +110,8 @@
     "semantic_hash": ""
   },
   "app/api/files/route.ts": {
-    "mtime": 1785042130.1559117,
-    "ast_hash": "22b75fdf6d71da9158eada17ec34cb82",
+    "mtime": 1785047986.68806,
+    "ast_hash": "6da1803d8c9be7f8ca50229e708f91cb",
     "semantic_hash": ""
   },
   "app/api/health/route.ts": {
@@ -185,8 +185,8 @@
     "semantic_hash": ""
   },
   "components/accounts/connect-terabox-form.tsx": {
-    "mtime": 1781483052.607922,
-    "ast_hash": "82a4869d43832ac7af98feef71a4d89c",
+    "mtime": 1785047829.3529963,
+    "ast_hash": "f91783462b647b88a3dd929b6ee257e4",
     "semantic_hash": ""
   },
   "components/accounts/oauth-done-client.tsx": {
@@ -230,8 +230,8 @@
     "semantic_hash": ""
   },
   "components/files/my-drive-view.tsx": {
-    "mtime": 1781479297.3031728,
-    "ast_hash": "536c1ee39525a00c17f3076c6b53ea24",
+    "mtime": 1785048129.1168804,
+    "ast_hash": "7ba0e173b7bb930a3a4c00b3e56ca3b7",
     "semantic_hash": ""
   },
   "components/files/upload-dropzone.tsx": {
@@ -240,8 +240,8 @@
     "semantic_hash": ""
   },
   "components/guide/connect-guide-content.tsx": {
-    "mtime": 1781482403.7179348,
-    "ast_hash": "6373257e930659e536199b3570c6f791",
+    "mtime": 1785048780.6618912,
+    "ast_hash": "6f2877d9046ab862ff5ad466e95243d0",
     "semantic_hash": ""
   },
   "components/layout/app-sidebar.tsx": {
@@ -525,8 +525,8 @@
     "semantic_hash": ""
   },
   "lib/adapters/onedrive.ts": {
-    "mtime": 1785041842.9186327,
-    "ast_hash": "f6c3cab5bf008258d1e119b149b79804",
+    "mtime": 1785048732.1990716,
+    "ast_hash": "dba52e97280b02c8c18bccd4ca8be40a",
     "semantic_hash": ""
   },
   "lib/adapters/registry.ts": {
@@ -545,8 +545,8 @@
     "semantic_hash": ""
   },
   "lib/adapters/terabox-client.ts": {
-    "mtime": 1781483034.4070532,
-    "ast_hash": "111f18dd42c3cafd8bbcade6fdb79da3",
+    "mtime": 1785047823.7650132,
+    "ast_hash": "76c944638c4b53608bb839c32c145f97",
     "semantic_hash": ""
   },
   "lib/adapters/terabox-hash.ts": {
@@ -570,13 +570,13 @@
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/en.ts": {
-    "mtime": 1785046966.2507732,
-    "ast_hash": "6778984c706a20d6531bc10a0a459977",
+    "mtime": 1785048768.110236,
+    "ast_hash": "a9b3832f9bcad0bcedc2fc81584a6c76",
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/id.ts": {
-    "mtime": 1785046969.1897757,
-    "ast_hash": "030758d17f3e8342b5c715af14439825",
+    "mtime": 1785048777.6558983,
+    "ast_hash": "ca74d4ebc44a1751594a6c87c5d9bd57",
     "semantic_hash": ""
   },
   "lib/i18n/index.ts": {
@@ -585,8 +585,8 @@
     "semantic_hash": ""
   },
   "lib/i18n/types.ts": {
-    "mtime": 1785046970.342531,
-    "ast_hash": "30ddaf4b458f47d210d4c0dfb4285f1e",
+    "mtime": 1785048762.9037411,
+    "ast_hash": "56940eb93728d1ef0d2633c0c9016278",
     "semantic_hash": ""
   },
   "lib/oauth/popup.ts": {
@@ -620,8 +620,8 @@
     "semantic_hash": ""
   },
   "lib/services/sync.ts": {
-    "mtime": 1785040412.548575,
-    "ast_hash": "c6466a3fd3c2c647bf877d7b242e9f7c",
+    "mtime": 1785048747.6891196,
+    "ast_hash": "daad9903db1eac480347ca635658ae8a",
     "semantic_hash": ""
   },
   "lib/services/upload.ts": {
@@ -735,8 +735,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1785046302.2229605,
-    "ast_hash": "e261391267cdd3b81288cb24908060fc",
+    "mtime": 1785048761.195649,
+    "ast_hash": "2e05a868afcadc01bcff57c3b949a70e",
     "semantic_hash": ""
   },
   "docker-compose.yaml": {
@@ -832,6 +832,11 @@
   "lib/supabase/admin.ts": {
     "mtime": 1785047269.7487743,
     "ast_hash": "9f1d7a2faa5b20f6964e0830dab57eb1",
+    "semantic_hash": ""
+  },
+  "lib/utils/with-timeout.ts": {
+    "mtime": 1785047819.7990675,
+    "ast_hash": "d114a176103564b8e8bafa7da1c7366d",
     "semantic_hash": ""
   }
 }

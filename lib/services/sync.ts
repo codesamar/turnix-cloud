@@ -2,10 +2,17 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { CloudAccount } from "@/lib/types/database";
 import { getAdapter } from "@/lib/adapters/registry";
 import {
+  getOneDriveSpecialFolder,
+  type OneDriveSpecialFolderName,
+} from "@/lib/adapters/onedrive";
+import {
   decryptCredentials,
   encryptCredentials,
 } from "@/lib/services/crypto";
-import type { ProviderCredentials } from "@/lib/adapters/types";
+import type {
+  NormalizedFile,
+  ProviderCredentials,
+} from "@/lib/adapters/types";
 import { OAUTH_PROVIDERS } from "@/lib/adapters/config";
 import { resolveOAuthConfig } from "@/lib/services/provider-config";
 import { classifyAccountError } from "@/lib/utils/account-error";
@@ -18,6 +25,11 @@ interface SyncResult {
   filesSynced: number;
   error?: string;
 }
+
+const ONEDRIVE_SPECIAL_FOLDERS: OneDriveSpecialFolderName[] = [
+  "photos",
+  "cameraroll",
+];
 
 async function getValidCredentials(
   supabase: Supabase,
@@ -43,6 +55,39 @@ async function getValidCredentials(
   return credentials;
 }
 
+async function upsertFileRow(
+  supabase: Supabase,
+  userId: string,
+  accountId: string,
+  file: NormalizedFile,
+  parentId: string | null
+): Promise<string | null> {
+  const { data: upserted } = await supabase
+    .from("file_metadata")
+    .upsert(
+      {
+        user_id: userId,
+        account_id: accountId,
+        provider_file_id: file.providerFileId,
+        name: file.name,
+        path: file.path,
+        mime_type: file.mimeType,
+        size: file.size,
+        is_folder: file.isFolder,
+        is_starred: file.isStarred,
+        is_shared: file.isShared,
+        parent_id: parentId,
+        modified_at: file.modifiedAt?.toISOString() ?? null,
+        synced_at: new Date().toISOString(),
+      },
+      { onConflict: "account_id,provider_file_id" }
+    )
+    .select("id")
+    .single();
+
+  return upserted?.id ?? null;
+}
+
 async function syncAccountPath(
   supabase: Supabase,
   userId: string,
@@ -57,32 +102,16 @@ async function syncAccountPath(
   let count = 0;
 
   for (const file of files) {
-    const { data: upserted } = await supabase
-      .from("file_metadata")
-      .upsert(
-        {
-          user_id: userId,
-          account_id: accountId,
-          provider_file_id: file.providerFileId,
-          name: file.name,
-          path: file.path,
-          mime_type: file.mimeType,
-          size: file.size,
-          is_folder: file.isFolder,
-          is_starred: file.isStarred,
-          is_shared: file.isShared,
-          parent_id: parentId,
-          modified_at: file.modifiedAt?.toISOString() ?? null,
-          synced_at: new Date().toISOString(),
-        },
-        { onConflict: "account_id,provider_file_id" }
-      )
-      .select("id")
-      .single();
-
+    const upsertedId = await upsertFileRow(
+      supabase,
+      userId,
+      accountId,
+      file,
+      parentId
+    );
     count++;
 
-    if (file.isFolder && upserted) {
+    if (file.isFolder && upsertedId) {
       count += await syncAccountPath(
         supabase,
         userId,
@@ -90,7 +119,50 @@ async function syncAccountPath(
         provider,
         credentials,
         file.providerFileId,
-        upserted.id
+        upsertedId
+      );
+    }
+  }
+
+  return count;
+}
+
+/**
+ * Sync OneDrive Photos / Camera Roll special folders into the account root
+ * in My Drive. Missing folders (404/403) are skipped. Upsert on
+ * (account_id, provider_file_id) dedupes if the same folder already appeared
+ * under root children.
+ */
+async function syncOneDriveSpecialFolders(
+  supabase: Supabase,
+  userId: string,
+  accountId: string,
+  credentials: ProviderCredentials
+): Promise<number> {
+  let count = 0;
+
+  for (const name of ONEDRIVE_SPECIAL_FOLDERS) {
+    const folder = await getOneDriveSpecialFolder(credentials, name);
+    if (!folder) continue;
+
+    const folderId = await upsertFileRow(
+      supabase,
+      userId,
+      accountId,
+      folder,
+      null
+    );
+    count++;
+
+    if (folderId) {
+      count += await syncAccountPath(
+        supabase,
+        userId,
+        accountId,
+        "onedrive",
+        credentials,
+        folder.providerFileId,
+        folderId
       );
     }
   }
@@ -128,7 +200,7 @@ export async function syncUserAccounts(
       const adapter = getAdapter(account.provider);
       const quota = await adapter.getQuota(credentials);
 
-      const filesSynced = await syncAccountPath(
+      let filesSynced = await syncAccountPath(
         supabase,
         userId,
         account.id,
@@ -136,6 +208,15 @@ export async function syncUserAccounts(
         credentials,
         "/"
       );
+
+      if (account.provider === "onedrive") {
+        filesSynced += await syncOneDriveSpecialFolders(
+          supabase,
+          userId,
+          account.id,
+          credentials
+        );
+      }
 
       await supabase
         .from("cloud_accounts")

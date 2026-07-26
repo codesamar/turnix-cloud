@@ -168,6 +168,12 @@ export function AccountsPanel() {
     onError: () => toast.error(t("accounts.syncFailed")),
   });
 
+  // Single mutation — pending applies globally; scope spinner to the target.
+  const syncingAccountId = syncMutation.isPending
+    ? (syncMutation.variables as string | undefined)
+    : undefined;
+  const isSyncingAll = syncMutation.isPending && syncingAccountId === undefined;
+
   const disconnectMutation = useMutation({
     mutationFn: async (id: string) => {
       const response = await fetch(`/api/accounts?id=${id}`, {
@@ -345,7 +351,9 @@ export function AccountsPanel() {
             onClick={() => setConfirmAction({ type: "sync-all" })}
             disabled={syncMutation.isPending || accounts.length === 0}
           >
-            <RefreshCw className={`size-4 mr-1 ${syncMutation.isPending ? "animate-spin" : ""}`} />
+            <RefreshCw
+              className={`size-4 mr-1 ${isSyncingAll ? "animate-spin" : ""}`}
+            />
             {t("accounts.syncAll")}
           </Button>
         </CardHeader>
@@ -367,6 +375,8 @@ export function AccountsPanel() {
               ? t("accounts.errorTokenExpired")
               : account.error_message || t("accounts.errorGeneric");
             const isReconnecting = reconnectingProvider === account.provider;
+            const isSyncingThis =
+              isSyncingAll || syncingAccountId === account.id;
 
             return (
               <div
@@ -415,7 +425,7 @@ export function AccountsPanel() {
                         title={t("accounts.sync")}
                       >
                         <RefreshCw
-                          className={`size-4 mr-1 ${syncMutation.isPending ? "animate-spin" : ""}`}
+                          className={`size-4 mr-1 ${isSyncingThis ? "animate-spin" : ""}`}
                         />
                         {t("accounts.sync")}
                       </Button>

@@ -227,6 +227,7 @@ export const en: Dictionary = {
   "guide.troubleshootTitle": "Common issues",
   "guide.troubleshootGoogle": "Google Drive",
   "guide.troubleshootDropbox": "Dropbox",
+  "guide.troubleshootOneDrive": "OneDrive",
   "guide.troubleshootTerabox": "TeraBox",
   "guide.troubleshootGeneral": "All providers",
   "guide.tip403": "403 access_denied: add the Gmail you are connecting to Test users (Audience). Each new Google account must be added separately while the app is in Testing.",
@@ -235,6 +236,8 @@ export const en: Dictionary = {
   "guide.tipDropboxScope": "Scope / permission errors: open Permissions in Dropbox App Console, enable required scopes, click Submit, then Connect again",
   "guide.tipDropboxDevUsers": "Only the app owner can connect: Settings → Enable additional users (development, up to ~500 users)",
   "guide.tipDropboxRedirect": "OAuth redirect failed: Redirect URI in Dropbox must exactly match the URL below and NEXT_PUBLIC_APP_URL",
+  "guide.tipOneDrivePhotos":
+    "Photos / Camera Roll: Sync All imports those special folders into My Drive when they exist. This is not the full OneDrive Photos web experience (albums, memories, faces).",
   "guide.tipTeraboxSession":
     "Session expired: log in to TeraBox again, copy a fresh ndus token, then reconnect the account",
   "guide.tipTeraboxUnofficial":

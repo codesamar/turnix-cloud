@@ -140,6 +140,7 @@ export function ConnectGuideContent() {
     t("guide.tipDropboxDevUsers"),
     t("guide.tipDropboxRedirect"),
   ];
+  const oneDriveTips = [t("guide.tipOneDrivePhotos")];
   const teraboxTips = [t("guide.tipTeraboxSession"), t("guide.tipTeraboxUnofficial")];
   const sharedTips = [t("guide.tipEmpty")];
 
@@ -222,6 +223,14 @@ export function ConnectGuideContent() {
             <p className="text-sm font-medium mb-2">{t("guide.troubleshootDropbox")}</p>
             <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
               {dropboxTips.map((tip) => (
+                <li key={tip}>{tip}</li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p className="text-sm font-medium mb-2">{t("guide.troubleshootOneDrive")}</p>
+            <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
+              {oneDriveTips.map((tip) => (
                 <li key={tip}>{tip}</li>
               ))}
             </ul>

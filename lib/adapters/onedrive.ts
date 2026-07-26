@@ -14,6 +14,12 @@ const SCOPES = [
   "User.Read",
 ];
 
+const GRAPH_BASE = "https://graph.microsoft.com/v1.0";
+/** Safety cap so a runaway nextLink loop cannot hang sync forever. */
+const MAX_LIST_PAGES = 100;
+
+export type OneDriveSpecialFolderName = "photos" | "cameraroll";
+
 function getConfig(config: OAuthProviderConfig) {
   return {
     clientId: config.clientId,
@@ -46,10 +52,13 @@ function normalizeItem(item: Record<string, unknown>): NormalizedFile {
 
 async function graphFetch(
   credentials: ProviderCredentials,
-  path: string,
+  pathOrUrl: string,
   init?: RequestInit
 ) {
-  const response = await fetch(`https://graph.microsoft.com/v1.0${path}`, {
+  const url = pathOrUrl.startsWith("http")
+    ? pathOrUrl
+    : `${GRAPH_BASE}${pathOrUrl}`;
+  const response = await fetch(url, {
     ...init,
     headers: {
       Authorization: `Bearer ${credentials.accessToken}`,
@@ -63,6 +72,55 @@ async function graphFetch(
   }
 
   return response;
+}
+
+async function listChildrenPaginated(
+  credentials: ProviderCredentials,
+  firstPath: string
+): Promise<NormalizedFile[]> {
+  const items: NormalizedFile[] = [];
+  let nextUrl: string | null = firstPath.startsWith("http")
+    ? firstPath
+    : `${GRAPH_BASE}${firstPath}`;
+  let pages = 0;
+
+  while (nextUrl && pages < MAX_LIST_PAGES) {
+    const response = await graphFetch(credentials, nextUrl);
+    const data = (await response.json()) as {
+      value?: Record<string, unknown>[];
+      "@odata.nextLink"?: string;
+    };
+    items.push(...(data.value ?? []).map(normalizeItem));
+    nextUrl = data["@odata.nextLink"] ?? null;
+    pages += 1;
+  }
+
+  return items;
+}
+
+/**
+ * Resolve OneDrive special folders (Photos / Camera Roll).
+ * Returns null when the folder does not exist (404/403) — common for
+ * Business accounts without Camera Roll.
+ */
+export async function getOneDriveSpecialFolder(
+  credentials: ProviderCredentials,
+  name: OneDriveSpecialFolderName
+): Promise<NormalizedFile | null> {
+  const response = await fetch(`${GRAPH_BASE}/me/drive/special/${name}`, {
+    headers: { Authorization: `Bearer ${credentials.accessToken}` },
+  });
+
+  if (response.status === 404 || response.status === 403) {
+    return null;
+  }
+
+  if (!response.ok) {
+    const body = await response.text();
+    throw new Error(`Microsoft Graph error: ${response.status} ${body}`);
+  }
+
+  return normalizeItem(await response.json());
 }
 
 export const oneDriveAdapter: CloudAdapter = {
@@ -166,9 +224,7 @@ export const oneDriveAdapter: CloudAdapter = {
       path === "/"
         ? "/me/drive/root/children"
         : `/me/drive/items/${path}/children`;
-    const response = await graphFetch(credentials, endpoint);
-    const data = await response.json();
-    return (data.value ?? []).map(normalizeItem);
+    return listChildrenPaginated(credentials, endpoint);
   },
 
   async getFile(credentials, fileId) {
