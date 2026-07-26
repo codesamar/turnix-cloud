@@ -255,6 +255,16 @@ export const id: Dictionary = {
   "move.cancel": "Batal",
   "move.confirm": "Pindahkan ke sini",
   "move.moving": "Memindahkan...",
+  "move.movingHint":
+    "Masih berjalan — pindah antar akun mengunduh lalu mengunggah ulang setiap file. Foto ke TeraBox bisa butuh beberapa menit.",
+  "move.crossAccountHint":
+    "Tujuan beda akun. Setiap file akan diunduh lalu diunggah ulang — prosesnya bisa lama.",
+  "move.cancelled": "Pemindahan dibatalkan",
+  "move.progressFile": "File {current} dari {total}",
+  "move.phaseDownload": "Mengunduh…",
+  "move.phaseUpload": "Mengunggah…",
+  "move.phaseFinalize": "Menyelesaikan…",
+  "move.phaseMoving": "Memindahkan…",
   "move.success": "Item berhasil dipindahkan",
   "move.action": "Pindahkan",
   "move.accountDisconnected":

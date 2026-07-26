@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AlertCircle, ChevronRight, Folder, FolderInput, Loader2 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
 import {
   Select,
   SelectContent,
@@ -23,6 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useLanguage } from "@/components/providers/language-provider";
+import type { MoveItemPhase } from "@/lib/services/move";
 import type { CloudAccount, FileMetadata, FileMetadataWithAccount } from "@/lib/types/database";
 import {
   ACCOUNT_DISCONNECTED_CODE,
@@ -35,6 +37,14 @@ interface MoveFileDialogProps {
   onOpenChange: (open: boolean) => void;
   files: FileMetadata[];
   onMoved: () => void;
+}
+
+interface MoveProgressState {
+  index: number;
+  total: number;
+  name: string;
+  phase: MoveItemPhase;
+  percent?: number;
 }
 
 async function fetchAccounts() {
@@ -51,6 +61,22 @@ async function fetchFolders(url: string) {
   return (data.files as FileMetadataWithAccount[]).filter((file) => file.is_folder);
 }
 
+function overallPercent(progress: MoveProgressState | null): number {
+  if (!progress || progress.total <= 0) return 0;
+  const slice = 100 / progress.total;
+  const base = (progress.index - 1) * slice;
+  let within = 0.15 * slice;
+  if (progress.phase === "download") within = 0.3 * slice;
+  if (progress.phase === "upload") {
+    within =
+      (typeof progress.percent === "number" ? progress.percent / 100 : 0.5) *
+      slice;
+  }
+  if (progress.phase === "finalize") within = 0.9 * slice;
+  if (progress.phase === "moving") within = 0.5 * slice;
+  return Math.min(99, Math.round(base + within));
+}
+
 export function MoveFileDialog({
   open,
   onOpenChange,
@@ -61,10 +87,19 @@ export function MoveFileDialog({
   const queryClient = useQueryClient();
   const [destinationAccountId, setDestinationAccountId] = useState("");
   const [folderStack, setFolderStack] = useState<FileMetadata[]>([]);
+  const [progress, setProgress] = useState<MoveProgressState | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   const movingFolderIds = useMemo(
     () => new Set(files.filter((file) => file.is_folder).map((file) => file.id)),
     [files]
+  );
+
+  const isCrossAccount = useMemo(
+    () =>
+      Boolean(destinationAccountId) &&
+      files.some((file) => file.account_id !== destinationAccountId),
+    [destinationAccountId, files]
   );
 
   const { data: accounts = [] } = useQuery({
@@ -92,6 +127,7 @@ export function MoveFileDialog({
 
     setDestinationAccountId(defaultAccountId);
     setFolderStack([]);
+    setProgress(null);
   }, [open, accounts, files]);
 
   const selectedAccount = accounts.find(
@@ -121,6 +157,16 @@ export function MoveFileDialog({
         });
       }
 
+      abortRef.current?.abort();
+      const controller = new AbortController();
+      abortRef.current = controller;
+      setProgress({
+        index: 1,
+        total: Math.max(files.length, 1),
+        name: files[0]?.name ?? "",
+        phase: "moving",
+      });
+
       const response = await fetch("/api/files", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -130,24 +176,124 @@ export function MoveFileDialog({
           destinationAccountId,
           destinationFolderId: currentFolder?.id ?? null,
         }),
+        signal: controller.signal,
       });
 
-      const data = await response.json();
-      if (!response.ok) {
+      if (!response.ok || !response.body) {
+        const data = (await response.json().catch(() => ({}))) as {
+          error?: string;
+          code?: string;
+          accountLabel?: string;
+        };
         throw Object.assign(new Error(data.error ?? "Move failed"), {
-          code: data.code as string | undefined,
-          accountLabel: data.accountLabel as string | undefined,
+          code: data.code,
+          accountLabel: data.accountLabel,
         });
       }
 
-      return data;
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+      let moved = 0;
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() ?? "";
+
+        for (const line of lines) {
+          if (!line.trim()) continue;
+          const event = JSON.parse(line) as {
+            type: string;
+            total?: number;
+            index?: number;
+            name?: string;
+            phase?: MoveItemPhase;
+            percent?: number;
+            moved?: number;
+            error?: string;
+            message?: string;
+            code?: string;
+            accountLabel?: string;
+          };
+
+          if (event.type === "error") {
+            throw Object.assign(
+              new Error(event.error ?? event.message ?? "Move failed"),
+              {
+                code: event.code,
+                accountLabel: event.accountLabel,
+              }
+            );
+          }
+
+          if (event.type === "start" && typeof event.total === "number") {
+            setProgress({
+              index: 1,
+              total: event.total,
+              name: files[0]?.name ?? "",
+              phase: "moving",
+            });
+            continue;
+          }
+
+          if (
+            event.type === "item" &&
+            typeof event.index === "number" &&
+            typeof event.total === "number" &&
+            event.name &&
+            event.phase
+          ) {
+            setProgress({
+              index: event.index,
+              total: event.total,
+              name: event.name,
+              phase: event.phase,
+              percent: event.percent,
+            });
+            continue;
+          }
+
+          if (
+            event.type === "item_done" &&
+            typeof event.index === "number" &&
+            typeof event.total === "number" &&
+            event.name
+          ) {
+            setProgress({
+              index: event.index,
+              total: event.total,
+              name: event.name,
+              phase: "moving",
+              percent: 100,
+            });
+            continue;
+          }
+
+          if (event.type === "complete" && typeof event.moved === "number") {
+            moved = event.moved;
+          }
+        }
+      }
+
+      return { moved };
     },
     onSuccess: () => {
+      abortRef.current = null;
+      setProgress(null);
       toast.success(t("move.success"));
       onOpenChange(false);
       onMoved();
     },
-    onError: (error: Error & { code?: string; accountLabel?: string }) => {
+    onError: (error: Error & { code?: string; accountLabel?: string; name?: string }) => {
+      abortRef.current = null;
+      setProgress(null);
+      if (error.name === "AbortError") {
+        toast.message(t("move.cancelled"));
+        return;
+      }
       if (error.code === ACCOUNT_DISCONNECTED_CODE) {
         const label =
           error.accountLabel ||
@@ -161,6 +307,14 @@ export function MoveFileDialog({
       toast.error(error.message);
     },
   });
+
+  function handleDialogOpenChange(nextOpen: boolean) {
+    if (!nextOpen && moveMutation.isPending) {
+      abortRef.current?.abort();
+    }
+    if (!nextOpen) setProgress(null);
+    onOpenChange(nextOpen);
+  }
 
   function handleAccountChange(accountId: string) {
     setDestinationAccountId(accountId);
@@ -198,13 +352,29 @@ export function MoveFileDialog({
     return false;
   }
 
+  function phaseLabel(phase: MoveItemPhase) {
+    switch (phase) {
+      case "download":
+        return t("move.phaseDownload");
+      case "upload":
+        return t("move.phaseUpload");
+      case "finalize":
+        return t("move.phaseFinalize");
+      default:
+        return t("move.phaseMoving");
+    }
+  }
+
   const itemLabel =
     files.length === 1
       ? files[0].name
       : t("move.itemCount").replace("{count}", String(files.length));
 
+  const barValue =
+    moveMutation.isPending && progress ? overallPercent(progress) : 0;
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleDialogOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>{t("move.title")}</DialogTitle>
@@ -214,9 +384,43 @@ export function MoveFileDialog({
         </DialogHeader>
 
         <div className="space-y-4">
+          {isCrossAccount && !moveMutation.isPending ? (
+            <Alert>
+              <AlertDescription>{t("move.crossAccountHint")}</AlertDescription>
+            </Alert>
+          ) : null}
+
+          {moveMutation.isPending && progress ? (
+            <div className="space-y-2 rounded-md border p-3">
+              <div className="flex items-center justify-between gap-2 text-sm">
+                <span className="font-medium">
+                  {t("move.progressFile")
+                    .replace("{current}", String(progress.index))
+                    .replace("{total}", String(progress.total))}
+                </span>
+                <span className="text-muted-foreground">{barValue}%</span>
+              </div>
+              <p className="truncate text-sm text-muted-foreground" title={progress.name}>
+                {progress.name}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {phaseLabel(progress.phase)}
+                {progress.phase === "upload" &&
+                typeof progress.percent === "number"
+                  ? ` ${progress.percent}%`
+                  : ""}
+              </p>
+              <Progress value={barValue} />
+            </div>
+          ) : null}
+
           <div className="space-y-2">
             <Label>{t("move.destinationAccount")}</Label>
-            <Select value={destinationAccountId} onValueChange={handleAccountChange}>
+            <Select
+              value={destinationAccountId}
+              onValueChange={handleAccountChange}
+              disabled={moveMutation.isPending}
+            >
               <SelectTrigger>
                 <SelectValue placeholder={t("move.selectAccount")} />
               </SelectTrigger>
@@ -254,7 +458,7 @@ export function MoveFileDialog({
                   type="button"
                   className="hover:text-foreground"
                   onClick={() => handleBreadcrumbClick(-1)}
-                  disabled={selectedDisconnected}
+                  disabled={selectedDisconnected || moveMutation.isPending}
                 >
                   {t("move.rootFolder")}
                 </button>
@@ -265,7 +469,7 @@ export function MoveFileDialog({
                       type="button"
                       className="hover:text-foreground truncate max-w-[140px]"
                       onClick={() => handleBreadcrumbClick(index)}
-                      disabled={selectedDisconnected}
+                      disabled={selectedDisconnected || moveMutation.isPending}
                     >
                       {folder.name}
                     </button>
@@ -301,7 +505,7 @@ export function MoveFileDialog({
                       <button
                         key={folder.id}
                         type="button"
-                        disabled={blocked}
+                        disabled={blocked || moveMutation.isPending}
                         className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50"
                         onClick={() => handleOpenFolder(folder)}
                       >
@@ -317,7 +521,7 @@ export function MoveFileDialog({
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button variant="outline" onClick={() => handleDialogOpenChange(false)}>
             {t("move.cancel")}
           </Button>
           <Button

@@ -5,11 +5,32 @@ import { getAccountCredentials } from "@/lib/services/accounts";
 
 type Supabase = SupabaseClient;
 
+export type MoveItemPhase = "download" | "upload" | "finalize" | "moving";
+
+export type MoveProgressEvent =
+  | { type: "start"; total: number }
+  | {
+      type: "item";
+      index: number;
+      total: number;
+      name: string;
+      phase: MoveItemPhase;
+      percent?: number;
+    }
+  | { type: "item_done"; index: number; total: number; name: string }
+  | { type: "complete"; moved: number };
+
 interface MoveOptions {
   fileIds: string[];
   destinationAccountId: string;
   destinationFolderId: string | null;
+  onProgress?: (event: MoveProgressEvent) => void;
 }
+
+type TransferProgress = {
+  phase: MoveItemPhase;
+  percent?: number;
+};
 
 async function loadFile(
   supabase: Supabase,
@@ -166,7 +187,8 @@ async function transferCrossAccount(
   userId: string,
   file: FileMetadata,
   destinationAccountId: string,
-  destination: { parentMetadataId: string | null; parentProviderPath: string }
+  destination: { parentMetadataId: string | null; parentProviderPath: string },
+  onTransferProgress?: (progress: TransferProgress) => void
 ) {
   const { account: sourceAccount, credentials: sourceCredentials } =
     await getAccountCredentials(supabase, file.account_id, userId);
@@ -177,6 +199,7 @@ async function transferCrossAccount(
   const destAdapter = getAdapter(destAccount.provider);
 
   if (file.is_folder) {
+    onTransferProgress?.({ phase: "moving" });
     const created = await destAdapter.createFolder(
       destCredentials,
       destination.parentProviderPath,
@@ -199,10 +222,17 @@ async function transferCrossAccount(
       .eq("user_id", userId);
 
     for (const child of (children ?? []) as FileMetadata[]) {
-      await transferCrossAccount(supabase, userId, child, destinationAccountId, {
-        parentMetadataId: newFolder.id,
-        parentProviderPath: created.providerFileId,
-      });
+      await transferCrossAccount(
+        supabase,
+        userId,
+        child,
+        destinationAccountId,
+        {
+          parentMetadataId: newFolder.id,
+          parentProviderPath: created.providerFileId,
+        },
+        onTransferProgress
+      );
     }
 
     await sourceAdapter.deleteFile(sourceCredentials, file.provider_file_id);
@@ -210,19 +240,30 @@ async function transferCrossAccount(
     return;
   }
 
+  onTransferProgress?.({ phase: "download" });
   const { stream, name } = await sourceAdapter.download(
     sourceCredentials,
     file.provider_file_id
   );
 
+  onTransferProgress?.({ phase: "upload", percent: 0 });
+  let lastReported = -1;
   const uploaded = await destAdapter.upload(
     destCredentials,
     destination.parentProviderPath,
     name,
     stream,
-    file.size
+    file.size,
+    (percent) => {
+      const rounded = Math.max(0, Math.min(100, Math.round(percent)));
+      if (rounded >= lastReported + 2 || rounded === 100) {
+        lastReported = rounded;
+        onTransferProgress?.({ phase: "upload", percent: rounded });
+      }
+    }
   );
 
+  onTransferProgress?.({ phase: "finalize" });
   await sourceAdapter.deleteFile(sourceCredentials, file.provider_file_id);
   await supabase.from("file_metadata").delete().eq("id", file.id);
 
@@ -241,7 +282,12 @@ export async function moveFiles(
   userId: string,
   options: MoveOptions
 ): Promise<{ moved: number }> {
-  const { fileIds, destinationAccountId, destinationFolderId } = options;
+  const {
+    fileIds,
+    destinationAccountId,
+    destinationFolderId,
+    onProgress,
+  } = options;
 
   if (!fileIds.length) {
     throw new Error("No files selected");
@@ -259,13 +305,25 @@ export async function moveFiles(
     files.push(await loadFile(supabase, userId, fileId));
   }
 
+  const total = files.length;
+  onProgress?.({ type: "start", total });
+
   const folderIds = files.filter((file) => file.is_folder).map((file) => file.id);
 
-  for (const file of files) {
+  for (let index = 0; index < files.length; index++) {
+    const file = files[index]!;
+    const displayIndex = index + 1;
+
     if (
       file.account_id === destinationAccountId &&
       file.parent_id === destination.parentMetadataId
     ) {
+      onProgress?.({
+        type: "item_done",
+        index: displayIndex,
+        total,
+        name: file.name,
+      });
       continue;
     }
 
@@ -281,17 +339,47 @@ export async function moveFiles(
     }
 
     if (file.account_id === destinationAccountId) {
+      console.info(`[move] ${file.name} (same account)`);
+      onProgress?.({
+        type: "item",
+        index: displayIndex,
+        total,
+        name: file.name,
+        phase: "moving",
+      });
       await moveSameAccount(supabase, userId, file, destination);
     } else {
+      console.info(
+        `[move] ${file.name} (cross-account → ${destinationAccountId})`
+      );
       await transferCrossAccount(
         supabase,
         userId,
         file,
         destinationAccountId,
-        destination
+        destination,
+        (progress) => {
+          onProgress?.({
+            type: "item",
+            index: displayIndex,
+            total,
+            name: file.name,
+            phase: progress.phase,
+            percent: progress.percent,
+          });
+        }
       );
+      console.info(`[move] done: ${file.name}`);
     }
+
+    onProgress?.({
+      type: "item_done",
+      index: displayIndex,
+      total,
+      name: file.name,
+    });
   }
 
+  onProgress?.({ type: "complete", moved: files.length });
   return { moved: files.length };
 }

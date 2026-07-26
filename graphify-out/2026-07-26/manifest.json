@@ -225,8 +225,8 @@
     "semantic_hash": ""
   },
   "components/files/move-file-dialog.tsx": {
-    "mtime": 1785042176.3876245,
-    "ast_hash": "4dad02118712db700ed45f7ab2eb34c2",
+    "mtime": 1785051486.3302767,
+    "ast_hash": "620670990f17086c777f70653478a5e5",
     "semantic_hash": ""
   },
   "components/files/my-drive-view.tsx": {
@@ -540,8 +540,8 @@
     "semantic_hash": ""
   },
   "lib/adapters/terabox-api.d.ts": {
-    "mtime": 1785050574.469265,
-    "ast_hash": "0e9c749682aba29f0d6896ac46cb4c9e",
+    "mtime": 1785051119.1066413,
+    "ast_hash": "1574994acf186ba539222779ebc74f23",
     "semantic_hash": ""
   },
   "lib/adapters/terabox-client.ts": {
@@ -555,8 +555,8 @@
     "semantic_hash": ""
   },
   "lib/adapters/terabox.ts": {
-    "mtime": 1785050583.6029687,
-    "ast_hash": "a96b8e9370ce80eb7f645e69bf640206",
+    "mtime": 1785051138.9146206,
+    "ast_hash": "e766b1174c62da95791228135ec0c4f5",
     "semantic_hash": ""
   },
   "lib/adapters/types.ts": {
@@ -570,13 +570,13 @@
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/en.ts": {
-    "mtime": 1785050722.0263107,
-    "ast_hash": "505e1bad8362333cacade1213c169ddb",
+    "mtime": 1785051456.5936618,
+    "ast_hash": "ce8139dfbe7e9256c112420f873311a4",
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/id.ts": {
-    "mtime": 1785050723.003079,
-    "ast_hash": "9df68e2442740d29a9fd45430675178e",
+    "mtime": 1785051457.4108322,
+    "ast_hash": "1bd2550bdd1957cec02fabdd00ef01fd",
     "semantic_hash": ""
   },
   "lib/i18n/index.ts": {
@@ -585,8 +585,8 @@
     "semantic_hash": ""
   },
   "lib/i18n/types.ts": {
-    "mtime": 1785050721.6317217,
-    "ast_hash": "72bb17c88dbe64a795a378efceeb7b21",
+    "mtime": 1785051456.5892506,
+    "ast_hash": "62d0eabd936ce96b9ca275efe044dffb",
     "semantic_hash": ""
   },
   "lib/oauth/popup.ts": {
@@ -610,8 +610,8 @@
     "semantic_hash": ""
   },
   "lib/services/move.ts": {
-    "mtime": 1781480571.5343177,
-    "ast_hash": "816d5bf76623ff7ca5ff4b10a906be0f",
+    "mtime": 1785051458.251346,
+    "ast_hash": "72f27e91656bf0ec5f353708a64cf82d",
     "semantic_hash": ""
   },
   "lib/services/provider-config.ts": {

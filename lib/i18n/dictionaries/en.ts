@@ -255,6 +255,16 @@ export const en: Dictionary = {
   "move.cancel": "Cancel",
   "move.confirm": "Move here",
   "move.moving": "Moving...",
+  "move.movingHint":
+    "Still working — cross-account moves download then re-upload each file. Photos to TeraBox can take several minutes.",
+  "move.crossAccountHint":
+    "Destination is another account. Each file will be downloaded and uploaded again — this can take a while.",
+  "move.cancelled": "Move cancelled",
+  "move.progressFile": "File {current} of {total}",
+  "move.phaseDownload": "Downloading…",
+  "move.phaseUpload": "Uploading…",
+  "move.phaseFinalize": "Finishing…",
+  "move.phaseMoving": "Moving…",
   "move.success": "Items moved successfully",
   "move.action": "Move",
   "move.accountDisconnected":

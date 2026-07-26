@@ -110,8 +110,8 @@
     "semantic_hash": ""
   },
   "app/api/files/route.ts": {
-    "mtime": 1785047986.68806,
-    "ast_hash": "6da1803d8c9be7f8ca50229e708f91cb",
+    "mtime": 1785051583.2584114,
+    "ast_hash": "bf745e361bbefc44066fdc7f7530f0dc",
     "semantic_hash": ""
   },
   "app/api/health/route.ts": {
@@ -225,8 +225,8 @@
     "semantic_hash": ""
   },
   "components/files/move-file-dialog.tsx": {
-    "mtime": 1785042176.3876245,
-    "ast_hash": "4dad02118712db700ed45f7ab2eb34c2",
+    "mtime": 1785051638.1645055,
+    "ast_hash": "adcb86911b9cbb478c148ddbf14debac",
     "semantic_hash": ""
   },
   "components/files/my-drive-view.tsx": {
@@ -570,13 +570,13 @@
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/en.ts": {
-    "mtime": 1785050722.0263107,
-    "ast_hash": "505e1bad8362333cacade1213c169ddb",
+    "mtime": 1785051588.0432003,
+    "ast_hash": "24a102bd3d04f53e87eebb4606a44439",
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/id.ts": {
-    "mtime": 1785050723.003079,
-    "ast_hash": "9df68e2442740d29a9fd45430675178e",
+    "mtime": 1785051589.46312,
+    "ast_hash": "bd63efe5041d17bf155a9c69752088ae",
     "semantic_hash": ""
   },
   "lib/i18n/index.ts": {
@@ -585,8 +585,8 @@
     "semantic_hash": ""
   },
   "lib/i18n/types.ts": {
-    "mtime": 1785050721.6317217,
-    "ast_hash": "72bb17c88dbe64a795a378efceeb7b21",
+    "mtime": 1785051586.758886,
+    "ast_hash": "ea71993da8073b92677eb2d055a4e407",
     "semantic_hash": ""
   },
   "lib/oauth/popup.ts": {
@@ -610,8 +610,8 @@
     "semantic_hash": ""
   },
   "lib/services/move.ts": {
-    "mtime": 1781480571.5343177,
-    "ast_hash": "816d5bf76623ff7ca5ff4b10a906be0f",
+    "mtime": 1785051579.0357985,
+    "ast_hash": "d282885e0b14d9e4f40a371dc26ecab9",
     "semantic_hash": ""
   },
   "lib/services/provider-config.ts": {

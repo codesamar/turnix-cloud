@@ -108,17 +108,35 @@ export async function POST(request: Request) {
   }
 
   if (action === "move" && fileIds?.length && destinationAccountId) {
-    try {
-      const result = await moveFiles(supabase, user.id, {
-        fileIds,
-        destinationAccountId,
-        destinationFolderId: destinationFolderId ?? null,
-      });
-      return NextResponse.json(result);
-    } catch (err) {
-      console.error("[move]", err);
-      return NextResponse.json(toAccountApiError(err), { status: 400 });
-    }
+    const encoder = new TextEncoder();
+    const stream = new ReadableStream<Uint8Array>({
+      async start(controller) {
+        const send = (event: Record<string, unknown>) => {
+          controller.enqueue(encoder.encode(`${JSON.stringify(event)}\n`));
+        };
+
+        try {
+          await moveFiles(supabase, user.id, {
+            fileIds,
+            destinationAccountId,
+            destinationFolderId: destinationFolderId ?? null,
+            onProgress: (event) => send(event),
+          });
+        } catch (err) {
+          console.error("[move]", err);
+          send({ type: "error", ...toAccountApiError(err) });
+        } finally {
+          controller.close();
+        }
+      },
+    });
+
+    return new Response(stream, {
+      headers: {
+        "Content-Type": "application/x-ndjson; charset=utf-8",
+        "Cache-Control": "no-cache, no-transform",
+      },
+    });
   }
 
   if (action === "bulk_delete" && fileIds?.length) {
