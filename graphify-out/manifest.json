@@ -210,13 +210,8 @@
     "semantic_hash": ""
   },
   "components/dashboard/home-dashboard.tsx": {
-    "mtime": 1781480170.1007977,
-    "ast_hash": "afaf1f12496e9c9e4d12c6423adec100",
-    "semantic_hash": ""
-  },
-  "components/dashboard/storage-chart-tooltip.tsx": {
-    "mtime": 1781480165.5962527,
-    "ast_hash": "8d7e95bc8c4b1ea7184234dabe7c1da2",
+    "mtime": 1785045865.8926997,
+    "ast_hash": "3991d288c7912539b0199596d164bee4",
     "semantic_hash": ""
   },
   "components/files/file-explorer.tsx": {
@@ -575,13 +570,13 @@
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/en.ts": {
-    "mtime": 1785045651.7659335,
-    "ast_hash": "8c6644915c9f66da836061a1f9ab51fe",
+    "mtime": 1785045867.5953338,
+    "ast_hash": "24de77e841f82b0b9138032716920db9",
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/id.ts": {
-    "mtime": 1785045651.7657871,
-    "ast_hash": "027873620d8a52d7f0893490b797767c",
+    "mtime": 1785045870.0277395,
+    "ast_hash": "1b44a78777eef927938c2630e027be0c",
     "semantic_hash": ""
   },
   "lib/i18n/index.ts": {
@@ -590,8 +585,8 @@
     "semantic_hash": ""
   },
   "lib/i18n/types.ts": {
-    "mtime": 1785044551.969387,
-    "ast_hash": "bdc79204e2eca5e4b562a602b48e01e7",
+    "mtime": 1785045871.3570611,
+    "ast_hash": "88f0bbf314ca43827496dbca1906d1dc",
     "semantic_hash": ""
   },
   "lib/oauth/popup.ts": {
@@ -827,6 +822,11 @@
   "public/logo/samar-cloud-logo-text-no-bg.png": {
     "mtime": 1785045429.3046832,
     "ast_hash": "b944bfebb4896d62aabac372d1c9c3ca",
+    "semantic_hash": ""
+  },
+  "components/dashboard/storage-overview.tsx": {
+    "mtime": 1785045879.2871628,
+    "ast_hash": "c7e9b44655ee891e524f7dc286166700",
     "semantic_hash": ""
   }
 }

@@ -1,32 +1,19 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Legend,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
 import { Cloud, FileText, HardDrive, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Skeleton } from "@/components/ui/skeleton";
 import { FileExplorer } from "@/components/files/file-explorer";
-import {
-  StorageChartTooltip,
-  type StorageChartRow,
-} from "@/components/dashboard/storage-chart-tooltip";
-import { getAccountDisplayName } from "@/lib/utils/account-display";
+import { StorageOverview } from "@/components/dashboard/storage-overview";
 import type { CloudAccount } from "@/lib/types/database";
 import { formatBytes } from "@/lib/utils/format";
 import { useLanguage } from "@/components/providers/language-provider";
@@ -38,8 +25,9 @@ async function fetchAccounts() {
   return data.accounts as CloudAccount[];
 }
 
-function toGb(bytes: number): number {
-  return Math.round((bytes / (1024 * 1024 * 1024)) * 10) / 10;
+function usagePercent(used: number, total: number): number {
+  if (total <= 0) return 0;
+  return Math.min(100, Math.round((used / total) * 100));
 }
 
 export function HomeDashboard() {
@@ -52,46 +40,36 @@ export function HomeDashboard() {
 
   const totalUsed = accounts.reduce((sum, a) => sum + a.quota_used, 0);
   const totalCapacity = accounts.reduce((sum, a) => sum + a.quota_total, 0);
-
-  const chartData: StorageChartRow[] = accounts.map((account) => {
-    const used = toGb(account.quota_used);
-    const total = toGb(account.quota_total);
-    const free = Math.max(0, Math.round((total - used) * 10) / 10);
-    const usedPercent = total > 0 ? Math.round((used / total) * 100) : 0;
-
-    return {
-      name: getAccountDisplayName(account),
-      used,
-      free,
-      total,
-      usedPercent,
-    };
-  });
+  const overallPercent = usagePercent(totalUsed, totalCapacity);
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-semibold tracking-tight">Dashboard</h2>
-        <p className="text-muted-foreground text-sm mt-1">
-          Overview of your unified cloud storage
-        </p>
+        <h2 className="text-2xl font-semibold tracking-tight">{t("dashboard.title")}</h2>
+        <p className="text-muted-foreground text-sm mt-1">{t("dashboard.subtitle")}</p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Connected Accounts</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("dashboard.connectedAccounts")}
+            </CardTitle>
             <Cloud className="size-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{accounts.length}</div>
-            <p className="text-xs text-muted-foreground">
-              {accounts.length === 0 ? (
+            {isLoading ? (
+              <Skeleton className="h-8 w-16" />
+            ) : (
+              <div className="text-2xl font-bold">{accounts.length}</div>
+            )}
+            <p className="text-xs text-muted-foreground mt-1">
+              {accounts.length === 0 && !isLoading ? (
                 <Link href="/quota" className="text-primary underline-offset-4 hover:underline">
-                  Connect your first account
+                  {t("dashboard.connectFirst")}
                 </Link>
               ) : (
-                "Active cloud providers"
+                t("dashboard.activeProviders")
               )}
             </p>
           </CardContent>
@@ -99,102 +77,76 @@ export function HomeDashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Storage Used</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("dashboard.storageUsedTitle")}
+            </CardTitle>
             <HardDrive className="size-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{formatBytes(totalUsed)}</div>
-            <p className="text-xs text-muted-foreground">
-              of {formatBytes(totalCapacity)} total
-            </p>
+          <CardContent className="space-y-2">
+            {isLoading ? (
+              <Skeleton className="h-8 w-28" />
+            ) : (
+              <>
+                <div className="text-2xl font-bold">{formatBytes(totalUsed)}</div>
+                <p className="text-xs text-muted-foreground">
+                  {t("dashboard.ofTotal").replace(
+                    "{total}",
+                    formatBytes(totalCapacity)
+                  )}
+                </p>
+                {totalCapacity > 0 && (
+                  <Progress value={overallPercent} className="h-1.5" />
+                )}
+              </>
+            )}
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Quick Actions</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("dashboard.quickActions")}
+            </CardTitle>
             <FileText className="size-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent className="flex gap-2">
+          <CardContent className="flex flex-wrap gap-2">
             <Button asChild size="sm" variant="outline">
-              <Link href="/my-drive">Browse Files</Link>
+              <Link href="/my-drive">{t("dashboard.browseFiles")}</Link>
             </Button>
             <Button asChild size="sm" variant="outline">
               <Link href="/quota">
                 <RefreshCw className="size-3 mr-1" />
-                Manage
+                {t("dashboard.manage")}
               </Link>
             </Button>
           </CardContent>
         </Card>
       </div>
 
-      {accounts.length > 0 && (
+      {isLoading && (
         <Card>
           <CardHeader>
-            <CardTitle>{t("dashboard.storageChartTitle")}</CardTitle>
-            <CardDescription>{t("dashboard.storageChartDesc")}</CardDescription>
+            <Skeleton className="h-5 w-40" />
+            <Skeleton className="h-4 w-64" />
           </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={280}>
-              <BarChart data={chartData} margin={{ top: 8, right: 8, left: 0, bottom: 48 }}>
-                <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                <XAxis
-                  dataKey="name"
-                  className="text-xs"
-                  interval={0}
-                  angle={-20}
-                  textAnchor="end"
-                  height={60}
-                  tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }}
-                />
-                <YAxis
-                  className="text-xs"
-                  tick={{ fill: "hsl(var(--muted-foreground))" }}
-                  label={{
-                    value: "GB",
-                    angle: -90,
-                    position: "insideLeft",
-                    style: { fill: "hsl(var(--muted-foreground))", fontSize: 11 },
-                  }}
-                />
-                <Tooltip
-                  content={<StorageChartTooltip />}
-                  cursor={{ fill: "hsl(var(--muted) / 0.35)" }}
-                />
-                <Legend
-                  formatter={(value) =>
-                    value === "used" ? t("dashboard.legendUsed") : t("dashboard.legendFree")
-                  }
-                />
-                <Bar
-                  dataKey="used"
-                  stackId="storage"
-                  fill="hsl(var(--primary))"
-                  name="used"
-                  radius={[0, 0, 0, 0]}
-                />
-                <Bar
-                  dataKey="free"
-                  stackId="storage"
-                  fill="hsl(var(--muted))"
-                  name="free"
-                  radius={[4, 4, 0, 0]}
-                />
-              </BarChart>
-            </ResponsiveContainer>
+          <CardContent className="space-y-4">
+            <Skeleton className="h-2.5 w-full" />
+            <Skeleton className="h-16 w-full" />
+            <Skeleton className="h-16 w-full" />
           </CardContent>
         </Card>
       )}
 
+      {!isLoading && accounts.length > 0 && <StorageOverview accounts={accounts} />}
+
       {!isLoading && (
         <div>
-          <h3 className="text-lg font-medium mb-4">Recent Files</h3>
+          <h3 className="text-lg font-medium mb-4">{t("dashboard.recentFiles")}</h3>
           <FileExplorer
             queryKey="home-recent"
             fetchUrl="/api/files?recent=1"
             showProvider
-            emptyMessage="No recent files. Sync your accounts to see activity."
+            emptyMessage={t("dashboard.recentEmpty")}
           />
         </div>
       )}
