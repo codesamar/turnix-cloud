@@ -219,6 +219,8 @@ export type TranslationKey =
   | "move.accountDisconnected"
   | "move.accountNeedsReconnect"
   | "move.accountDisconnectedBadge"
+  | "files.viewList"
+  | "files.viewGrid"
   | "common.placeholder.name";
 
 export type Dictionary = Record<TranslationKey, string>;

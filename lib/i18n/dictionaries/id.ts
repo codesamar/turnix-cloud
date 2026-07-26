@@ -226,5 +226,7 @@ export const id: Dictionary = {
   "move.accountNeedsReconnect":
     "Akun ini sudah tidak terhubung. Hubungkan ulang di halaman Accounts sebelum memindahkan ke sini.",
   "move.accountDisconnectedBadge": "terputus",
+  "files.viewList": "Tampilan daftar",
+  "files.viewGrid": "Tampilan grid",
   "common.placeholder.name": "Nama Anda",
 };

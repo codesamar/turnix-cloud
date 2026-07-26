@@ -5,13 +5,19 @@ import {
   Download,
   Eye,
   File,
+  FileText,
   Folder,
   FolderInput,
+  LayoutGrid,
+  List,
+  Loader2,
   MoreHorizontal,
+  Music,
+  Play,
   Star,
   Trash2,
 } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -29,12 +35,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { cn } from "@/lib/utils";
 import { formatBytes } from "@/lib/utils/format";
 import type { FileMetadata, FileMetadataWithAccount } from "@/lib/types/database";
 import { getFileAccountLabel } from "@/lib/utils/account-display";
+import { getPreviewKind } from "@/lib/utils/file-preview";
 import { FilePreviewDialog } from "@/components/files/file-preview-dialog";
 import { MoveFileDialog } from "@/components/files/move-file-dialog";
 import { useLanguage } from "@/components/providers/language-provider";
+
+type ViewMode = "list" | "grid";
+
+const VIEW_STORAGE_KEY = "samarcloud.fileView";
 
 interface FileExplorerProps {
   queryKey: string;
@@ -53,6 +66,178 @@ async function fetchFiles(url: string) {
   return data.files as FileMetadataWithAccount[];
 }
 
+function readStoredViewMode(): ViewMode {
+  if (typeof window === "undefined") return "list";
+  const stored = window.localStorage.getItem(VIEW_STORAGE_KEY);
+  return stored === "grid" ? "grid" : "list";
+}
+
+function GridMediaLoading() {
+  return (
+    <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-muted">
+      <Loader2 className="size-6 animate-spin text-muted-foreground" />
+      <span className="text-xs text-muted-foreground">Loading...</span>
+    </div>
+  );
+}
+
+function GridFileMedia({ file }: { file: FileMetadataWithAccount }) {
+  const previewKind = file.is_folder
+    ? null
+    : getPreviewKind(file.mime_type, file.name);
+  const [mediaFailed, setMediaFailed] = useState(false);
+  const [mediaLoaded, setMediaLoaded] = useState(false);
+
+  useEffect(() => {
+    setMediaFailed(false);
+    setMediaLoaded(false);
+  }, [file.id]);
+
+  if (file.is_folder) {
+    return (
+      <div className="flex aspect-[4/3] w-full items-center justify-center bg-muted/50">
+        <Folder className="size-14 text-blue-500" />
+      </div>
+    );
+  }
+
+  const previewUrl = `/api/files/${file.id}/preview`;
+
+  if (previewKind === "image" && !mediaFailed) {
+    return (
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
+        {!mediaLoaded && <GridMediaLoading />}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={previewUrl}
+          alt={file.name}
+          className={cn(
+            "h-full w-full object-cover transition-opacity duration-200",
+            mediaLoaded ? "opacity-100" : "opacity-0"
+          )}
+          loading="lazy"
+          onLoad={() => setMediaLoaded(true)}
+          onError={() => {
+            setMediaFailed(true);
+            setMediaLoaded(false);
+          }}
+        />
+      </div>
+    );
+  }
+
+  if (previewKind === "video" && !mediaFailed) {
+    return (
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
+        {!mediaLoaded && <GridMediaLoading />}
+        <video
+          src={previewUrl}
+          muted
+          preload="metadata"
+          playsInline
+          className={cn(
+            "h-full w-full object-cover transition-opacity duration-200",
+            mediaLoaded ? "opacity-100" : "opacity-0"
+          )}
+          onLoadedData={() => setMediaLoaded(true)}
+          onError={() => {
+            setMediaFailed(true);
+            setMediaLoaded(false);
+          }}
+        />
+        {mediaLoaded && (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/20">
+            <div className="flex size-10 items-center justify-center rounded-full bg-black/60 text-white">
+              <Play className="size-5 fill-current" />
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (previewKind === "audio") {
+    return (
+      <div className="flex aspect-[4/3] w-full flex-col items-center justify-center gap-2 bg-muted/50">
+        <Music className="size-12 text-muted-foreground" />
+        <span className="text-xs text-muted-foreground">Audio</span>
+      </div>
+    );
+  }
+
+  if (previewKind === "pdf") {
+    return (
+      <div className="flex aspect-[4/3] w-full flex-col items-center justify-center gap-2 bg-muted/50">
+        <FileText className="size-12 text-red-500/80" />
+        <span className="text-xs text-muted-foreground">PDF</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex aspect-[4/3] w-full items-center justify-center bg-muted/50">
+      <File className="size-14 text-muted-foreground" />
+    </div>
+  );
+}
+
+function FileActionsMenu({
+  file,
+  onPreview,
+  onStar,
+  onMove,
+  onDelete,
+  moveLabel,
+}: {
+  file: FileMetadata;
+  onPreview: (file: FileMetadata) => void;
+  onStar: (file: FileMetadata) => void;
+  onMove: (file: FileMetadata) => void;
+  onDelete: (file: FileMetadata) => void;
+  moveLabel: string;
+}) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon" className="size-8">
+          <MoreHorizontal className="size-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        {!file.is_folder && (
+          <DropdownMenuItem onClick={() => onPreview(file)}>
+            <Eye className="size-4 mr-2" />
+            View
+          </DropdownMenuItem>
+        )}
+        <DropdownMenuItem onClick={() => onStar(file)}>
+          <Star className="size-4 mr-2" />
+          {file.is_starred ? "Unstar" : "Star"}
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => onMove(file)}>
+          <FolderInput className="size-4 mr-2" />
+          {moveLabel}
+        </DropdownMenuItem>
+        {!file.is_folder && (
+          <DropdownMenuItem asChild>
+            <a href={`/api/files/${file.id}/download`}>
+              <Download className="size-4 mr-2" />
+              Download
+            </a>
+          </DropdownMenuItem>
+        )}
+        <DropdownMenuItem
+          className="text-destructive"
+          onClick={() => onDelete(file)}
+        >
+          <Trash2 className="size-4 mr-2" />
+          Delete
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
 export function FileExplorer({
   queryKey,
   fetchUrl,
@@ -63,11 +248,22 @@ export function FileExplorer({
   onBreadcrumbClick,
 }: FileExplorerProps) {
   const { t } = useLanguage();
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [previewFile, setPreviewFile] = useState<FileMetadata | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [moveOpen, setMoveOpen] = useState(false);
   const [moveFiles, setMoveFiles] = useState<FileMetadata[]>([]);
+
+  useEffect(() => {
+    setViewMode(readStoredViewMode());
+  }, []);
+
+  function handleViewModeChange(value: string) {
+    if (value !== "list" && value !== "grid") return;
+    setViewMode(value);
+    window.localStorage.setItem(VIEW_STORAGE_KEY, value);
+  }
 
   const { data: files = [], isLoading, refetch } = useQuery({
     queryKey: [queryKey, fetchUrl],
@@ -137,32 +333,53 @@ export function FileExplorer({
   }
 
   const columnCount = showProvider ? 6 : 5;
+  const moveLabel = t("move.action");
 
   return (
     <div className="space-y-4">
-      {breadcrumbs && breadcrumbs.length > 0 && (
-        <div className="flex items-center gap-1 text-sm text-muted-foreground">
-          <button
-            type="button"
-            className="hover:text-foreground"
-            onClick={() => onBreadcrumbClick?.(-1)}
-          >
-            My Drive
-          </button>
-          {breadcrumbs.map((crumb, index) => (
-            <span key={crumb.id} className="flex items-center gap-1">
-              <span>/</span>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          {breadcrumbs && breadcrumbs.length > 0 && (
+            <div className="flex items-center gap-1 text-sm text-muted-foreground">
               <button
                 type="button"
                 className="hover:text-foreground"
-                onClick={() => onBreadcrumbClick?.(index)}
+                onClick={() => onBreadcrumbClick?.(-1)}
               >
-                {crumb.name}
+                My Drive
               </button>
-            </span>
-          ))}
+              {breadcrumbs.map((crumb, index) => (
+                <span key={crumb.id} className="flex items-center gap-1">
+                  <span>/</span>
+                  <button
+                    type="button"
+                    className="hover:text-foreground"
+                    onClick={() => onBreadcrumbClick?.(index)}
+                  >
+                    {crumb.name}
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
         </div>
-      )}
+
+        <ToggleGroup
+          type="single"
+          value={viewMode}
+          onValueChange={handleViewModeChange}
+          variant="outline"
+          size="sm"
+          className="justify-end"
+        >
+          <ToggleGroupItem value="list" aria-label={t("files.viewList")} title={t("files.viewList")}>
+            <List className="size-4" />
+          </ToggleGroupItem>
+          <ToggleGroupItem value="grid" aria-label={t("files.viewGrid")} title={t("files.viewGrid")}>
+            <LayoutGrid className="size-4" />
+          </ToggleGroupItem>
+        </ToggleGroup>
+      </div>
 
       {selected.size > 0 && (
         <div className="flex items-center gap-2">
@@ -177,7 +394,7 @@ export function FileExplorer({
             }
           >
             <FolderInput className="size-4 mr-1" />
-            {t("move.action")}
+            {moveLabel}
           </Button>
           <Button variant="destructive" size="sm" onClick={handleBulkDelete}>
             <Trash2 className="size-4 mr-1" />
@@ -186,142 +403,197 @@ export function FileExplorer({
         </div>
       )}
 
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-10" />
-              <TableHead>Name</TableHead>
-              {showProvider && <TableHead>Account</TableHead>}
-              <TableHead>Size</TableHead>
-              <TableHead>Modified</TableHead>
-              <TableHead className="w-28 text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading && (
+      {viewMode === "list" ? (
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
               <TableRow>
-                <TableCell colSpan={columnCount} className="text-center py-8 text-muted-foreground">
-                  Loading files...
-                </TableCell>
+                <TableHead className="w-10" />
+                <TableHead>Name</TableHead>
+                {showProvider && <TableHead>Account</TableHead>}
+                <TableHead>Size</TableHead>
+                <TableHead>Modified</TableHead>
+                <TableHead className="w-28 text-right">Actions</TableHead>
               </TableRow>
-            )}
-            {!isLoading && files.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={columnCount} className="text-center py-8 text-muted-foreground">
-                  {emptyMessage}
-                </TableCell>
-              </TableRow>
-            )}
-            {files.map((file) => (
-              <TableRow
-                key={file.id}
-                className="cursor-pointer"
-                onClick={() => handleRowClick(file)}
-              >
-                <TableCell onClick={(e) => e.stopPropagation()}>
-                  <Checkbox
-                    checked={selected.has(file.id)}
-                    onCheckedChange={() => toggleSelect(file.id)}
-                  />
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    {file.is_folder ? (
-                      <Folder className="size-4 text-blue-500" />
-                    ) : (
-                      <File className="size-4 text-muted-foreground" />
-                    )}
-                    <span className="truncate max-w-[300px]">{file.name}</span>
-                    {file.is_starred && (
-                      <Star className="size-3 fill-yellow-400 text-yellow-400" />
-                    )}
-                  </div>
-                </TableCell>
-                {showProvider && (
-                  <TableCell className="text-muted-foreground text-sm max-w-[220px] truncate">
-                    {getFileAccountLabel(file.cloud_accounts)}
+            </TableHeader>
+            <TableBody>
+              {isLoading && (
+                <TableRow>
+                  <TableCell colSpan={columnCount} className="text-center py-8 text-muted-foreground">
+                    Loading files...
                   </TableCell>
-                )}
-                <TableCell className="text-muted-foreground text-sm">
-                  {file.is_folder ? "—" : formatBytes(file.size)}
-                </TableCell>
-                <TableCell className="text-muted-foreground text-sm">
-                  {file.modified_at
-                    ? new Date(file.modified_at).toLocaleDateString()
-                    : "—"}
-                </TableCell>
-                <TableCell onClick={(e) => e.stopPropagation()}>
-                  <div className="flex items-center justify-end gap-1">
-                    {!file.is_folder && (
-                      <>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="size-8"
-                          title="View file"
-                          onClick={() => handlePreview(file)}
-                        >
-                          <Eye className="size-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="size-8"
-                          title="Download"
-                          asChild
-                        >
-                          <a href={`/api/files/${file.id}/download`}>
-                            <Download className="size-4" />
-                          </a>
-                        </Button>
-                      </>
-                    )}
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="size-8">
-                          <MoreHorizontal className="size-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        {!file.is_folder && (
-                          <DropdownMenuItem onClick={() => handlePreview(file)}>
-                            <Eye className="size-4 mr-2" />
-                            View
-                          </DropdownMenuItem>
-                        )}
-                        <DropdownMenuItem onClick={() => handleStar(file)}>
-                          <Star className="size-4 mr-2" />
-                          {file.is_starred ? "Unstar" : "Star"}
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => openMoveDialog([file])}>
-                          <FolderInput className="size-4 mr-2" />
-                          {t("move.action")}
-                        </DropdownMenuItem>
-                        {!file.is_folder && (
-                          <DropdownMenuItem asChild>
+                </TableRow>
+              )}
+              {!isLoading && files.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={columnCount} className="text-center py-8 text-muted-foreground">
+                    {emptyMessage}
+                  </TableCell>
+                </TableRow>
+              )}
+              {files.map((file) => (
+                <TableRow
+                  key={file.id}
+                  className="cursor-pointer"
+                  onClick={() => handleRowClick(file)}
+                >
+                  <TableCell onClick={(e) => e.stopPropagation()}>
+                    <Checkbox
+                      checked={selected.has(file.id)}
+                      onCheckedChange={() => toggleSelect(file.id)}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      {file.is_folder ? (
+                        <Folder className="size-4 text-blue-500" />
+                      ) : (
+                        <File className="size-4 text-muted-foreground" />
+                      )}
+                      <span className="truncate max-w-[300px]">{file.name}</span>
+                      {file.is_starred && (
+                        <Star className="size-3 fill-yellow-400 text-yellow-400" />
+                      )}
+                    </div>
+                  </TableCell>
+                  {showProvider && (
+                    <TableCell className="text-muted-foreground text-sm max-w-[220px] truncate">
+                      {getFileAccountLabel(file.cloud_accounts)}
+                    </TableCell>
+                  )}
+                  <TableCell className="text-muted-foreground text-sm">
+                    {file.is_folder ? "—" : formatBytes(file.size)}
+                  </TableCell>
+                  <TableCell className="text-muted-foreground text-sm">
+                    {file.modified_at
+                      ? new Date(file.modified_at).toLocaleDateString()
+                      : "—"}
+                  </TableCell>
+                  <TableCell onClick={(e) => e.stopPropagation()}>
+                    <div className="flex items-center justify-end gap-1">
+                      {!file.is_folder && (
+                        <>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="size-8"
+                            title="View file"
+                            onClick={() => handlePreview(file)}
+                          >
+                            <Eye className="size-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="size-8"
+                            title="Download"
+                            asChild
+                          >
                             <a href={`/api/files/${file.id}/download`}>
-                              <Download className="size-4 mr-2" />
-                              Download
+                              <Download className="size-4" />
                             </a>
-                          </DropdownMenuItem>
+                          </Button>
+                        </>
+                      )}
+                      <FileActionsMenu
+                        file={file}
+                        onPreview={handlePreview}
+                        onStar={handleStar}
+                        onMove={(item) => openMoveDialog([item])}
+                        onDelete={handleDelete}
+                        moveLabel={moveLabel}
+                      />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      ) : (
+        <div>
+          {isLoading && (
+            <p className="py-10 text-center text-sm text-muted-foreground">
+              Loading files...
+            </p>
+          )}
+          {!isLoading && files.length === 0 && (
+            <p className="py-10 text-center text-sm text-muted-foreground">
+              {emptyMessage}
+            </p>
+          )}
+          {!isLoading && files.length > 0 && (
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+              {files.map((file) => {
+                const isSelected = selected.has(file.id);
+                return (
+                  <div
+                    key={file.id}
+                    role="button"
+                    tabIndex={0}
+                    className={cn(
+                      "group relative flex cursor-pointer flex-col overflow-hidden rounded-lg border transition-colors hover:bg-muted/40",
+                      isSelected && "border-primary ring-1 ring-primary/30"
+                    )}
+                    onClick={() => handleRowClick(file)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        handleRowClick(file);
+                      }
+                    }}
+                  >
+                    <div className="flex items-start gap-2 px-2.5 pb-2 pt-2">
+                      <div
+                        className="pt-0.5"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Checkbox
+                          checked={isSelected}
+                          onCheckedChange={() => toggleSelect(file.id)}
+                        />
+                      </div>
+                      <div className="min-w-0 flex-1 space-y-0.5">
+                        <div className="flex items-center gap-1">
+                          <span className="truncate text-sm font-medium leading-snug">
+                            {file.name}
+                          </span>
+                          {file.is_starred && (
+                            <Star className="size-3 shrink-0 fill-yellow-400 text-yellow-400" />
+                          )}
+                        </div>
+                        {showProvider && (
+                          <p className="truncate text-xs text-muted-foreground">
+                            {getFileAccountLabel(file.cloud_accounts)}
+                          </p>
                         )}
-                        <DropdownMenuItem
-                          className="text-destructive"
-                          onClick={() => handleDelete(file)}
-                        >
-                          <Trash2 className="size-4 mr-2" />
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                        <p className="text-xs text-muted-foreground">
+                          {file.is_folder ? "—" : formatBytes(file.size)}
+                        </p>
+                      </div>
+                      <div
+                        className="-mr-1 -mt-0.5 shrink-0"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <FileActionsMenu
+                          file={file}
+                          onPreview={handlePreview}
+                          onStar={handleStar}
+                          onMove={(item) => openMoveDialog([item])}
+                          onDelete={handleDelete}
+                          moveLabel={moveLabel}
+                        />
+                      </div>
+                    </div>
+
+                    <GridFileMedia file={file} />
                   </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
 
       <FilePreviewDialog
         file={previewFile}

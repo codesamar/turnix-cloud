@@ -226,5 +226,7 @@ export const en: Dictionary = {
   "move.accountNeedsReconnect":
     "This account is disconnected. Reconnect it in Accounts before moving here.",
   "move.accountDisconnectedBadge": "disconnected",
+  "files.viewList": "List view",
+  "files.viewGrid": "Grid view",
   "common.placeholder.name": "Your name",
 };
