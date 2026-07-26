@@ -217,7 +217,7 @@ Setelah disetujui, update **Redirect URI** di Dropbox ke domain HTTPS production
 
 ## Deploy production (Vercel)
 
-1. Set env vars di Vercel (sama seperti `.env.local`, plus `CRON_SECRET`)
+1. Set env vars di Vercel (sama seperti `.env.local`)
 2. `NEXT_PUBLIC_APP_URL=https://domain-anda.com`
 3. Update Redirect URI di Dropbox App Console ke:
    ```

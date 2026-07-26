@@ -34,7 +34,6 @@ TurnixCloud is a cloud drive aggregation platform that presents multiple storage
 
 ### 🔄 Sync and metadata mirror
 - File metadata is stored in Supabase Postgres for fast navigation
-- Scheduled sync via Vercel Cron (`POST /api/sync/run` every 5 minutes)
 - Manual sync trigger from the dashboard (`Sync All`)
 
 ### 👤 Auth and multi-user
@@ -93,7 +92,6 @@ turnix-cloud/
 ├─ supabase/migrations/  # Database schema SQL
 ├─ docs/                 # Provider setup documentation
 ├─ docker-compose.yaml
-├─ vercel.json           # Cron schedule for sync
 └─ README.md
 ```
 
@@ -144,7 +142,6 @@ flowchart TD
     SA --> DB
 
     API --> SY[Sync Service]
-    SY --> CRON[Vercel Cron]
     SY --> CP
     SY --> DB
 
@@ -159,7 +156,7 @@ At a high level:
 2. The API selects the appropriate provider adapter (`google_drive`, `onedrive`, `dropbox`, `yandex`, `terabox`, `s3`)
 3. Provider responses are normalized into the Turnix data model
 4. File metadata is mirrored into Supabase Postgres for fast access
-5. The sync service keeps mirrored metadata aligned with provider state (manual or cron)
+5. The sync service keeps mirrored metadata aligned with provider state (manual sync from the dashboard)
 
 ## 🧩 Current application views
 
@@ -241,7 +238,6 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 # App
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 TURNIX_SECRET_KEY=replace-with-a-strong-random-secret-at-least-32-chars
-CRON_SECRET=replace-with-cron-secret
 
 # Optional OAuth fallbacks (can also be set in dashboard → /quota)
 GOOGLE_CLIENT_ID=
@@ -268,7 +264,6 @@ openssl rand -base64 32
 | `SUPABASE_SERVICE_ROLE_KEY` | Service role key (server only) |
 | `NEXT_PUBLIC_APP_URL` | App URL used for OAuth redirects |
 | `TURNIX_SECRET_KEY` | Encrypts provider tokens at rest (min. 32 chars) |
-| `CRON_SECRET` | Auth for Vercel Cron sync in production |
 
 Notes:
 - TeraBox and S3 do not use `.env` OAuth credentials; they are connected from the UI
@@ -342,8 +337,6 @@ docker compose down
 2. Set all env vars from `.env.local`
 3. Set `NEXT_PUBLIC_APP_URL` to the production domain
 4. Deploy
-
-[`vercel.json`](vercel.json) schedules sync every 5 minutes via `POST /api/sync/run`. Set `CRON_SECRET` in Vercel; Vercel sends `Authorization: Bearer <CRON_SECRET>`.
 
 Also update:
 - Supabase Auth Site URL / Redirect URLs to production

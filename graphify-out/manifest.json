@@ -135,8 +135,8 @@
     "semantic_hash": ""
   },
   "app/api/sync/run/route.ts": {
-    "mtime": 1781453839.9975896,
-    "ast_hash": "578a13e3d7396d616bb6b1974d0a5859",
+    "mtime": 1785040411.3479993,
+    "ast_hash": "08a34604123d55c7a54517a2ab45f987",
     "semantic_hash": ""
   },
   "app/api/uploads/destination/route.ts": {
@@ -625,8 +625,8 @@
     "semantic_hash": ""
   },
   "lib/services/sync.ts": {
-    "mtime": 1785035310.8934247,
-    "ast_hash": "6a0332a85685a44c638836afd4f6218a",
+    "mtime": 1785040412.548575,
+    "ast_hash": "c6466a3fd3c2c647bf877d7b242e9f7c",
     "semantic_hash": ""
   },
   "lib/services/upload.ts": {
@@ -645,8 +645,8 @@
     "semantic_hash": ""
   },
   "lib/supabase/server.ts": {
-    "mtime": 1781453696.2307398,
-    "ast_hash": "c1e0e6fc1f475eb156f87952b4a0984d",
+    "mtime": 1785040424.7157154,
+    "ast_hash": "70a0c12bb255ce2536adc7b6109b13f7",
     "semantic_hash": ""
   },
   "lib/types/database.ts": {
@@ -739,19 +739,14 @@
     "ast_hash": "4182c2bc51f98cb6f1fea089e12513ad",
     "semantic_hash": ""
   },
-  "vercel.json": {
-    "mtime": 1781453541.3515153,
-    "ast_hash": "096ee35060dab545b6860ecc9d95e479",
-    "semantic_hash": ""
-  },
   "README-OmniCloud.md": {
     "mtime": 1781452842.9383178,
     "ast_hash": "1a3caf565fa5a4edf4fa6d272280b523",
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1785034036.4146738,
-    "ast_hash": "1a7987c1acbef89a834317851f039f6b",
+    "mtime": 1785040416.9261162,
+    "ast_hash": "820e0bcb3f578ac4cf9a878df72bd248",
     "semantic_hash": ""
   },
   "docker-compose.yaml": {
@@ -760,13 +755,13 @@
     "semantic_hash": ""
   },
   "docs/dropbox-setup.md": {
-    "mtime": 1781481487.0713818,
-    "ast_hash": "8463d946196e3c19353838a842d4fe16",
+    "mtime": 1785040417.4551668,
+    "ast_hash": "9c8719fc96cd507203a32e82db5ed290",
     "semantic_hash": ""
   },
   "docs/google-oauth-production.md": {
-    "mtime": 1781477798.2958179,
-    "ast_hash": "99d35bcd1660a353f9b0cc059711db34",
+    "mtime": 1785040418.7321303,
+    "ast_hash": "fc381a0c4389b17cd9cc7ffe9b79ac41",
     "semantic_hash": ""
   },
   "docs/terabox-setup.md": {

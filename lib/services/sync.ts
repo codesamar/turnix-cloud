@@ -171,24 +171,3 @@ export async function syncUserAccounts(
 
   return results;
 }
-
-export async function syncAllUsers(supabase: Supabase): Promise<SyncResult[]> {
-  const { data: accounts, error } = await supabase
-    .from("cloud_accounts")
-    .select("user_id")
-    .eq("status", "active");
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  const userIds = [...new Set((accounts ?? []).map((a) => a.user_id))];
-  const allResults: SyncResult[] = [];
-
-  for (const userId of userIds) {
-    const results = await syncUserAccounts(supabase, userId);
-    allResults.push(...results);
-  }
-
-  return allResults;
-}

@@ -48,14 +48,12 @@ NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
 SUPABASE_SERVICE_ROLE_KEY=eyJ...
 TURNIX_SECRET_KEY=ganti-dengan-secret-minimal-32-karakter
-CRON_SECRET=secret-untuk-vercel-cron
 ```
 
 | Variable | Fungsi |
 |---|---|
 | `NEXT_PUBLIC_APP_URL` | Base URL app — dipakai untuk OAuth redirect URI |
 | `TURNIX_SECRET_KEY` | Enkripsi token provider di database |
-| `CRON_SECRET` | Auth endpoint sync otomatis (`/api/sync/run`) |
 
 OAuth Google bisa diset lewat **dashboard** (`/quota → Configure Cloud Providers`) atau fallback `.env`:
 
