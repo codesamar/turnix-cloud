@@ -363,7 +363,7 @@ Also update:
 If you change the key (for example you left the placeholder and later set a real secret), **re-encrypt existing rows** before relying on the new key in local or production.
 
 ```bash
-# Preview (no DB writes)
+# Preview (no DB writes) — BOTH keys required
 OLD_SAMAR_SECRET_KEY='previous-secret' \
 NEW_SAMAR_SECRET_KEY='new-secret' \
 npm run secrets:reencrypt -- --dry-run
@@ -373,6 +373,8 @@ OLD_SAMAR_SECRET_KEY='previous-secret' \
 NEW_SAMAR_SECRET_KEY='new-secret' \
 npm run secrets:reencrypt
 ```
+
+`npm run secrets:reencrypt` alone will fail — `OLD_SAMAR_SECRET_KEY` is always required. Quote keys that contain `$`, `*`, or `%`.
 
 Notes:
 - Script reads `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` from `.env.local` when unset

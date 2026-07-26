@@ -6,10 +6,20 @@ import {
   HardDrive,
   Link2,
   RefreshCw,
-  Trash2,
+  Unplug,
 } from "lucide-react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -32,6 +42,12 @@ import { invalidateFileQueries } from "@/lib/utils/invalidate-file-queries";
 import type { ProviderStatus } from "@/lib/services/provider-config";
 import { isTokenExpiredError } from "@/lib/utils/account-error";
 import { isOAuthMessage, openOAuthPopup } from "@/lib/oauth/popup";
+import { cn } from "@/lib/utils";
+
+type ConfirmAction =
+  | { type: "sync-all" }
+  | { type: "sync"; account: CloudAccount }
+  | { type: "disconnect"; account: CloudAccount };
 
 async function fetchAccounts() {
   const response = await fetch("/api/accounts");
@@ -52,6 +68,7 @@ export function AccountsPanel() {
   const { t, language } = useLanguage();
   const [reconnectingProvider, setReconnectingProvider] =
     useState<CloudProvider | null>(null);
+  const [confirmAction, setConfirmAction] = useState<ConfirmAction | null>(null);
   const popupPollRef = useRef<number | null>(null);
 
   const { data: accounts = [], isLoading } = useQuery({
@@ -151,12 +168,100 @@ export function AccountsPanel() {
     onError: () => toast.error(t("accounts.syncFailed")),
   });
 
-  async function handleDisconnect(id: string) {
-    const response = await fetch(`/api/accounts?id=${id}`, { method: "DELETE" });
-    if (response.ok) {
+  const disconnectMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const response = await fetch(`/api/accounts?id=${id}`, {
+        method: "DELETE",
+      });
+      const data = (await response.json().catch(() => ({}))) as {
+        error?: string;
+      };
+      if (!response.ok) {
+        throw new Error(data.error || t("accounts.disconnectFailed"));
+      }
+      return id;
+    },
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({ queryKey: ["accounts"] });
+      const previous = queryClient.getQueryData<CloudAccount[]>(["accounts"]);
+      queryClient.setQueryData<CloudAccount[]>(["accounts"], (current) =>
+        (current ?? []).filter((account) => account.id !== id)
+      );
+      return { previous };
+    },
+    onError: (error, _id, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(["accounts"], context.previous);
+      }
+      toast.error(
+        error instanceof Error ? error.message : t("accounts.disconnectFailed")
+      );
+    },
+    onSuccess: () => {
       toast.success(t("accounts.disconnectSuccess"));
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      queryClient.invalidateQueries({ queryKey: ["allocation"] });
+      invalidateFileQueries(queryClient);
+    },
+  });
+
+  function runConfirmedAction() {
+    const action = confirmAction;
+    if (!action) return;
+
+    setConfirmAction(null);
+
+    if (action.type === "sync-all") {
+      syncMutation.mutate(undefined);
+      return;
     }
+
+    if (action.type === "sync") {
+      syncMutation.mutate(action.account.id);
+      return;
+    }
+
+    disconnectMutation.mutate(action.account.id);
+  }
+
+  function confirmDialogCopy() {
+    if (!confirmAction) {
+      return { title: "", description: "", confirm: "", destructive: false };
+    }
+
+    if (confirmAction.type === "sync-all") {
+      return {
+        title: t("accounts.confirmSyncAllTitle"),
+        description: t("accounts.confirmSyncAllDesc"),
+        confirm: t("accounts.syncAll"),
+        destructive: false,
+      };
+    }
+
+    const label = getAccountDisplayName(confirmAction.account);
+    const provider = PROVIDER_LABELS[confirmAction.account.provider];
+
+    if (confirmAction.type === "sync") {
+      return {
+        title: t("accounts.confirmSyncTitle"),
+        description: t("accounts.confirmSyncDesc")
+          .replace("{account}", label)
+          .replace("{provider}", provider),
+        confirm: t("accounts.sync"),
+        destructive: false,
+      };
+    }
+
+    return {
+      title: t("accounts.confirmDisconnectTitle"),
+      description: t("accounts.confirmDisconnectDesc")
+        .replace("{account}", label)
+        .replace("{provider}", provider),
+      confirm: t("accounts.disconnect"),
+      destructive: true,
+    };
   }
 
   function handleReconnect(provider: CloudProvider) {
@@ -181,6 +286,8 @@ export function AccountsPanel() {
       }
     }, 500);
   }
+
+  const confirmCopy = confirmDialogCopy();
 
   return (
     <div className="space-y-6">
@@ -235,7 +342,7 @@ export function AccountsPanel() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => syncMutation.mutate(undefined)}
+            onClick={() => setConfirmAction({ type: "sync-all" })}
             disabled={syncMutation.isPending || accounts.length === 0}
           >
             <RefreshCw className={`size-4 mr-1 ${syncMutation.isPending ? "animate-spin" : ""}`} />
@@ -298,23 +405,32 @@ export function AccountsPanel() {
                       </p>
                     )}
                   </div>
-                  <div className="flex gap-1 shrink-0">
+                  <div className="flex flex-col sm:flex-row gap-2 shrink-0">
                     {!isError && (
                       <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => syncMutation.mutate(account.id)}
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setConfirmAction({ type: "sync", account })}
                         disabled={syncMutation.isPending}
+                        title={t("accounts.sync")}
                       >
-                        <RefreshCw className="size-4" />
+                        <RefreshCw
+                          className={`size-4 mr-1 ${syncMutation.isPending ? "animate-spin" : ""}`}
+                        />
+                        {t("accounts.sync")}
                       </Button>
                     )}
                     <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDisconnect(account.id)}
+                      variant="outline"
+                      size="sm"
+                      className="border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                      onClick={() =>
+                        setConfirmAction({ type: "disconnect", account })
+                      }
+                      disabled={disconnectMutation.isPending}
                     >
-                      <Trash2 className="size-4 text-destructive" />
+                      <Unplug className="size-4 mr-1" />
+                      {t("accounts.disconnect")}
                     </Button>
                   </div>
                 </div>
@@ -346,6 +462,32 @@ export function AccountsPanel() {
       </Card>
 
       <AllocationSettings accounts={accounts} />
+
+      <AlertDialog
+        open={confirmAction !== null}
+        onOpenChange={(open) => {
+          if (!open) setConfirmAction(null);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{confirmCopy.title}</AlertDialogTitle>
+            <AlertDialogDescription>{confirmCopy.description}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t("providers.cancel")}</AlertDialogCancel>
+            <AlertDialogAction
+              className={cn(
+                confirmCopy.destructive &&
+                  buttonVariants({ variant: "destructive" })
+              )}
+              onClick={runConfirmedAction}
+            >
+              {confirmCopy.confirm}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

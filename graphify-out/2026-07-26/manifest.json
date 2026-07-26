@@ -75,8 +75,8 @@
     "semantic_hash": ""
   },
   "app/api/accounts/route.ts": {
-    "mtime": 1781453471.362944,
-    "ast_hash": "402e98f9f3d58f1579cc9286fb0a74d3",
+    "mtime": 1785047057.8255494,
+    "ast_hash": "1c42cde93810ed07193e8ce2e82686da",
     "semantic_hash": ""
   },
   "app/api/accounts/terabox/connect/route.ts": {
@@ -155,8 +155,8 @@
     "semantic_hash": ""
   },
   "app/layout.tsx": {
-    "mtime": 1785045652.9280386,
-    "ast_hash": "cccebaaee53a1db7e86bbed93d0270fd",
+    "mtime": 1785045964.492566,
+    "ast_hash": "a671598783e5b77f04b625b8a45e3e5a",
     "semantic_hash": ""
   },
   "app/oauth/done/page.tsx": {
@@ -170,8 +170,8 @@
     "semantic_hash": ""
   },
   "components/accounts/accounts-panel.tsx": {
-    "mtime": 1785044553.5252247,
-    "ast_hash": "41f1297a12f3feffba42b25480d596a6",
+    "mtime": 1785047065.8903975,
+    "ast_hash": "f4a4ef1407d9817c3575f4470666ebb7",
     "semantic_hash": ""
   },
   "components/accounts/connect-account-dialog.tsx": {
@@ -570,13 +570,13 @@
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/en.ts": {
-    "mtime": 1785045867.5953338,
-    "ast_hash": "24de77e841f82b0b9138032716920db9",
+    "mtime": 1785046966.2507732,
+    "ast_hash": "6778984c706a20d6531bc10a0a459977",
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/id.ts": {
-    "mtime": 1785045870.0277395,
-    "ast_hash": "1b44a78777eef927938c2630e027be0c",
+    "mtime": 1785046969.1897757,
+    "ast_hash": "030758d17f3e8342b5c715af14439825",
     "semantic_hash": ""
   },
   "lib/i18n/index.ts": {
@@ -585,8 +585,8 @@
     "semantic_hash": ""
   },
   "lib/i18n/types.ts": {
-    "mtime": 1785045871.3570611,
-    "ast_hash": "88f0bbf314ca43827496dbca1906d1dc",
+    "mtime": 1785046970.342531,
+    "ast_hash": "30ddaf4b458f47d210d4c0dfb4285f1e",
     "semantic_hash": ""
   },
   "lib/oauth/popup.ts": {
@@ -685,8 +685,8 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1785044941.3037128,
-    "ast_hash": "da79ebede44afb1b86a2428c08ce796c",
+    "mtime": 1785045960.2735436,
+    "ast_hash": "5c20faff37f6725faef3c7634e9bd27a",
     "semantic_hash": ""
   },
   "postcss.config.mjs": {
@@ -735,8 +735,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1785045661.6076336,
-    "ast_hash": "82537e1e185fddbbafbf19979f435ab8",
+    "mtime": 1785046302.2229605,
+    "ast_hash": "e261391267cdd3b81288cb24908060fc",
     "semantic_hash": ""
   },
   "docker-compose.yaml": {
@@ -785,8 +785,8 @@
     "semantic_hash": ""
   },
   "scripts/reencrypt-secrets.mjs": {
-    "mtime": 1785044940.8711867,
-    "ast_hash": "726ab8fbea9aa93f95d11609c662a93c",
+    "mtime": 1785046293.7283974,
+    "ast_hash": "d4e1ac0b71539bc38ba5923571409748",
     "semantic_hash": ""
   },
   "app/apple-icon.png": {
@@ -825,8 +825,8 @@
     "semantic_hash": ""
   },
   "components/dashboard/storage-overview.tsx": {
-    "mtime": 1785045879.2871628,
-    "ast_hash": "c7e9b44655ee891e524f7dc286166700",
+    "mtime": 1785045891.9121308,
+    "ast_hash": "ca30581e4c2316f1f0dc04457e08f293",
     "semantic_hash": ""
   }
 }

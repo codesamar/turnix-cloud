@@ -127,7 +127,12 @@ async function main() {
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!oldKey) {
-    throw new Error("Set OLD_SAMAR_SECRET_KEY to the previous secret");
+    throw new Error(
+      "Set OLD_SAMAR_SECRET_KEY to the previous secret.\n\n" +
+        "Example:\n" +
+        "  OLD_SAMAR_SECRET_KEY='key-lama' NEW_SAMAR_SECRET_KEY='key-baru' npm run secrets:reencrypt -- --dry-run\n" +
+        "  OLD_SAMAR_SECRET_KEY='key-lama' NEW_SAMAR_SECRET_KEY='key-baru' npm run secrets:reencrypt"
+    );
   }
   if (!newKey) {
     throw new Error("Set NEW_SAMAR_SECRET_KEY (or SAMAR_SECRET_KEY) to the new secret");
