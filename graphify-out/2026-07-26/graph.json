@@ -208,8 +208,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_dashboard_recent_page",
-      "community": 101,
-      "community_name": "file-explorer.tsx",
+      "community": 11,
+      "community_name": "provider-config.ts",
       "norm_label": "page.tsx"
     },
     {
@@ -219,8 +219,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "app_dashboard_recent_page_recentpage",
-      "community": 101,
-      "community_name": "file-explorer.tsx",
+      "community": 11,
+      "community_name": "provider-config.ts",
       "norm_label": "recentpage()"
     },
     {
@@ -274,8 +274,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_dashboard_starred_page",
-      "community": 101,
-      "community_name": "file-explorer.tsx",
+      "community": 11,
+      "community_name": "provider-config.ts",
       "norm_label": "page.tsx"
     },
     {
@@ -285,8 +285,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "app_dashboard_starred_page_starredpage",
-      "community": 101,
-      "community_name": "file-explorer.tsx",
+      "community": 11,
+      "community_name": "provider-config.ts",
       "norm_label": "starredpage()"
     },
     {
@@ -1459,7 +1459,7 @@
       "label": "LoginForm()",
       "file_type": "code",
       "source_file": "components/auth/login-form.tsx",
-      "source_location": "L20",
+      "source_location": "L21",
       "_origin": "ast",
       "id": "components_auth_login_form_loginform",
       "community": 33,
@@ -1594,8 +1594,8 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "components_files_file_explorer_fetchfiles",
-      "community": 101,
-      "community_name": "file-explorer.tsx",
+      "community": 11,
+      "community_name": "provider-config.ts",
       "norm_label": "fetchfiles()"
     },
     {
@@ -1605,8 +1605,8 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "components_files_file_explorer_fileexplorer",
-      "community": 101,
-      "community_name": "file-explorer.tsx",
+      "community": 11,
+      "community_name": "provider-config.ts",
       "norm_label": "fileexplorer()"
     },
     {
@@ -1638,8 +1638,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "components_files_file_preview_dialog_filepreviewdialog",
-      "community": 11,
-      "community_name": "provider-config.ts",
+      "community": 106,
+      "community_name": "file-preview.ts",
       "norm_label": "filepreviewdialog()"
     },
     {
@@ -2925,8 +2925,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "components_ui_carousel_usecarousel",
-      "community": 5,
-      "community_name": "carousel.tsx",
+      "community": 48,
+      "community_name": "react",
       "norm_label": "usecarousel()"
     },
     {
@@ -2991,8 +2991,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_ui_chart",
-      "community": 5,
-      "community_name": "carousel.tsx",
+      "community": 44,
+      "community_name": "chart.tsx",
       "norm_label": "chart.tsx"
     },
     {
@@ -3002,8 +3002,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "components_ui_chart_themes",
-      "community": 5,
-      "community_name": "carousel.tsx",
+      "community": 44,
+      "community_name": "chart.tsx",
       "norm_label": "themes"
     },
     {
@@ -3013,8 +3013,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "components_ui_chart_chartconfig",
-      "community": 5,
-      "community_name": "carousel.tsx",
+      "community": 44,
+      "community_name": "chart.tsx",
       "norm_label": "chartconfig"
     },
     {
@@ -3024,8 +3024,8 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "components_ui_chart_chartcontextprops",
-      "community": 5,
-      "community_name": "carousel.tsx",
+      "community": 44,
+      "community_name": "chart.tsx",
       "norm_label": "chartcontextprops"
     },
     {
@@ -3035,8 +3035,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "components_ui_chart_chartcontext",
-      "community": 5,
-      "community_name": "carousel.tsx",
+      "community": 44,
+      "community_name": "chart.tsx",
       "norm_label": "chartcontext"
     },
     {
@@ -3046,8 +3046,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "components_ui_chart_usechart",
-      "community": 5,
-      "community_name": "carousel.tsx",
+      "community": 48,
+      "community_name": "react",
       "norm_label": "usechart()"
     },
     {
@@ -3057,8 +3057,8 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "components_ui_chart_chartcontainer",
-      "community": 5,
-      "community_name": "carousel.tsx",
+      "community": 44,
+      "community_name": "chart.tsx",
       "norm_label": "chartcontainer"
     },
     {
@@ -3068,8 +3068,8 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "components_ui_chart_chartstyle",
-      "community": 5,
-      "community_name": "carousel.tsx",
+      "community": 44,
+      "community_name": "chart.tsx",
       "norm_label": "chartstyle()"
     },
     {
@@ -3079,8 +3079,8 @@
       "source_location": "L105",
       "_origin": "ast",
       "id": "components_ui_chart_charttooltipcontent",
-      "community": 5,
-      "community_name": "carousel.tsx",
+      "community": 44,
+      "community_name": "chart.tsx",
       "norm_label": "charttooltipcontent"
     },
     {
@@ -3090,8 +3090,8 @@
       "source_location": "L261",
       "_origin": "ast",
       "id": "components_ui_chart_chartlegendcontent",
-      "community": 5,
-      "community_name": "carousel.tsx",
+      "community": 44,
+      "community_name": "chart.tsx",
       "norm_label": "chartlegendcontent"
     },
     {
@@ -3101,8 +3101,8 @@
       "source_location": "L320",
       "_origin": "ast",
       "id": "components_ui_chart_getpayloadconfigfrompayload",
-      "community": 5,
-      "community_name": "carousel.tsx",
+      "community": 44,
+      "community_name": "chart.tsx",
       "norm_label": "getpayloadconfigfrompayload()"
     },
     {
@@ -3640,8 +3640,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_ui_form",
-      "community": 5,
-      "community_name": "carousel.tsx",
+      "community": 42,
+      "community_name": "form.tsx",
       "norm_label": "form.tsx"
     },
     {
@@ -3651,8 +3651,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "components_ui_form_formfieldcontextvalue",
-      "community": 5,
-      "community_name": "carousel.tsx",
+      "community": 42,
+      "community_name": "form.tsx",
       "norm_label": "formfieldcontextvalue"
     },
     {
@@ -3662,8 +3662,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "components_ui_form_formfieldcontext",
-      "community": 5,
-      "community_name": "carousel.tsx",
+      "community": 42,
+      "community_name": "form.tsx",
       "norm_label": "formfieldcontext"
     },
     {
@@ -3673,8 +3673,8 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "components_ui_form_formfield",
-      "community": 5,
-      "community_name": "carousel.tsx",
+      "community": 42,
+      "community_name": "form.tsx",
       "norm_label": "formfield()"
     },
     {
@@ -3684,8 +3684,8 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "components_ui_form_useformfield",
-      "community": 5,
-      "community_name": "carousel.tsx",
+      "community": 48,
+      "community_name": "react",
       "norm_label": "useformfield()"
     },
     {
@@ -3695,8 +3695,8 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "components_ui_form_formitemcontextvalue",
-      "community": 5,
-      "community_name": "carousel.tsx",
+      "community": 42,
+      "community_name": "form.tsx",
       "norm_label": "formitemcontextvalue"
     },
     {
@@ -3706,8 +3706,8 @@
       "source_location": "L71",
       "_origin": "ast",
       "id": "components_ui_form_formitemcontext",
-      "community": 5,
-      "community_name": "carousel.tsx",
+      "community": 42,
+      "community_name": "form.tsx",
       "norm_label": "formitemcontext"
     },
     {
@@ -3717,8 +3717,8 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "components_ui_form_formitem",
-      "community": 5,
-      "community_name": "carousel.tsx",
+      "community": 42,
+      "community_name": "form.tsx",
       "norm_label": "formitem"
     },
     {
@@ -3728,8 +3728,8 @@
       "source_location": "L89",
       "_origin": "ast",
       "id": "components_ui_form_formlabel",
-      "community": 5,
-      "community_name": "carousel.tsx",
+      "community": 42,
+      "community_name": "form.tsx",
       "norm_label": "formlabel"
     },
     {
@@ -3739,8 +3739,8 @@
       "source_location": "L106",
       "_origin": "ast",
       "id": "components_ui_form_formcontrol",
-      "community": 5,
-      "community_name": "carousel.tsx",
+      "community": 42,
+      "community_name": "form.tsx",
       "norm_label": "formcontrol"
     },
     {
@@ -3750,8 +3750,8 @@
       "source_location": "L128",
       "_origin": "ast",
       "id": "components_ui_form_formdescription",
-      "community": 5,
-      "community_name": "carousel.tsx",
+      "community": 42,
+      "community_name": "form.tsx",
       "norm_label": "formdescription"
     },
     {
@@ -3761,8 +3761,8 @@
       "source_location": "L145",
       "_origin": "ast",
       "id": "components_ui_form_formmessage",
-      "community": 5,
-      "community_name": "carousel.tsx",
+      "community": 42,
+      "community_name": "form.tsx",
       "norm_label": "formmessage"
     },
     {
@@ -4531,8 +4531,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_ui_sheet",
-      "community": 2,
-      "community_name": "sidebar.tsx",
+      "community": 46,
+      "community_name": "clsx",
       "norm_label": "sheet.tsx"
     },
     {
@@ -4542,8 +4542,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "components_ui_sheet_sheetoverlay",
-      "community": 2,
-      "community_name": "sidebar.tsx",
+      "community": 46,
+      "community_name": "clsx",
       "norm_label": "sheetoverlay"
     },
     {
@@ -4553,8 +4553,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "components_ui_sheet_sheetvariants",
-      "community": 2,
-      "community_name": "sidebar.tsx",
+      "community": 46,
+      "community_name": "clsx",
       "norm_label": "sheetvariants"
     },
     {
@@ -4564,8 +4564,8 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "components_ui_sheet_sheetcontentprops",
-      "community": 2,
-      "community_name": "sidebar.tsx",
+      "community": 46,
+      "community_name": "clsx",
       "norm_label": "sheetcontentprops"
     },
     {
@@ -4575,8 +4575,8 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "components_ui_sheet_sheetcontent",
-      "community": 2,
-      "community_name": "sidebar.tsx",
+      "community": 46,
+      "community_name": "clsx",
       "norm_label": "sheetcontent"
     },
     {
@@ -4586,8 +4586,8 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "components_ui_sheet_sheetheader",
-      "community": 2,
-      "community_name": "sidebar.tsx",
+      "community": 46,
+      "community_name": "clsx",
       "norm_label": "sheetheader()"
     },
     {
@@ -4597,8 +4597,8 @@
       "source_location": "L91",
       "_origin": "ast",
       "id": "components_ui_sheet_sheetfooter",
-      "community": 2,
-      "community_name": "sidebar.tsx",
+      "community": 46,
+      "community_name": "clsx",
       "norm_label": "sheetfooter()"
     },
     {
@@ -4608,8 +4608,8 @@
       "source_location": "L105",
       "_origin": "ast",
       "id": "components_ui_sheet_sheettitle",
-      "community": 2,
-      "community_name": "sidebar.tsx",
+      "community": 46,
+      "community_name": "clsx",
       "norm_label": "sheettitle"
     },
     {
@@ -4619,8 +4619,8 @@
       "source_location": "L117",
       "_origin": "ast",
       "id": "components_ui_sheet_sheetdescription",
-      "community": 2,
-      "community_name": "sidebar.tsx",
+      "community": 46,
+      "community_name": "clsx",
       "norm_label": "sheetdescription"
     },
     {
@@ -4630,7 +4630,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_ui_sidebar",
-      "community": 2,
+      "community": 40,
       "community_name": "sidebar.tsx",
       "norm_label": "sidebar.tsx"
     },
@@ -4641,7 +4641,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "components_ui_sidebar_sidebarcontextprops",
-      "community": 2,
+      "community": 40,
       "community_name": "sidebar.tsx",
       "norm_label": "sidebarcontextprops"
     },
@@ -4652,7 +4652,7 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "components_ui_sidebar_sidebarcontext",
-      "community": 2,
+      "community": 40,
       "community_name": "sidebar.tsx",
       "norm_label": "sidebarcontext"
     },
@@ -4663,8 +4663,8 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "components_ui_sidebar_usesidebar",
-      "community": 5,
-      "community_name": "carousel.tsx",
+      "community": 48,
+      "community_name": "react",
       "norm_label": "usesidebar()"
     },
     {
@@ -4707,7 +4707,7 @@
       "source_location": "L298",
       "_origin": "ast",
       "id": "components_ui_sidebar_sidebarrail",
-      "community": 2,
+      "community": 40,
       "community_name": "sidebar.tsx",
       "norm_label": "sidebarrail"
     },
@@ -4718,7 +4718,7 @@
       "source_location": "L327",
       "_origin": "ast",
       "id": "components_ui_sidebar_sidebarinset",
-      "community": 2,
+      "community": 40,
       "community_name": "sidebar.tsx",
       "norm_label": "sidebarinset"
     },
@@ -4729,7 +4729,7 @@
       "source_location": "L345",
       "_origin": "ast",
       "id": "components_ui_sidebar_sidebarinput",
-      "community": 2,
+      "community": 40,
       "community_name": "sidebar.tsx",
       "norm_label": "sidebarinput"
     },
@@ -4762,7 +4762,7 @@
       "source_location": "L393",
       "_origin": "ast",
       "id": "components_ui_sidebar_sidebarseparator",
-      "community": 2,
+      "community": 40,
       "community_name": "sidebar.tsx",
       "norm_label": "sidebarseparator"
     },
@@ -4806,7 +4806,7 @@
       "source_location": "L462",
       "_origin": "ast",
       "id": "components_ui_sidebar_sidebargroupaction",
-      "community": 2,
+      "community": 40,
       "community_name": "sidebar.tsx",
       "norm_label": "sidebargroupaction"
     },
@@ -4850,7 +4850,7 @@
       "source_location": "L524",
       "_origin": "ast",
       "id": "components_ui_sidebar_sidebarmenubuttonvariants",
-      "community": 2,
+      "community": 40,
       "community_name": "sidebar.tsx",
       "norm_label": "sidebarmenubuttonvariants"
     },
@@ -4872,7 +4872,7 @@
       "source_location": "L605",
       "_origin": "ast",
       "id": "components_ui_sidebar_sidebarmenuaction",
-      "community": 2,
+      "community": 40,
       "community_name": "sidebar.tsx",
       "norm_label": "sidebarmenuaction"
     },
@@ -4883,7 +4883,7 @@
       "source_location": "L636",
       "_origin": "ast",
       "id": "components_ui_sidebar_sidebarmenubadge",
-      "community": 2,
+      "community": 40,
       "community_name": "sidebar.tsx",
       "norm_label": "sidebarmenubadge"
     },
@@ -4894,7 +4894,7 @@
       "source_location": "L657",
       "_origin": "ast",
       "id": "components_ui_sidebar_sidebarmenuskeleton",
-      "community": 2,
+      "community": 40,
       "community_name": "sidebar.tsx",
       "norm_label": "sidebarmenuskeleton"
     },
@@ -4905,7 +4905,7 @@
       "source_location": "L695",
       "_origin": "ast",
       "id": "components_ui_sidebar_sidebarmenusub",
-      "community": 2,
+      "community": 40,
       "community_name": "sidebar.tsx",
       "norm_label": "sidebarmenusub"
     },
@@ -4916,7 +4916,7 @@
       "source_location": "L712",
       "_origin": "ast",
       "id": "components_ui_sidebar_sidebarmenusubitem",
-      "community": 2,
+      "community": 40,
       "community_name": "sidebar.tsx",
       "norm_label": "sidebarmenusubitem"
     },
@@ -4927,7 +4927,7 @@
       "source_location": "L718",
       "_origin": "ast",
       "id": "components_ui_sidebar_sidebarmenusubbutton",
-      "community": 2,
+      "community": 40,
       "community_name": "sidebar.tsx",
       "norm_label": "sidebarmenusubbutton"
     },
@@ -5279,7 +5279,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "components_ui_tooltip",
-      "community": 2,
+      "community": 40,
       "community_name": "sidebar.tsx",
       "norm_label": "tooltip.tsx"
     },
@@ -5290,7 +5290,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "components_ui_tooltip_tooltipcontent",
-      "community": 2,
+      "community": 40,
       "community_name": "sidebar.tsx",
       "norm_label": "tooltipcontent"
     },
@@ -5301,8 +5301,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "hooks_use_mobile",
-      "community": 2,
-      "community_name": "sidebar.tsx",
+      "community": 48,
+      "community_name": "react",
       "norm_label": "use-mobile.tsx"
     },
     {
@@ -5312,8 +5312,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "hooks_use_mobile_useismobile",
-      "community": 2,
-      "community_name": "sidebar.tsx",
+      "community": 48,
+      "community_name": "react",
       "norm_label": "useismobile()"
     },
     {
@@ -7594,39 +7594,6 @@
       "norm_label": "invalidatefilequeries()"
     },
     {
-      "label": "middleware.ts",
-      "file_type": "code",
-      "source_file": "middleware.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "middleware",
-      "community": 36,
-      "community_name": "middleware.ts",
-      "norm_label": "middleware.ts"
-    },
-    {
-      "label": "middleware()",
-      "file_type": "code",
-      "source_file": "middleware.ts",
-      "source_location": "L4",
-      "_origin": "ast",
-      "id": "middleware_middleware",
-      "community": 36,
-      "community_name": "middleware.ts",
-      "norm_label": "middleware()"
-    },
-    {
-      "label": "config",
-      "file_type": "code",
-      "source_file": "middleware.ts",
-      "source_location": "L8",
-      "_origin": "ast",
-      "id": "middleware_config",
-      "community": 36,
-      "community_name": "middleware.ts",
-      "norm_label": "config"
-    },
-    {
       "label": "next.config.mjs",
       "file_type": "code",
       "source_file": "next.config.mjs",
@@ -8546,8 +8513,8 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "package_dependencies_clsx",
-      "community": 46,
-      "community_name": "clsx",
+      "community": 95,
+      "community_name": "class-variance-authority",
       "norm_label": "clsx"
     },
     {
@@ -8557,8 +8524,8 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "clsx",
-      "community": 46,
-      "community_name": "clsx",
+      "community": 95,
+      "community_name": "class-variance-authority",
       "norm_label": "clsx"
     },
     {
@@ -8744,8 +8711,8 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "package_dependencies_react",
-      "community": 5,
-      "community_name": "carousel.tsx",
+      "community": 48,
+      "community_name": "react",
       "norm_label": "react"
     },
     {
@@ -8755,8 +8722,8 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "react",
-      "community": 5,
-      "community_name": "carousel.tsx",
+      "community": 48,
+      "community_name": "react",
       "norm_label": "react"
     },
     {
@@ -9274,6 +9241,39 @@
       "id": "postcss_config_config",
       "community": 93,
       "community_name": "postcss.config.mjs",
+      "norm_label": "config"
+    },
+    {
+      "label": "proxy.ts",
+      "file_type": "code",
+      "source_file": "proxy.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "proxy",
+      "community": 36,
+      "community_name": "middleware.ts",
+      "norm_label": "proxy.ts"
+    },
+    {
+      "label": "proxy()",
+      "file_type": "code",
+      "source_file": "proxy.ts",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "proxy_proxy",
+      "community": 36,
+      "community_name": "middleware.ts",
+      "norm_label": "proxy()"
+    },
+    {
+      "label": "config",
+      "file_type": "code",
+      "source_file": "proxy.ts",
+      "source_location": "L8",
+      "_origin": "ast",
+      "id": "proxy_config",
+      "community": 36,
+      "community_name": "middleware.ts",
       "norm_label": "config"
     },
     {
@@ -16401,7 +16401,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "components/auth/login-form.tsx",
-      "source_location": "L20",
+      "source_location": "L21",
       "weight": 1.0,
       "_origin": "ast",
       "source": "components_auth_login_form",
@@ -16413,7 +16413,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "components/auth/login-form.tsx",
-      "source_location": "L18",
+      "source_location": "L19",
       "weight": 1.0,
       "_origin": "ast",
       "source": "components_auth_login_form",
@@ -16425,7 +16425,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "components/auth/login-form.tsx",
-      "source_location": "L18",
+      "source_location": "L19",
       "weight": 1.0,
       "_origin": "ast",
       "source": "components_auth_login_form",
@@ -16437,7 +16437,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "components/auth/login-form.tsx",
-      "source_location": "L6",
+      "source_location": "L7",
       "weight": 1.0,
       "_origin": "ast",
       "source": "components_auth_login_form",
@@ -16449,7 +16449,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "components/auth/login-form.tsx",
-      "source_location": "L6",
+      "source_location": "L7",
       "weight": 1.0,
       "_origin": "ast",
       "source": "components_auth_login_form",
@@ -16461,7 +16461,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "components/auth/login-form.tsx",
-      "source_location": "L7",
+      "source_location": "L8",
       "weight": 1.0,
       "_origin": "ast",
       "source": "components_auth_login_form",
@@ -16473,7 +16473,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "components/auth/login-form.tsx",
-      "source_location": "L7",
+      "source_location": "L8",
       "weight": 1.0,
       "_origin": "ast",
       "source": "components_auth_login_form",
@@ -16485,7 +16485,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "components/auth/login-form.tsx",
-      "source_location": "L7",
+      "source_location": "L8",
       "weight": 1.0,
       "_origin": "ast",
       "source": "components_auth_login_form",
@@ -16497,7 +16497,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "components/auth/login-form.tsx",
-      "source_location": "L7",
+      "source_location": "L8",
       "weight": 1.0,
       "_origin": "ast",
       "source": "components_auth_login_form",
@@ -16509,7 +16509,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "components/auth/login-form.tsx",
-      "source_location": "L7",
+      "source_location": "L8",
       "weight": 1.0,
       "_origin": "ast",
       "source": "components_auth_login_form",
@@ -16521,7 +16521,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "components/auth/login-form.tsx",
-      "source_location": "L7",
+      "source_location": "L8",
       "weight": 1.0,
       "_origin": "ast",
       "source": "components_auth_login_form",
@@ -16533,7 +16533,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "components/auth/login-form.tsx",
-      "source_location": "L7",
+      "source_location": "L8",
       "weight": 1.0,
       "_origin": "ast",
       "source": "components_auth_login_form",
@@ -16545,7 +16545,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "components/auth/login-form.tsx",
-      "source_location": "L15",
+      "source_location": "L16",
       "weight": 1.0,
       "_origin": "ast",
       "source": "components_auth_login_form",
@@ -16557,7 +16557,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "components/auth/login-form.tsx",
-      "source_location": "L15",
+      "source_location": "L16",
       "weight": 1.0,
       "_origin": "ast",
       "source": "components_auth_login_form",
@@ -16569,7 +16569,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "components/auth/login-form.tsx",
-      "source_location": "L16",
+      "source_location": "L17",
       "weight": 1.0,
       "_origin": "ast",
       "source": "components_auth_login_form",
@@ -16581,7 +16581,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "components/auth/login-form.tsx",
-      "source_location": "L16",
+      "source_location": "L17",
       "weight": 1.0,
       "_origin": "ast",
       "source": "components_auth_login_form",
@@ -16593,7 +16593,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "components/auth/login-form.tsx",
-      "source_location": "L17",
+      "source_location": "L18",
       "weight": 1.0,
       "_origin": "ast",
       "source": "components_auth_login_form",
@@ -16605,7 +16605,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "components/auth/login-form.tsx",
-      "source_location": "L17",
+      "source_location": "L18",
       "weight": 1.0,
       "_origin": "ast",
       "source": "components_auth_login_form",
@@ -16618,7 +16618,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "components/auth/login-form.tsx",
-      "source_location": "L22",
+      "source_location": "L23",
       "weight": 1.0,
       "_origin": "ast",
       "source": "components_auth_login_form_loginform",
@@ -28917,11 +28917,11 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "middleware.ts",
+      "source_file": "proxy.ts",
       "source_location": "L2",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "middleware",
+      "source": "proxy",
       "target": "lib_supabase_middleware",
       "confidence_score": 1.0
     },
@@ -28929,11 +28929,11 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "middleware.ts",
+      "source_file": "proxy.ts",
       "source_location": "L2",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "middleware",
+      "source": "proxy",
       "target": "lib_supabase_middleware_updatesession",
       "confidence_score": 1.0
     },
@@ -28942,11 +28942,11 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "middleware.ts",
+      "source_file": "proxy.ts",
       "source_location": "L5",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "middleware_middleware",
+      "source": "proxy_proxy",
       "target": "lib_supabase_middleware_updatesession"
     },
     {
@@ -29421,28 +29421,6 @@
       "_origin": "ast",
       "source": "lib_utils_invalidate_file_queries",
       "target": "lib_utils_invalidate_file_queries_invalidatefilequeries",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "middleware.ts",
-      "source_location": "L8",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "middleware",
-      "target": "middleware_config",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "middleware.ts",
-      "source_location": "L4",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "middleware",
-      "target": "middleware_middleware",
       "confidence_score": 1.0
     },
     {
@@ -31126,6 +31104,28 @@
       "_origin": "ast",
       "source": "postcss_config",
       "target": "postcss_config_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "proxy.ts",
+      "source_location": "L8",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "proxy",
+      "target": "proxy_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "proxy.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "proxy",
+      "target": "proxy_proxy",
       "confidence_score": 1.0
     },
     {
@@ -33132,5 +33132,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "1dd193320fd3291a90747300e75ef5f8668a2a46"
+  "built_at_commit": "fc556e8920ef54af7118b4e8c24be72106ee8736"
 }

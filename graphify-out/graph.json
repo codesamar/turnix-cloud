@@ -5444,8 +5444,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_adapters_google_drive",
-      "community": 29,
-      "community_name": "terabox-client.ts",
+      "community": 16,
+      "community_name": "types.ts",
       "norm_label": "google-drive.ts"
     },
     {
@@ -5455,8 +5455,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "lib_adapters_google_drive_scopes",
-      "community": 29,
-      "community_name": "terabox-client.ts",
+      "community": 16,
+      "community_name": "types.ts",
       "norm_label": "scopes"
     },
     {
@@ -5466,8 +5466,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "lib_adapters_google_drive_getconfig",
-      "community": 29,
-      "community_name": "terabox-client.ts",
+      "community": 16,
+      "community_name": "types.ts",
       "norm_label": "getconfig()"
     },
     {
@@ -5477,8 +5477,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "lib_adapters_google_drive_google_export_mimes",
-      "community": 29,
-      "community_name": "terabox-client.ts",
+      "community": 16,
+      "community_name": "types.ts",
       "norm_label": "google_export_mimes"
     },
     {
@@ -5488,8 +5488,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "lib_adapters_google_drive_getgoogleexportmime",
-      "community": 29,
-      "community_name": "terabox-client.ts",
+      "community": 16,
+      "community_name": "types.ts",
       "norm_label": "getgoogleexportmime()"
     },
     {
@@ -5499,8 +5499,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "lib_adapters_google_drive_appendextension",
-      "community": 29,
-      "community_name": "terabox-client.ts",
+      "community": 16,
+      "community_name": "types.ts",
       "norm_label": "appendextension()"
     },
     {
@@ -5510,8 +5510,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "lib_adapters_google_drive_normalizefile",
-      "community": 29,
-      "community_name": "terabox-client.ts",
+      "community": 16,
+      "community_name": "types.ts",
       "norm_label": "normalizefile()"
     },
     {
@@ -5521,8 +5521,8 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "lib_adapters_google_drive_drivefetch",
-      "community": 29,
-      "community_name": "terabox-client.ts",
+      "community": 16,
+      "community_name": "types.ts",
       "norm_label": "drivefetch()"
     },
     {
@@ -5532,8 +5532,8 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "lib_adapters_google_drive_googledriveadapter",
-      "community": 29,
-      "community_name": "terabox-client.ts",
+      "community": 16,
+      "community_name": "types.ts",
       "norm_label": "googledriveadapter"
     },
     {
@@ -5543,8 +5543,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_adapters_onedrive",
-      "community": 16,
-      "community_name": "types.ts",
+      "community": 29,
+      "community_name": "terabox-client.ts",
       "norm_label": "onedrive.ts"
     },
     {
@@ -5554,8 +5554,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "lib_adapters_onedrive_scopes",
-      "community": 16,
-      "community_name": "types.ts",
+      "community": 29,
+      "community_name": "terabox-client.ts",
       "norm_label": "scopes"
     },
     {
@@ -5565,8 +5565,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "lib_adapters_onedrive_getconfig",
-      "community": 16,
-      "community_name": "types.ts",
+      "community": 29,
+      "community_name": "terabox-client.ts",
       "norm_label": "getconfig()"
     },
     {
@@ -5576,8 +5576,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "lib_adapters_onedrive_normalizeitem",
-      "community": 16,
-      "community_name": "types.ts",
+      "community": 29,
+      "community_name": "terabox-client.ts",
       "norm_label": "normalizeitem()"
     },
     {
@@ -5587,8 +5587,8 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "lib_adapters_onedrive_graphfetch",
-      "community": 16,
-      "community_name": "types.ts",
+      "community": 29,
+      "community_name": "terabox-client.ts",
       "norm_label": "graphfetch()"
     },
     {
@@ -5598,8 +5598,8 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "lib_adapters_onedrive_onedriveadapter",
-      "community": 16,
-      "community_name": "types.ts",
+      "community": 29,
+      "community_name": "terabox-client.ts",
       "norm_label": "onedriveadapter"
     },
     {
@@ -6137,8 +6137,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "lib_adapters_types_quotainfo",
-      "community": 29,
-      "community_name": "terabox-client.ts",
+      "community": 16,
+      "community_name": "types.ts",
       "norm_label": "quotainfo"
     },
     {
@@ -8469,8 +8469,8 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "package_dependencies_class_variance_authority",
-      "community": 95,
-      "community_name": "class-variance-authority",
+      "community": 22,
+      "community_name": "dependencies",
       "norm_label": "class-variance-authority"
     },
     {
@@ -8480,8 +8480,8 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "class_variance_authority",
-      "community": 95,
-      "community_name": "class-variance-authority",
+      "community": 22,
+      "community_name": "dependencies",
       "norm_label": "class-variance-authority"
     },
     {
@@ -8513,8 +8513,8 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "package_dependencies_clsx",
-      "community": 22,
-      "community_name": "dependencies",
+      "community": 95,
+      "community_name": "class-variance-authority",
       "norm_label": "clsx"
     },
     {
@@ -8524,8 +8524,8 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "clsx",
-      "community": 22,
-      "community_name": "dependencies",
+      "community": 95,
+      "community_name": "class-variance-authority",
       "norm_label": "clsx"
     },
     {
@@ -33132,5 +33132,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "2953745c4734691ed07a38d0a9d46cb147666547"
+  "built_at_commit": "fc556e8920ef54af7118b4e8c24be72106ee8736"
 }
