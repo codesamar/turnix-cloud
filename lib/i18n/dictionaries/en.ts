@@ -27,7 +27,7 @@ export const en: Dictionary = {
   "settings.theme.system": "System",
   "settings.language.en": "English",
   "settings.language.id": "Bahasa Indonesia",
-  "auth.login.title": "Sign in to SamarCloud",
+  "auth.login.title": "Sign in",
   "auth.login.subtitle": "Access your unified cloud workspace",
   "auth.login.submit": "Sign in",
   "auth.login.loading": "Signing in...",

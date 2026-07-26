@@ -27,7 +27,7 @@ export const id: Dictionary = {
   "settings.theme.system": "Sistem",
   "settings.language.en": "English",
   "settings.language.id": "Bahasa Indonesia",
-  "auth.login.title": "Masuk ke SamarCloud",
+  "auth.login.title": "Masuk",
   "auth.login.subtitle": "Akses workspace cloud terpadu Anda",
   "auth.login.submit": "Masuk",
   "auth.login.loading": "Sedang masuk...",

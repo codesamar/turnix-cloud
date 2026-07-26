@@ -1,8 +1,16 @@
 # SamarCloud
 
+<p align="center">
+  <img src="public/logo/samar-cloud-logo-only-no-bg.png" alt="SamarCloud mark" width="120" />
+  <br />
+  <img src="public/logo/samar-cloud-logo-text-no-bg.png" alt="SamarCloud" width="280" />
+</p>
+
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/) [![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/) [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/) [![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/) [![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
 
 SamarCloud is a cloud drive aggregation platform that presents multiple storage providers through a single, consistent workspace. Built with **Next.js 16** and **Supabase** (Auth, Postgres, RLS, Realtime), it lets users browse, upload, download, and manage files across connected cloud accounts from one interface.
+
+Brand assets live in [`public/logo/`](public/logo/) and are used app-wide via `SamarLogo` (sidebar, auth, favicon, OAuth popup, Open Graph).
 
 ![SamarCloud Overview](image.png)
 

@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import { SamarLogo } from "@/components/brand/samar-logo";
 import { OAUTH_MESSAGE_TYPE } from "@/lib/oauth/popup";
 
 export function OAuthDoneClient() {
@@ -30,7 +31,8 @@ export function OAuthDoneClient() {
   const error = searchParams.get("error");
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-2 bg-background p-6 text-center">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background p-6 text-center">
+      <SamarLogo variant="mark" height={40} />
       {connected && !error ? (
         <>
           <p className="text-lg font-medium">Account connected</p>

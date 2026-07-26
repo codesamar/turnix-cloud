@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import { SamarLogo } from "@/components/brand/samar-logo";
 import { createClient } from "@/lib/supabase/client";
 import { useLanguage } from "@/components/providers/language-provider";
 
@@ -96,9 +97,8 @@ export function AppSidebar({ userEmail }: AppSidebarProps) {
   return (
     <Sidebar>
       <SidebarHeader className="p-4">
-        <Link href="/" className="flex items-center gap-2 font-semibold">
-          <Cloud className="size-5 text-primary" />
-          <span>SamarCloud</span>
+        <Link href="/" className="flex items-center" aria-label="SamarCloud">
+          <SamarLogo variant="lockup" height={32} className="max-w-full" />
         </Link>
       </SidebarHeader>
       <SidebarContent>

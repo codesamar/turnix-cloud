@@ -5,13 +5,13 @@
     "semantic_hash": ""
   },
   "app/(auth)/login/page.tsx": {
-    "mtime": 1781453405.9841533,
-    "ast_hash": "6b1d24a532ba921d18090f8930a8e959",
+    "mtime": 1785045636.1229205,
+    "ast_hash": "0842e268ffaf26b04dfbafa6db334ec7",
     "semantic_hash": ""
   },
   "app/(auth)/register/page.tsx": {
-    "mtime": 1781453406.2750735,
-    "ast_hash": "46ac907c2cacb4c5c773b7131ad9b866",
+    "mtime": 1785045637.1912744,
+    "ast_hash": "a7c4f3f7a4947216393b1eed85cdcf5b",
     "semantic_hash": ""
   },
   "app/(dashboard)/connect-guide/page.tsx": {
@@ -110,8 +110,8 @@
     "semantic_hash": ""
   },
   "app/api/files/route.ts": {
-    "mtime": 1781480420.538851,
-    "ast_hash": "8f0ce9b7c4db1ea608cedd45f2fcbbfa",
+    "mtime": 1785042130.1559117,
+    "ast_hash": "22b75fdf6d71da9158eada17ec34cb82",
     "semantic_hash": ""
   },
   "app/api/health/route.ts": {
@@ -155,8 +155,8 @@
     "semantic_hash": ""
   },
   "app/layout.tsx": {
-    "mtime": 1785041289.2204611,
-    "ast_hash": "a95585cd4f05bbef15c690fa3061f08d",
+    "mtime": 1785045652.9280386,
+    "ast_hash": "cccebaaee53a1db7e86bbed93d0270fd",
     "semantic_hash": ""
   },
   "app/oauth/done/page.tsx": {
@@ -170,13 +170,13 @@
     "semantic_hash": ""
   },
   "components/accounts/accounts-panel.tsx": {
-    "mtime": 1785035333.3214695,
-    "ast_hash": "4e6b13f3b178c09729e2b58ab67ee642",
+    "mtime": 1785044553.5252247,
+    "ast_hash": "41f1297a12f3feffba42b25480d596a6",
     "semantic_hash": ""
   },
   "components/accounts/connect-account-dialog.tsx": {
-    "mtime": 1781482390.211673,
-    "ast_hash": "ca87f7d42c3570c69250c6ebedbed7e5",
+    "mtime": 1785044552.963566,
+    "ast_hash": "bcf8a1d5c5cc7f57ab7724fdd37844d9",
     "semantic_hash": ""
   },
   "components/accounts/connect-s3-form.tsx": {
@@ -190,8 +190,8 @@
     "semantic_hash": ""
   },
   "components/accounts/oauth-done-client.tsx": {
-    "mtime": 1785041292.1118028,
-    "ast_hash": "5676218bb00fc9376cb51f40425cb397",
+    "mtime": 1785045641.9572926,
+    "ast_hash": "a19efc45f50fa2d5e86150f62b0667d0",
     "semantic_hash": ""
   },
   "components/accounts/provider-config-panel.tsx": {
@@ -220,8 +220,8 @@
     "semantic_hash": ""
   },
   "components/files/file-explorer.tsx": {
-    "mtime": 1781480462.81419,
-    "ast_hash": "c8637a90998bd7626532208300b4f389",
+    "mtime": 1785042902.0639448,
+    "ast_hash": "586f7e61516b7a26229ec9e60c6f9cda",
     "semantic_hash": ""
   },
   "components/files/file-preview-dialog.tsx": {
@@ -230,8 +230,8 @@
     "semantic_hash": ""
   },
   "components/files/move-file-dialog.tsx": {
-    "mtime": 1781480457.807449,
-    "ast_hash": "b07179d4194fd899c8b52ab214db3594",
+    "mtime": 1785042176.3876245,
+    "ast_hash": "4dad02118712db700ed45f7ab2eb34c2",
     "semantic_hash": ""
   },
   "components/files/my-drive-view.tsx": {
@@ -250,8 +250,8 @@
     "semantic_hash": ""
   },
   "components/layout/app-sidebar.tsx": {
-    "mtime": 1785041292.1108522,
-    "ast_hash": "ba62c8db1e522faf62aa0d765ad14c0f",
+    "mtime": 1785045632.4714766,
+    "ast_hash": "81cc8e432671ec152daf7fa1ad1b4feb",
     "semantic_hash": ""
   },
   "components/providers.tsx": {
@@ -525,13 +525,13 @@
     "semantic_hash": ""
   },
   "lib/adapters/google-drive.ts": {
-    "mtime": 1785041292.1200294,
-    "ast_hash": "ad44ddeda1494ea3bfaea7ba20cc6228",
+    "mtime": 1785041839.5192451,
+    "ast_hash": "d0323735db948961c3c935718d315c2b",
     "semantic_hash": ""
   },
   "lib/adapters/onedrive.ts": {
-    "mtime": 1785038497.4933372,
-    "ast_hash": "cd3872879b93c9eafe11a07e72136347",
+    "mtime": 1785041842.9186327,
+    "ast_hash": "f6c3cab5bf008258d1e119b149b79804",
     "semantic_hash": ""
   },
   "lib/adapters/registry.ts": {
@@ -575,13 +575,13 @@
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/en.ts": {
-    "mtime": 1785041292.12218,
-    "ast_hash": "28667bca2fa6420812bde01710c8fc32",
+    "mtime": 1785045651.7659335,
+    "ast_hash": "8c6644915c9f66da836061a1f9ab51fe",
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/id.ts": {
-    "mtime": 1785041292.122478,
-    "ast_hash": "919791a189161bb94a31d044730495ce",
+    "mtime": 1785045651.7657871,
+    "ast_hash": "027873620d8a52d7f0893490b797767c",
     "semantic_hash": ""
   },
   "lib/i18n/index.ts": {
@@ -590,8 +590,8 @@
     "semantic_hash": ""
   },
   "lib/i18n/types.ts": {
-    "mtime": 1785035314.9434693,
-    "ast_hash": "e740cd38e9d2187420e826dc47e13c70",
+    "mtime": 1785044551.969387,
+    "ast_hash": "bdc79204e2eca5e4b562a602b48e01e7",
     "semantic_hash": ""
   },
   "lib/oauth/popup.ts": {
@@ -600,8 +600,8 @@
     "semantic_hash": ""
   },
   "lib/services/accounts.ts": {
-    "mtime": 1785035312.208985,
-    "ast_hash": "c3ece1104d55ee223c366358a5ad2bb2",
+    "mtime": 1785042177.9360793,
+    "ast_hash": "bdeb5a8c234b99cfa473b10d4ab0e5be",
     "semantic_hash": ""
   },
   "lib/services/allocation.ts": {
@@ -620,8 +620,8 @@
     "semantic_hash": ""
   },
   "lib/services/provider-config.ts": {
-    "mtime": 1781482385.4295511,
-    "ast_hash": "cf8f910d21803e56c53fdffc78d983dc",
+    "mtime": 1785044550.2824767,
+    "ast_hash": "21d6f3ac285c6d1736f8eddad9353b25",
     "semantic_hash": ""
   },
   "lib/services/sync.ts": {
@@ -665,8 +665,8 @@
     "semantic_hash": ""
   },
   "lib/utils/account-error.ts": {
-    "mtime": 1785035303.6433616,
-    "ast_hash": "376bd4dfe32f76b9eba798c73fefdf9a",
+    "mtime": 1785042118.4703507,
+    "ast_hash": "cb76bba86de70f34e84903f8ff16ee1c",
     "semantic_hash": ""
   },
   "lib/utils/file-preview.ts": {
@@ -690,8 +690,8 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1785041289.2175443,
-    "ast_hash": "00719217589ed12d924d58dacb31f85c",
+    "mtime": 1785044941.3037128,
+    "ast_hash": "da79ebede44afb1b86a2428c08ce796c",
     "semantic_hash": ""
   },
   "postcss.config.mjs": {
@@ -740,8 +740,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1785041289.2133443,
-    "ast_hash": "f31eb029b50e6a2d16ceec5020c3fe64",
+    "mtime": 1785045661.6076336,
+    "ast_hash": "82537e1e185fddbbafbf19979f435ab8",
     "semantic_hash": ""
   },
   "docker-compose.yaml": {
@@ -772,6 +772,61 @@
   "proxy.ts": {
     "mtime": 1785040709.8440716,
     "ast_hash": "76caf7fc1c9f6f85bec3de8e70e2f6a1",
+    "semantic_hash": ""
+  },
+  "components/brand/auth-brand.tsx": {
+    "mtime": 1785045629.8464391,
+    "ast_hash": "8790c64364e1127d2f8135b9ef558087",
+    "semantic_hash": ""
+  },
+  "components/brand/samar-logo.tsx": {
+    "mtime": 1785045628.9189563,
+    "ast_hash": "6b3d12515c618b54f4ed346e03f47b9d",
+    "semantic_hash": ""
+  },
+  "lib/brand.ts": {
+    "mtime": 1785045622.8156526,
+    "ast_hash": "702bbeeca041896f15f97b2e16f61023",
+    "semantic_hash": ""
+  },
+  "scripts/reencrypt-secrets.mjs": {
+    "mtime": 1785044940.8711867,
+    "ast_hash": "726ab8fbea9aa93f95d11609c662a93c",
+    "semantic_hash": ""
+  },
+  "app/apple-icon.png": {
+    "mtime": 1785045623.4570358,
+    "ast_hash": "f601b56cd72609082c6fb372ff9805a3",
+    "semantic_hash": ""
+  },
+  "app/icon.png": {
+    "mtime": 1785045623.4388134,
+    "ast_hash": "59c2e868cd21fae4955a1618bfb63901",
+    "semantic_hash": ""
+  },
+  "public/logo/icon-192.png": {
+    "mtime": 1785045623.2734094,
+    "ast_hash": "0065d1da9ba550fba7897234aadc572e",
+    "semantic_hash": ""
+  },
+  "public/logo/icon-32.png": {
+    "mtime": 1785045623.2779553,
+    "ast_hash": "a0d944bb7073b5c8e4c9c64d986809fe",
+    "semantic_hash": ""
+  },
+  "public/logo/icon-512.png": {
+    "mtime": 1785045623.250405,
+    "ast_hash": "59c2e868cd21fae4955a1618bfb63901",
+    "semantic_hash": ""
+  },
+  "public/logo/samar-cloud-logo-only-no-bg.png": {
+    "mtime": 1785045382.3328726,
+    "ast_hash": "e5c1b804bf1da98e8eb980eb7c3e9a5e",
+    "semantic_hash": ""
+  },
+  "public/logo/samar-cloud-logo-text-no-bg.png": {
+    "mtime": 1785045429.3046832,
+    "ast_hash": "b944bfebb4896d62aabac372d1c9c3ca",
     "semantic_hash": ""
   }
 }
