@@ -290,6 +290,7 @@ export type TranslationKey =
   | "files.loading"
   | "files.loadingMore"
   | "files.showingCount"
+  | "files.itemCount"
   | "common.placeholder.name";
 
 export type Dictionary = Record<TranslationKey, string>;

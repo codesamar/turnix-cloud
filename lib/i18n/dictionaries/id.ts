@@ -301,5 +301,6 @@ export const id: Dictionary = {
   "files.loading": "Memuat file...",
   "files.loadingMore": "Memuat file berikutnya...",
   "files.showingCount": "Menampilkan {shown} dari {total}",
+  "files.itemCount": "{count} item",
   "common.placeholder.name": "Nama Anda",
 };

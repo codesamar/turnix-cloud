@@ -31,6 +31,7 @@ function getConfig(config: OAuthProviderConfig) {
 
 function normalizeItem(item: Record<string, unknown>): NormalizedFile {
   const folder = item.folder !== undefined;
+  const folderFacet = item.folder as { childCount?: number } | undefined;
   const fileMeta = item.file as { mimeType?: string } | undefined;
   return {
     providerFileId: item.id as string,
@@ -43,6 +44,7 @@ function normalizeItem(item: Record<string, unknown>): NormalizedFile {
     isFolder: folder,
     isStarred: false,
     isShared: Boolean(item.shared),
+    childCount: folder ? (folderFacet?.childCount ?? null) : null,
     parentProviderId: null,
     modifiedAt: item.lastModifiedDateTime
       ? new Date(item.lastModifiedDateTime as string)

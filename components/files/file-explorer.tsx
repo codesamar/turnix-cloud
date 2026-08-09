@@ -44,7 +44,7 @@ import {
 } from "@/components/ui/table";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
-import { formatBytes } from "@/lib/utils/format";
+import { formatFileSizeLabel } from "@/lib/utils/file-size-display";
 import type { FileMetadata, FileMetadataWithAccount } from "@/lib/types/database";
 import { getFileAccountLabel } from "@/lib/utils/account-display";
 import { getPreviewKind } from "@/lib/utils/file-preview";
@@ -386,6 +386,10 @@ export function FileExplorer({
 }: FileExplorerProps) {
   const { t, language } = useLanguage();
   const queryClient = useQueryClient();
+  const formatItemCount = useCallback(
+    (count: number) => t("files.itemCount").replace("{count}", String(count)),
+    [t]
+  );
   const [internalViewMode, setInternalViewMode] =
     useState<ViewMode>(DEFAULT_VIEW_MODE);
   const [internalSortMode, setInternalSortMode] =
@@ -791,7 +795,7 @@ export function FileExplorer({
                     </TableCell>
                   )}
                   <TableCell className="text-muted-foreground text-sm">
-                    {file.is_folder ? "—" : formatBytes(file.size)}
+                    {formatFileSizeLabel(file, formatItemCount)}
                   </TableCell>
                   <TableCell className="text-muted-foreground text-sm whitespace-nowrap">
                     {formatFileDate(file.modified_at, language)}
@@ -918,7 +922,7 @@ export function FileExplorer({
                         )}
                         <p className="text-xs text-muted-foreground">
                           <span>
-                            {file.is_folder ? "—" : formatBytes(file.size)}
+                            {formatFileSizeLabel(file, formatItemCount)}
                           </span>
                           <span className="mx-1.5 text-muted-foreground/50">
                             ·

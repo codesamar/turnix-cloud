@@ -52,6 +52,7 @@ export interface FileMetadata {
   is_folder: boolean;
   is_starred: boolean;
   is_shared: boolean;
+  child_count: number | null;
   parent_id: string | null;
   modified_at: string | null;
   synced_at: string;

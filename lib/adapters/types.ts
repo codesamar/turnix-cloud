@@ -9,6 +9,8 @@ export interface NormalizedFile {
   isFolder: boolean;
   isStarred: boolean;
   isShared: boolean;
+  /** Immediate children count for folders; null when unknown. */
+  childCount?: number | null;
   parentProviderId: string | null;
   modifiedAt: Date | null;
 }

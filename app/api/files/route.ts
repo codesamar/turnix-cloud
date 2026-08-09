@@ -4,8 +4,9 @@ import { getAccountCredentials } from "@/lib/services/accounts";
 import { deleteFiles } from "@/lib/services/delete";
 import { moveFiles } from "@/lib/services/move";
 import {
-  refreshFolderWithTimeout,
-  refreshProviderRoots,
+  enrichFolderChildCounts,
+  refreshFolderInBackground,
+  refreshProviderRootsInBackground,
   BROWSE_REFRESH_MAX_PAGES,
 } from "@/lib/services/file-metadata";
 import { getAdapter } from "@/lib/adapters/registry";
@@ -56,7 +57,7 @@ export async function GET(request: Request) {
       after(async () => {
         try {
           const bgSupabase = await createClient();
-          await refreshFolderWithTimeout(bgSupabase, user.id, {
+          await refreshFolderInBackground(bgSupabase, user.id, {
             parentId,
             accountId: refreshAccountId,
             maxListPages: BROWSE_REFRESH_MAX_PAGES,
@@ -71,7 +72,7 @@ export async function GET(request: Request) {
     after(async () => {
       try {
         const bgSupabase = await createClient();
-        await refreshFolderWithTimeout(bgSupabase, user.id, {
+        await refreshFolderInBackground(bgSupabase, user.id, {
           parentId: null,
           accountId,
           maxListPages: BROWSE_REFRESH_MAX_PAGES,
@@ -85,15 +86,7 @@ export async function GET(request: Request) {
     after(async () => {
       try {
         const bgSupabase = await createClient();
-        await Promise.race([
-          refreshProviderRoots(bgSupabase, user.id, provider),
-          new Promise<void>((_, reject) => {
-            setTimeout(
-              () => reject(new Error("Provider refresh timed out")),
-              12_000
-            );
-          }),
-        ]);
+        await refreshProviderRootsInBackground(bgSupabase, user.id, provider);
       } catch (err) {
         console.error("[files] background provider root refresh failed", err);
       }
@@ -167,7 +160,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  const files = data ?? [];
+  const files = await enrichFolderChildCounts(supabase, user.id, data ?? []);
 
   if (isPaginated && limit !== undefined) {
     const total = count ?? files.length;
@@ -217,6 +210,7 @@ export async function POST(request: Request) {
         is_folder: true,
         is_starred: false,
         is_shared: false,
+        child_count: 0,
         modified_at: folder.modifiedAt?.toISOString() ?? null,
       })
       .select()

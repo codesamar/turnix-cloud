@@ -301,5 +301,6 @@ export const en: Dictionary = {
   "files.loading": "Loading files...",
   "files.loadingMore": "Loading more files...",
   "files.showingCount": "Showing {shown} of {total}",
+  "files.itemCount": "{count} items",
   "common.placeholder.name": "Your name",
 };

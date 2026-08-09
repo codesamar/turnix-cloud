@@ -6,6 +6,7 @@ import {
 } from "@/lib/adapters/onedrive";
 import { getAccountCredentials } from "@/lib/services/accounts";
 import type { NormalizedFile } from "@/lib/adapters/types";
+import type { FileMetadata } from "@/lib/types/database";
 
 type Supabase = SupabaseClient;
 
@@ -17,7 +18,8 @@ const ONEDRIVE_SPECIAL_FOLDERS: OneDriveSpecialFolderName[] = [
 /** Pages to fetch when browsing a folder (not full account sync). */
 export const BROWSE_REFRESH_MAX_PAGES = 6;
 
-const UPSERT_BATCH_SIZE = 80;
+const UPSERT_BATCH_SIZE = 100;
+const UPSERT_CONCURRENCY = 2;
 
 export async function upsertFileMetadata(
   supabase: Supabase,
@@ -40,6 +42,7 @@ export async function upsertFileMetadata(
         is_folder: file.isFolder,
         is_starred: file.isStarred,
         is_shared: file.isShared,
+        child_count: file.isFolder ? (file.childCount ?? null) : null,
         parent_id: parentId,
         modified_at: file.modifiedAt?.toISOString() ?? null,
         synced_at: new Date().toISOString(),
@@ -73,6 +76,7 @@ function toMetadataRow(
     is_folder: file.isFolder,
     is_starred: file.isStarred,
     is_shared: file.isShared,
+    child_count: file.isFolder ? (file.childCount ?? null) : null,
     parent_id: parentId,
     modified_at: file.modifiedAt?.toISOString() ?? null,
     synced_at: new Date().toISOString(),
@@ -86,16 +90,25 @@ export async function upsertFileMetadataBatch(
   files: NormalizedFile[],
   parentId: string | null
 ): Promise<void> {
+  const batches: NormalizedFile[][] = [];
   for (let index = 0; index < files.length; index += UPSERT_BATCH_SIZE) {
-    const batch = files.slice(index, index + UPSERT_BATCH_SIZE);
-    const { error } = await supabase.from("file_metadata").upsert(
-      batch.map((file) => toMetadataRow(userId, accountId, file, parentId)),
-      { onConflict: "account_id,provider_file_id" }
-    );
+    batches.push(files.slice(index, index + UPSERT_BATCH_SIZE));
+  }
 
-    if (error) {
-      throw new Error(error.message);
-    }
+  for (let index = 0; index < batches.length; index += UPSERT_CONCURRENCY) {
+    const chunk = batches.slice(index, index + UPSERT_CONCURRENCY);
+    await Promise.all(
+      chunk.map(async (batch) => {
+        const { error } = await supabase.from("file_metadata").upsert(
+          batch.map((file) => toMetadataRow(userId, accountId, file, parentId)),
+          { onConflict: "account_id,provider_file_id" }
+        );
+
+        if (error) {
+          throw new Error(error.message);
+        }
+      })
+    );
   }
 }
 
@@ -260,20 +273,101 @@ export async function refreshProviderRoots(
   }
 }
 
-const REFRESH_TIMEOUT_MS = 12_000;
+const inFlightBackgroundRefreshes = new Set<string>();
 
-export async function refreshFolderWithTimeout(
+function backgroundRefreshKey(
+  userId: string,
+  accountId: string,
+  parentId: string | null
+): string {
+  return `${userId}:${accountId}:${parentId ?? "root"}`;
+}
+
+/**
+ * Run folder refresh after the HTTP response without a hard timeout.
+ * Skips if the same folder is already refreshing in this process.
+ */
+export async function refreshFolderInBackground(
   supabase: Supabase,
   userId: string,
   options: RefreshFolderOptions
+): Promise<number | null> {
+  const key = backgroundRefreshKey(userId, options.accountId, options.parentId);
+  if (inFlightBackgroundRefreshes.has(key)) {
+    return null;
+  }
+
+  inFlightBackgroundRefreshes.add(key);
+  try {
+    const count = await refreshFolderFromProvider(supabase, userId, options);
+    console.info(
+      `[files] background folder refresh completed (${count} items, parent=${options.parentId ?? "root"})`
+    );
+    return count;
+  } finally {
+    inFlightBackgroundRefreshes.delete(key);
+  }
+}
+
+export async function refreshProviderRootsInBackground(
+  supabase: Supabase,
+  userId: string,
+  provider: string
 ): Promise<void> {
-  await Promise.race([
-    refreshFolderFromProvider(supabase, userId, options),
-    new Promise<void>((_, reject) => {
-      setTimeout(
-        () => reject(new Error("Folder refresh timed out")),
-        REFRESH_TIMEOUT_MS
-      );
-    }),
-  ]);
+  const key = `${userId}:provider:${provider}`;
+  if (inFlightBackgroundRefreshes.has(key)) return;
+
+  inFlightBackgroundRefreshes.add(key);
+  try {
+    await refreshProviderRoots(supabase, userId, provider);
+    console.info(`[files] background provider refresh completed (${provider})`);
+  } finally {
+    inFlightBackgroundRefreshes.delete(key);
+  }
+}
+
+function resolveFolderChildCount(
+  stored: number | null | undefined,
+  dbCount: number
+): number | null {
+  if (stored != null && stored >= 0) {
+    return Math.max(stored, dbCount);
+  }
+  return dbCount > 0 ? dbCount : null;
+}
+
+/** Fill folder child_count from DB when provider value is missing or lower. */
+export async function enrichFolderChildCounts<T extends FileMetadata>(
+  supabase: Supabase,
+  userId: string,
+  files: T[]
+): Promise<T[]> {
+  const folderIds = files.filter((file) => file.is_folder).map((file) => file.id);
+  if (folderIds.length === 0) return files;
+
+  const { data: children, error } = await supabase
+    .from("file_metadata")
+    .select("parent_id")
+    .eq("user_id", userId)
+    .in("parent_id", folderIds);
+
+  if (error) {
+    console.error("[files] child count enrichment failed", error);
+    return files;
+  }
+
+  const dbCounts = new Map<string, number>();
+  for (const row of children ?? []) {
+    if (!row.parent_id) continue;
+    dbCounts.set(row.parent_id, (dbCounts.get(row.parent_id) ?? 0) + 1);
+  }
+
+  return files.map((file) => {
+    if (!file.is_folder) return file;
+    const dbCount = dbCounts.get(file.id) ?? 0;
+    return {
+      ...file,
+      child_count: resolveFolderChildCount(file.child_count, dbCount),
+    };
+  });
 }
