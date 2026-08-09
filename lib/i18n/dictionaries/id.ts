@@ -268,6 +268,8 @@ export const id: Dictionary = {
   "move.phaseFinalize": "Menyelesaikan…",
   "move.phaseMoving": "Memindahkan…",
   "move.success": "Item berhasil dipindahkan",
+  "move.alreadyAtDestination": "Item sudah berada di tujuan yang dipilih",
+  "move.partialSuccess": "{moved} dipindahkan, {skipped} sudah di tujuan",
   "move.action": "Pindahkan",
   "move.accountDisconnected":
     "{account} sudah tidak terhubung. Hubungkan ulang di halaman Accounts, lalu coba lagi.",

@@ -200,6 +200,7 @@ export function MoveFileDialog({
       const decoder = new TextDecoder();
       let buffer = "";
       let moved = 0;
+      let skipped = 0;
 
       const handleEvent = (event: {
         type: string;
@@ -209,6 +210,7 @@ export function MoveFileDialog({
         phase?: MoveItemPhase;
         percent?: number;
         moved?: number;
+        skipped?: number;
         error?: string;
         message?: string;
         code?: string;
@@ -269,14 +271,12 @@ export function MoveFileDialog({
 
         if (event.type === "complete" && typeof event.moved === "number") {
           moved = event.moved;
+          skipped = typeof event.skipped === "number" ? event.skipped : 0;
           // Close as soon as the server finishes — do not wait for stream teardown.
           finishedRef.current = true;
           abortRef.current = null;
           setProgress(null);
-          toast.success(t("move.success"));
-          invalidateFileQueries(queryClient);
-          onOpenChange(false);
-          onMoved();
+          finishMove(event.moved, skipped);
         }
       };
 
@@ -297,9 +297,9 @@ export function MoveFileDialog({
         handleEvent(JSON.parse(buffer));
       }
 
-      return { moved };
+      return { moved, skipped };
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       abortRef.current = null;
       // Already closed when the complete event arrived.
       if (finishedRef.current) {
@@ -308,10 +308,7 @@ export function MoveFileDialog({
       }
       finishedRef.current = false;
       setProgress(null);
-      toast.success(t("move.success"));
-      invalidateFileQueries(queryClient);
-      onOpenChange(false);
-      onMoved();
+      finishMove(data?.moved ?? 0, data?.skipped ?? 0);
     },
     onError: (error: Error & { code?: string; accountLabel?: string; name?: string }) => {
       abortRef.current = null;
@@ -402,6 +399,31 @@ export function MoveFileDialog({
 
   const barValue =
     moveMutation.isPending && progress ? overallPercent(progress) : 0;
+
+  function showMoveResult(movedCount: number, skippedCount: number) {
+    if (movedCount > 0 && skippedCount > 0) {
+      toast.success(
+        t("move.partialSuccess")
+          .replace("{moved}", String(movedCount))
+          .replace("{skipped}", String(skippedCount))
+      );
+      return;
+    }
+    if (movedCount > 0) {
+      toast.success(t("move.success"));
+      return;
+    }
+    toast.message(t("move.alreadyAtDestination"));
+  }
+
+  function finishMove(movedCount: number, skippedCount: number) {
+    showMoveResult(movedCount, skippedCount);
+    if (movedCount > 0) {
+      invalidateFileQueries(queryClient);
+      onMoved();
+    }
+    onOpenChange(false);
+  }
 
   return (
     <Dialog open={open} onOpenChange={handleDialogOpenChange}>

@@ -260,6 +260,8 @@ export type TranslationKey =
   | "move.phaseFinalize"
   | "move.phaseMoving"
   | "move.success"
+  | "move.alreadyAtDestination"
+  | "move.partialSuccess"
   | "move.action"
   | "move.accountDisconnected"
   | "move.accountNeedsReconnect"

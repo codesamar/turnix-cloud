@@ -18,7 +18,7 @@ export type MoveProgressEvent =
       percent?: number;
     }
   | { type: "item_done"; index: number; total: number; name: string }
-  | { type: "complete"; moved: number };
+  | { type: "complete"; moved: number; skipped: number };
 
 interface MoveOptions {
   fileIds: string[];
@@ -149,6 +149,72 @@ async function upsertMovedMetadata(
   return data as FileMetadata;
 }
 
+async function deleteFileMetadata(
+  supabase: Supabase,
+  userId: string,
+  file: Pick<FileMetadata, "id" | "name">
+): Promise<void> {
+  const { data, error } = await supabase
+    .from("file_metadata")
+    .delete()
+    .eq("id", file.id)
+    .eq("user_id", userId)
+    .select("id")
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (!data) {
+    throw new Error(
+      `Failed to remove "${file.name}" from the current folder. Try again or refresh the page.`
+    );
+  }
+}
+
+async function updateMovedFileMetadata(
+  supabase: Supabase,
+  userId: string,
+  file: Pick<FileMetadata, "id" | "name">,
+  destination: { parentMetadataId: string | null },
+  moved: {
+    providerFileId: string;
+    name: string;
+    path: string;
+    mimeType: string | null;
+    size: number;
+    modifiedAt: Date | null;
+  }
+): Promise<void> {
+  const { data, error } = await supabase
+    .from("file_metadata")
+    .update({
+      parent_id: destination.parentMetadataId,
+      provider_file_id: moved.providerFileId,
+      path: moved.path,
+      name: moved.name,
+      mime_type: moved.mimeType,
+      size: moved.size,
+      modified_at: moved.modifiedAt?.toISOString() ?? null,
+      synced_at: new Date().toISOString(),
+    })
+    .eq("id", file.id)
+    .eq("user_id", userId)
+    .select("id")
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (!data) {
+    throw new Error(
+      `Failed to update folder location for "${file.name}". Try again or refresh the page.`
+    );
+  }
+}
+
 async function moveSameAccount(
   supabase: Supabase,
   userId: string,
@@ -167,23 +233,7 @@ async function moveSameAccount(
     destination.parentProviderPath
   );
 
-  const { error } = await supabase
-    .from("file_metadata")
-    .update({
-      parent_id: destination.parentMetadataId,
-      provider_file_id: moved.providerFileId,
-      path: moved.path,
-      name: moved.name,
-      mime_type: moved.mimeType,
-      size: moved.size,
-      modified_at: moved.modifiedAt?.toISOString() ?? null,
-      synced_at: new Date().toISOString(),
-    })
-    .eq("id", file.id);
-
-  if (error) {
-    throw new Error(error.message);
-  }
+  await updateMovedFileMetadata(supabase, userId, file, destination, moved);
 }
 
 async function transferCrossAccount(
@@ -239,8 +289,8 @@ async function transferCrossAccount(
       );
     }
 
+    await deleteFileMetadata(supabase, userId, file);
     await sourceAdapter.deleteFile(sourceCredentials, file.provider_file_id);
-    await supabase.from("file_metadata").delete().eq("id", file.id);
     return;
   }
 
@@ -268,9 +318,6 @@ async function transferCrossAccount(
   );
 
   onTransferProgress?.({ phase: "finalize" });
-  await sourceAdapter.deleteFile(sourceCredentials, file.provider_file_id);
-  await supabase.from("file_metadata").delete().eq("id", file.id);
-
   await upsertMovedMetadata(
     supabase,
     userId,
@@ -279,6 +326,8 @@ async function transferCrossAccount(
     uploaded,
     file
   );
+  await deleteFileMetadata(supabase, userId, file);
+  await sourceAdapter.deleteFile(sourceCredentials, file.provider_file_id);
 }
 
 export async function moveFiles(
@@ -313,6 +362,8 @@ export async function moveFiles(
   onProgress?.({ type: "start", total });
 
   const folderIds = files.filter((file) => file.is_folder).map((file) => file.id);
+  let movedCount = 0;
+  let skippedCount = 0;
 
   for (let index = 0; index < files.length; index++) {
     const file = files[index]!;
@@ -322,6 +373,7 @@ export async function moveFiles(
       file.account_id === destinationAccountId &&
       file.parent_id === destination.parentMetadataId
     ) {
+      skippedCount++;
       onProgress?.({
         type: "item_done",
         index: displayIndex,
@@ -376,6 +428,7 @@ export async function moveFiles(
       console.info(`[move] done: ${file.name}`);
     }
 
+    movedCount++;
     onProgress?.({
       type: "item_done",
       index: displayIndex,
@@ -384,6 +437,10 @@ export async function moveFiles(
     });
   }
 
-  onProgress?.({ type: "complete", moved: files.length });
-  return { moved: files.length };
+  if (movedCount === 0 && skippedCount === 0) {
+    throw new Error("No files were moved");
+  }
+
+  onProgress?.({ type: "complete", moved: movedCount, skipped: skippedCount });
+  return { moved: movedCount };
 }

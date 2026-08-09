@@ -268,6 +268,8 @@ export const en: Dictionary = {
   "move.phaseFinalize": "Finishing…",
   "move.phaseMoving": "Moving…",
   "move.success": "Items moved successfully",
+  "move.alreadyAtDestination": "Items are already in the selected destination",
+  "move.partialSuccess": "{moved} moved, {skipped} already in destination",
   "move.action": "Move",
   "move.accountDisconnected":
     "{account} is no longer connected. Reconnect it in Accounts, then try again.",
