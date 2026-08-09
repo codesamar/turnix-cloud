@@ -41,6 +41,29 @@ export interface CloudAdapter {
     path: string,
     options?: ListFilesOptions
   ): Promise<NormalizedFile[]>;
+  /** Resolve a child item by parent path/id and name (used when stored provider IDs are stale). */
+  getFileInParent?(
+    credentials: ProviderCredentials,
+    parentPath: string,
+    name: string
+  ): Promise<NormalizedFile>;
+  /** Search the drive for items matching a query (exact name filtering is caller responsibility). */
+  searchByName?(
+    credentials: ProviderCredentials,
+    name: string
+  ): Promise<NormalizedFile[]>;
+  /** Resolve an item by drive-root-relative path segments, e.g. ["Gambar", "Rol Kamera", "photo.jpg"]. */
+  getFileByDrivePath?(
+    credentials: ProviderCredentials,
+    pathSegments: string[]
+  ): Promise<NormalizedFile>;
+  /** Paginate folder children until a matching name is found (for large folders). */
+  findChildByName?(
+    credentials: ProviderCredentials,
+    parentPath: string,
+    childName: string,
+    options?: { isFolder?: boolean; maxPages?: number }
+  ): Promise<NormalizedFile | null>;
   getFile(
     credentials: ProviderCredentials,
     fileId: string

@@ -179,6 +179,25 @@ export const googleDriveAdapter: CloudAdapter = {
     return normalizeFile(await response.json());
   },
 
+  async getFileInParent(credentials, parentPath, name) {
+    const parentId = parentPath === "/" ? "root" : parentPath;
+    const escapedName = name.replace(/'/g, "\\'");
+    const params = new URLSearchParams({
+      q: `name = '${escapedName}' and '${parentId}' in parents and trashed = false`,
+      fields: "files(id,name,mimeType,size,modifiedTime,starred,shared,parents)",
+      pageSize: "1",
+      supportsAllDrives: "true",
+      includeItemsFromAllDrives: "true",
+    });
+    const response = await driveFetch(credentials, `/files?${params}`);
+    const data = (await response.json()) as { files?: Record<string, unknown>[] };
+    const item = data.files?.[0];
+    if (!item) {
+      throw new Error("Google Drive API error: 404 File not found");
+    }
+    return normalizeFile(item);
+  },
+
   async createFolder(credentials, parentPath, name) {
     const parentId = parentPath === "/" ? "root" : parentPath;
     const response = await driveFetch(credentials, "/files", {

@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { FileMetadata } from "@/lib/types/database";
 import { getAdapter } from "@/lib/adapters/registry";
 import { getAccountCredentials } from "@/lib/services/accounts";
+import { resolveFileMetadataForMove } from "@/lib/services/resolve-provider-file";
 
 type Supabase = SupabaseClient;
 
@@ -221,19 +222,24 @@ async function moveSameAccount(
   file: FileMetadata,
   destination: { parentMetadataId: string | null; parentProviderPath: string }
 ) {
-  const { account, credentials } = await getAccountCredentials(
+  const { file: resolvedFile, credentials } = await resolveFileMetadataForMove(
     supabase,
-    file.account_id,
+    userId,
+    file
+  );
+  const { account } = await getAccountCredentials(
+    supabase,
+    resolvedFile.account_id,
     userId
   );
   const adapter = getAdapter(account.provider);
   const moved = await adapter.move(
     credentials,
-    file.provider_file_id,
+    resolvedFile.provider_file_id,
     destination.parentProviderPath
   );
 
-  await updateMovedFileMetadata(supabase, userId, file, destination, moved);
+  await updateMovedFileMetadata(supabase, userId, resolvedFile, destination, moved);
 }
 
 async function transferCrossAccount(
@@ -244,20 +250,25 @@ async function transferCrossAccount(
   destination: { parentMetadataId: string | null; parentProviderPath: string },
   onTransferProgress?: (progress: TransferProgress) => void
 ) {
-  const { account: sourceAccount, credentials: sourceCredentials } =
-    await getAccountCredentials(supabase, file.account_id, userId);
   const { account: destAccount, credentials: destCredentials } =
     await getAccountCredentials(supabase, destinationAccountId, userId);
 
-  const sourceAdapter = getAdapter(sourceAccount.provider);
+  onTransferProgress?.({ phase: "moving" });
+  const {
+    file: resolvedFile,
+    credentials: sourceCredentials,
+    provider: sourceProvider,
+  } = await resolveFileMetadataForMove(supabase, userId, file);
+
+  const sourceAdapter = getAdapter(sourceProvider);
   const destAdapter = getAdapter(destAccount.provider);
 
-  if (file.is_folder) {
+  if (resolvedFile.is_folder) {
     onTransferProgress?.({ phase: "moving" });
     const created = await destAdapter.createFolder(
       destCredentials,
       destination.parentProviderPath,
-      file.name
+      resolvedFile.name
     );
 
     const newFolder = await upsertMovedMetadata(
@@ -266,13 +277,13 @@ async function transferCrossAccount(
       destinationAccountId,
       destination.parentMetadataId,
       created,
-      file
+      resolvedFile
     );
 
     const { data: children } = await supabase
       .from("file_metadata")
       .select("*")
-      .eq("parent_id", file.id)
+      .eq("parent_id", resolvedFile.id)
       .eq("user_id", userId);
 
     for (const child of (children ?? []) as FileMetadata[]) {
@@ -289,15 +300,18 @@ async function transferCrossAccount(
       );
     }
 
-    await deleteFileMetadata(supabase, userId, file);
-    await sourceAdapter.deleteFile(sourceCredentials, file.provider_file_id);
+    await deleteFileMetadata(supabase, userId, resolvedFile);
+    await sourceAdapter.deleteFile(
+      sourceCredentials,
+      resolvedFile.provider_file_id
+    );
     return;
   }
 
   onTransferProgress?.({ phase: "download" });
   const { stream, name } = await sourceAdapter.download(
     sourceCredentials,
-    file.provider_file_id
+    resolvedFile.provider_file_id
   );
 
   onTransferProgress?.({ phase: "upload", percent: 0 });
@@ -307,7 +321,7 @@ async function transferCrossAccount(
     destination.parentProviderPath,
     name,
     stream,
-    file.size,
+    resolvedFile.size,
     (percent) => {
       const rounded = Math.max(0, Math.min(100, Math.round(percent)));
       if (rounded >= lastReported + 2 || rounded === 100) {
@@ -324,10 +338,13 @@ async function transferCrossAccount(
     destinationAccountId,
     destination.parentMetadataId,
     uploaded,
-    file
+    resolvedFile
   );
-  await deleteFileMetadata(supabase, userId, file);
-  await sourceAdapter.deleteFile(sourceCredentials, file.provider_file_id);
+  await deleteFileMetadata(supabase, userId, resolvedFile);
+  await sourceAdapter.deleteFile(
+    sourceCredentials,
+    resolvedFile.provider_file_id
+  );
 }
 
 export async function moveFiles(

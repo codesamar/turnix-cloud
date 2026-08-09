@@ -18,6 +18,10 @@ const GRAPH_BASE = "https://graph.microsoft.com/v1.0";
 /** Safety cap so a runaway nextLink loop cannot hang sync forever. */
 const MAX_LIST_PAGES = 100;
 
+function escapeGraphSearchQuery(value: string): string {
+  return value.replace(/'/g, "''");
+}
+
 export type OneDriveSpecialFolderName = "photos" | "cameraroll";
 
 function getConfig(config: OAuthProviderConfig) {
@@ -33,6 +37,7 @@ function normalizeItem(item: Record<string, unknown>): NormalizedFile {
   const folder = item.folder !== undefined;
   const folderFacet = item.folder as { childCount?: number } | undefined;
   const fileMeta = item.file as { mimeType?: string } | undefined;
+  const parentRef = item.parentReference as { id?: string } | undefined;
   return {
     providerFileId: item.id as string,
     name: item.name as string,
@@ -45,7 +50,7 @@ function normalizeItem(item: Record<string, unknown>): NormalizedFile {
     isStarred: false,
     isShared: Boolean(item.shared),
     childCount: folder ? (folderFacet?.childCount ?? null) : null,
-    parentProviderId: null,
+    parentProviderId: parentRef?.id ?? null,
     modifiedAt: item.lastModifiedDateTime
       ? new Date(item.lastModifiedDateTime as string)
       : null,
@@ -241,8 +246,118 @@ export const oneDriveAdapter: CloudAdapter = {
   },
 
   async getFile(credentials, fileId) {
-    const response = await graphFetch(credentials, `/me/drive/items/${fileId}`);
+    const response = await graphFetch(
+      credentials,
+      `/me/drive/items/${fileId}`
+    );
     return normalizeItem(await response.json());
+  },
+
+  async getFileInParent(credentials, parentPath, name) {
+    const encodedName = encodeURIComponent(name);
+    const candidates =
+      parentPath === "/"
+        ? [`/me/drive/root:/${encodedName}`]
+        : [
+            `/me/drive/items/${parentPath}:/${encodedName}`,
+            `/me/drive/items/${parentPath}:/${encodedName}:`,
+          ];
+
+    let lastError: unknown;
+    for (const endpoint of candidates) {
+      try {
+        const response = await graphFetch(credentials, endpoint);
+        return normalizeItem(await response.json());
+      } catch (error) {
+        lastError = error;
+        if (!String(error).includes("404")) throw error;
+      }
+    }
+
+    throw lastError instanceof Error
+      ? lastError
+      : new Error("Microsoft Graph error: 404 itemNotFound");
+  },
+
+  async searchByName(credentials, name) {
+    const query = escapeGraphSearchQuery(name);
+    const items: NormalizedFile[] = [];
+    let nextUrl: string | null = `/me/drive/root/search(q='${query}')`;
+    let pages = 0;
+
+    while (nextUrl && pages < 5) {
+      const response = await graphFetch(credentials, nextUrl);
+      const data = (await response.json()) as {
+        value?: Record<string, unknown>[];
+        "@odata.nextLink"?: string;
+      };
+      items.push(...(data.value ?? []).map(normalizeItem));
+      nextUrl = data["@odata.nextLink"] ?? null;
+      pages += 1;
+    }
+
+    return items;
+  },
+
+  async getFileByDrivePath(credentials, pathSegments) {
+    if (pathSegments.length === 0) {
+      throw new Error("Drive path is empty");
+    }
+
+    const encodedPath = pathSegments.map((segment) => encodeURIComponent(segment)).join("/");
+    const candidates = [
+      `/me/drive/root:/${encodedPath}`,
+      `/me/drive/root:/${encodedPath}:`,
+    ];
+
+    let lastError: unknown;
+    for (const endpoint of candidates) {
+      try {
+        const response = await graphFetch(credentials, endpoint);
+        return normalizeItem(await response.json());
+      } catch (error) {
+        lastError = error;
+        if (!String(error).includes("404")) throw error;
+      }
+    }
+
+    throw lastError instanceof Error
+      ? lastError
+      : new Error("Microsoft Graph error: 404 itemNotFound");
+  },
+
+  async findChildByName(credentials, parentPath, childName, options) {
+    const maxPages = options?.maxPages ?? 80;
+    const isFolder = options?.isFolder ?? false;
+    const endpoint =
+      parentPath === "/"
+        ? "/me/drive/root/children"
+        : `/me/drive/items/${parentPath}/children`;
+
+    let nextUrl: string | null = endpoint.startsWith("http")
+      ? endpoint
+      : `${GRAPH_BASE}${endpoint}`;
+    let pages = 0;
+
+    while (nextUrl && pages < maxPages) {
+      const response = await graphFetch(credentials, nextUrl);
+      const data = (await response.json()) as {
+        value?: Record<string, unknown>[];
+        "@odata.nextLink"?: string;
+      };
+
+      for (const item of data.value ?? []) {
+        const normalized = normalizeItem(item);
+        if (normalized.name === childName && normalized.isFolder === isFolder) {
+          return normalized;
+        }
+      }
+
+      nextUrl = data["@odata.nextLink"] ?? null;
+      pages += 1;
+    }
+
+    return null;
   },
 
   async createFolder(credentials, parentPath, name) {
@@ -304,7 +419,7 @@ export const oneDriveAdapter: CloudAdapter = {
   async download(credentials, fileId) {
     const meta = await this.getFile(credentials, fileId);
     const response = await fetch(
-      `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/content`,
+      `${GRAPH_BASE}/me/drive/items/${fileId}/content`,
       { headers: { Authorization: `Bearer ${credentials.accessToken}` } }
     );
     if (!response.ok || !response.body) {
