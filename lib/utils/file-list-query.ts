@@ -1,5 +1,3 @@
-import type { PostgrestFilterBuilder } from "@supabase/postgrest-js";
-
 export type FileListSortMode =
   | "name-asc"
   | "name-desc"
@@ -16,6 +14,13 @@ export const FILE_LIST_SORT_MODES: FileListSortMode[] = [
 export const FILE_LIST_PAGE_SIZE_GRID = 24;
 export const FILE_LIST_PAGE_SIZE_LIST = 40;
 export const FILE_LIST_MAX_PAGE_SIZE = 200;
+
+interface FileListSortableQuery {
+  order(
+    column: string,
+    options?: { ascending?: boolean; nullsFirst?: boolean }
+  ): FileListSortableQuery;
+}
 
 export function parseFileListSort(value: string | null): FileListSortMode {
   return FILE_LIST_SORT_MODES.includes(value as FileListSortMode)
@@ -37,8 +42,7 @@ export function parseFileListOffset(value: string | null): number {
   return parsed;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function applyFileListSort<T extends PostgrestFilterBuilder<any, any, any>>(
+export function applyFileListSort<T extends FileListSortableQuery>(
   query: T,
   sort: FileListSortMode
 ): T {
