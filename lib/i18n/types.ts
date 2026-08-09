@@ -288,6 +288,8 @@ export type TranslationKey =
   | "files.selectedCount"
   | "files.unselectAll"
   | "files.loading"
+  | "files.loadingMore"
+  | "files.showingCount"
   | "common.placeholder.name";
 
 export type Dictionary = Record<TranslationKey, string>;

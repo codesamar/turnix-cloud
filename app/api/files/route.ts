@@ -5,6 +5,12 @@ import { deleteFiles } from "@/lib/services/delete";
 import { moveFiles } from "@/lib/services/move";
 import { getAdapter } from "@/lib/adapters/registry";
 import { toAccountApiError } from "@/lib/utils/account-error";
+import {
+  applyFileListSort,
+  parseFileListLimit,
+  parseFileListOffset,
+  parseFileListSort,
+} from "@/lib/utils/file-list-query";
 
 export async function GET(request: Request) {
   const supabase = await createClient();
@@ -24,6 +30,10 @@ export async function GET(request: Request) {
   const shared = searchParams.get("shared");
   const accountId = searchParams.get("accountId");
   const provider = searchParams.get("provider");
+  const limit = parseFileListLimit(searchParams.get("limit"));
+  const offset = parseFileListOffset(searchParams.get("offset"));
+  const sort = parseFileListSort(searchParams.get("sort"));
+  const isPaginated = limit !== undefined;
 
   // Inner join when filtering by provider so PostgREST can match cloud_accounts.provider
   const select = provider
@@ -32,7 +42,7 @@ export async function GET(request: Request) {
 
   let query = supabase
     .from("file_metadata")
-    .select(select)
+    .select(select, isPaginated ? { count: "exact" } : undefined)
     .eq("user_id", user.id);
 
   if (provider) {
@@ -40,28 +50,70 @@ export async function GET(request: Request) {
   }
 
   if (recent) {
-    query = query.order("modified_at", { ascending: false }).limit(50);
+    query = query.order("modified_at", { ascending: false });
+    if (!isPaginated) {
+      query = query.limit(50);
+    }
   } else if (starred) {
-    query = query.eq("is_starred", true).order("name");
+    query = query.eq("is_starred", true);
+    query = isPaginated
+      ? applyFileListSort(query, sort)
+      : query.order("name");
   } else if (shared) {
     query = query.eq("is_shared", true).order("modified_at", { ascending: false });
   } else if (parentId) {
-    query = query.eq("parent_id", parentId).order("is_folder", { ascending: false }).order("name");
+    query = query.eq("parent_id", parentId);
+    query = isPaginated
+      ? applyFileListSort(query, sort)
+      : query
+          .order("is_folder", { ascending: false })
+          .order("name");
   } else if (accountId) {
-    query = query.eq("account_id", accountId).is("parent_id", null).order("is_folder", { ascending: false }).order("name");
+    query = query.eq("account_id", accountId).is("parent_id", null);
+    query = isPaginated
+      ? applyFileListSort(query, sort)
+      : query
+          .order("is_folder", { ascending: false })
+          .order("name");
   } else if (path !== null) {
-    query = query.eq("path", path ?? "/").order("is_folder", { ascending: false }).order("name");
+    query = query.eq("path", path ?? "/");
+    query = isPaginated
+      ? applyFileListSort(query, sort)
+      : query
+          .order("is_folder", { ascending: false })
+          .order("name");
   } else {
-    query = query.is("parent_id", null).order("is_folder", { ascending: false }).order("name").limit(200);
+    query = query.is("parent_id", null);
+    query = isPaginated
+      ? applyFileListSort(query, sort)
+      : query
+          .order("is_folder", { ascending: false })
+          .order("name")
+          .limit(200);
   }
 
-  const { data, error } = await query;
+  if (isPaginated && limit !== undefined) {
+    query = query.range(offset, offset + limit - 1);
+  }
+
+  const { data, error, count } = await query;
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json({ files: data ?? [] });
+  const files = data ?? [];
+
+  if (isPaginated && limit !== undefined) {
+    const total = count ?? files.length;
+    return NextResponse.json({
+      files,
+      total,
+      hasMore: offset + files.length < total,
+    });
+  }
+
+  return NextResponse.json({ files });
 }
 
 export async function POST(request: Request) {

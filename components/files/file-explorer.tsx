@@ -1,6 +1,7 @@
 "use client";
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import type { InfiniteData } from "@tanstack/react-query";
 import {
   Download,
   Eye,
@@ -17,7 +18,7 @@ import {
   Star,
   Trash2,
 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -51,9 +52,15 @@ import { FilePreviewDialog } from "@/components/files/file-preview-dialog";
 import { DeleteFilesDialog } from "@/components/files/delete-files-dialog";
 import { MoveFileDialog } from "@/components/files/move-file-dialog";
 import { useLanguage } from "@/components/providers/language-provider";
+import {
+  buildFilesPageUrl,
+  FILE_LIST_PAGE_SIZE_GRID,
+  FILE_LIST_PAGE_SIZE_LIST,
+  type FileListSortMode,
+} from "@/lib/utils/file-list-query";
 
 export type ViewMode = "list" | "grid";
-export type SortMode = "name-asc" | "name-desc" | "date-newest" | "date-oldest";
+export type SortMode = FileListSortMode;
 
 const VIEW_STORAGE_KEY = "samarcloud.fileView";
 const SORT_STORAGE_KEY = "samarcloud.fileSort";
@@ -93,11 +100,30 @@ interface FileExplorerProps {
   onViewModeChange?: (mode: ViewMode) => void;
 }
 
-async function fetchFiles(url: string) {
+interface FilesPage {
+  files: FileMetadataWithAccount[];
+  total: number;
+  hasMore: boolean;
+}
+
+async function fetchFilesPage(url: string): Promise<FilesPage> {
   const response = await fetch(url);
   if (!response.ok) throw new Error("Failed to fetch files");
   const data = await response.json();
-  return data.files as FileMetadataWithAccount[];
+  return {
+    files: (data.files as FileMetadataWithAccount[]) ?? [],
+    total: typeof data.total === "number" ? data.total : data.files?.length ?? 0,
+    hasMore: Boolean(data.hasMore),
+  };
+}
+
+function filesExplorerQueryKey(
+  queryKey: string,
+  fetchUrl: string,
+  sortMode: SortMode,
+  pageSize: number
+) {
+  return [queryKey, fetchUrl, sortMode, pageSize] as const;
 }
 
 function readStoredViewMode(): ViewMode {
@@ -129,37 +155,6 @@ function formatFileDate(
   });
 }
 
-function sortFiles(
-  files: FileMetadataWithAccount[],
-  sortMode: SortMode
-): FileMetadataWithAccount[] {
-  const sorted = [...files];
-  sorted.sort((a, b) => {
-    if (a.is_folder !== b.is_folder) {
-      return a.is_folder ? -1 : 1;
-    }
-
-    if (sortMode === "name-asc" || sortMode === "name-desc") {
-      const cmp = a.name.localeCompare(b.name, undefined, {
-        sensitivity: "base",
-        numeric: true,
-      });
-      return sortMode === "name-asc" ? cmp : -cmp;
-    }
-
-    const aTime = a.modified_at ? new Date(a.modified_at).getTime() : 0;
-    const bTime = b.modified_at ? new Date(b.modified_at).getTime() : 0;
-    if (aTime !== bTime) {
-      return sortMode === "date-newest" ? bTime - aTime : aTime - bTime;
-    }
-    return a.name.localeCompare(b.name, undefined, {
-      sensitivity: "base",
-      numeric: true,
-    });
-  });
-  return sorted;
-}
-
 function GridLoadingSkeleton() {
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
@@ -186,16 +181,37 @@ function GridMediaLoading() {
 }
 
 function GridFileMedia({ file }: { file: FileMetadataWithAccount }) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const previewKind = file.is_folder
     ? null
     : getPreviewKind(file.mime_type, file.name);
   const [mediaFailed, setMediaFailed] = useState(false);
   const [mediaLoaded, setMediaLoaded] = useState(false);
+  const [shouldLoadPreview, setShouldLoadPreview] = useState(false);
 
   useEffect(() => {
     setMediaFailed(false);
     setMediaLoaded(false);
+    setShouldLoadPreview(false);
   }, [file.id]);
+
+  useEffect(() => {
+    const element = containerRef.current;
+    if (!element || file.is_folder || !previewKind) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          setShouldLoadPreview(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "240px 0px" }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [file.id, file.is_folder, previewKind]);
 
   if (file.is_folder) {
     return (
@@ -209,46 +225,57 @@ function GridFileMedia({ file }: { file: FileMetadataWithAccount }) {
 
   if (previewKind === "image" && !mediaFailed) {
     return (
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
-        {!mediaLoaded && <GridMediaLoading />}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={previewUrl}
-          alt={file.name}
-          className={cn(
-            "h-full w-full object-cover transition-opacity duration-200",
-            mediaLoaded ? "opacity-100" : "opacity-0"
-          )}
-          loading="lazy"
-          onLoad={() => setMediaLoaded(true)}
-          onError={() => {
-            setMediaFailed(true);
-            setMediaLoaded(false);
-          }}
-        />
+      <div
+        ref={containerRef}
+        className="relative aspect-[4/3] w-full overflow-hidden bg-muted"
+      >
+        {!shouldLoadPreview || !mediaLoaded ? <GridMediaLoading /> : null}
+        {shouldLoadPreview ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={previewUrl}
+            alt={file.name}
+            className={cn(
+              "h-full w-full object-cover transition-opacity duration-200",
+              mediaLoaded ? "opacity-100" : "opacity-0"
+            )}
+            loading="lazy"
+            decoding="async"
+            onLoad={() => setMediaLoaded(true)}
+            onError={() => {
+              setMediaFailed(true);
+              setMediaLoaded(false);
+            }}
+          />
+        ) : null}
       </div>
     );
   }
 
   if (previewKind === "video" && !mediaFailed) {
     return (
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
-        {!mediaLoaded && <GridMediaLoading />}
-        <video
-          src={previewUrl}
-          muted
-          preload="metadata"
-          playsInline
-          className={cn(
-            "h-full w-full object-cover transition-opacity duration-200",
-            mediaLoaded ? "opacity-100" : "opacity-0"
-          )}
-          onLoadedData={() => setMediaLoaded(true)}
-          onError={() => {
-            setMediaFailed(true);
-            setMediaLoaded(false);
-          }}
-        />
+      <div
+        ref={containerRef}
+        className="relative aspect-[4/3] w-full overflow-hidden bg-muted"
+      >
+        {!shouldLoadPreview || !mediaLoaded ? <GridMediaLoading /> : null}
+        {shouldLoadPreview ? (
+          <video
+            src={previewUrl}
+            muted
+            preload="metadata"
+            playsInline
+            className={cn(
+              "h-full w-full object-cover transition-opacity duration-200",
+              mediaLoaded ? "opacity-100" : "opacity-0"
+            )}
+            onLoadedData={() => setMediaLoaded(true)}
+            onError={() => {
+              setMediaFailed(true);
+              setMediaLoaded(false);
+            }}
+          />
+        ) : null}
         {mediaLoaded && (
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/20">
             <div className="flex size-10 items-center justify-center rounded-full bg-black/60 text-white">
@@ -406,16 +433,63 @@ export function FileExplorer({
     window.localStorage.setItem(SORT_STORAGE_KEY, next);
   }
 
-  const { data: files = [], isPending, isFetching, refetch } = useQuery({
-    queryKey: [queryKey, fetchUrl],
-    queryFn: () => fetchFiles(fetchUrl),
+  const pageSize =
+    viewMode === "grid" ? FILE_LIST_PAGE_SIZE_GRID : FILE_LIST_PAGE_SIZE_LIST;
+  const explorerQueryKey = filesExplorerQueryKey(
+    queryKey,
+    fetchUrl,
+    sortMode,
+    pageSize
+  );
+
+  const {
+    data,
+    isPending,
+    isFetching,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+    refetch,
+  } = useInfiniteQuery({
+    queryKey: explorerQueryKey,
+    queryFn: ({ pageParam }) =>
+      fetchFilesPage(
+        buildFilesPageUrl(fetchUrl, pageParam, pageSize, sortMode)
+      ),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      if (!lastPage.hasMore) return undefined;
+      return allPages.reduce((count, page) => count + page.files.length, 0);
+    },
     staleTime: 0,
   });
 
-  const sortedFiles = useMemo(
-    () => sortFiles(files, sortMode),
-    [files, sortMode]
+  const files = useMemo(
+    () => data?.pages.flatMap((page) => page.files) ?? [],
+    [data]
   );
+  const totalFiles = data?.pages[0]?.total ?? files.length;
+
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!hasNextPage || isFetchingNextPage) return;
+
+    const element = loadMoreRef.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          void fetchNextPage();
+        }
+      },
+      { rootMargin: "320px 0px" }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage, files.length]);
 
   const toggleSelect = useCallback((id: string) => {
     setSelected((prev) => {
@@ -449,47 +523,43 @@ export function FileExplorer({
     setMoveOpen(true);
   }
 
-  function applyFileListFilter(
+  function updateExplorerFilePages(
     filterIds: Set<string>
-  ): (current: FileMetadataWithAccount[] | undefined) => FileMetadataWithAccount[] {
-    return (current) =>
-      current?.filter((file) => !filterIds.has(file.id)) ?? [];
+  ): (current: InfiniteData<FilesPage> | undefined) => InfiniteData<FilesPage> | undefined {
+    return (current) => {
+      if (!current) return current;
+      return {
+        ...current,
+        pages: current.pages.map((page) => ({
+          ...page,
+          files: page.files.filter((file) => !filterIds.has(file.id)),
+          total: Math.max(
+            0,
+            page.total - page.files.filter((file) => filterIds.has(file.id)).length
+          ),
+        })),
+      };
+    };
   }
 
   function handleMoveComplete() {
     const movedIds = new Set(moveFiles.map((file) => file.id));
     setSelected(new Set());
-    const filterMoved = applyFileListFilter(movedIds);
-    queryClient.setQueryData<FileMetadataWithAccount[]>(
-      [queryKey, fetchUrl],
-      filterMoved
-    );
-    void queryClient
-      .invalidateQueries({ queryKey: [queryKey] })
-      .then(() => {
-        queryClient.setQueryData<FileMetadataWithAccount[]>(
-          [queryKey, fetchUrl],
-          filterMoved
-        );
-      });
+    const updater = updateExplorerFilePages(movedIds);
+    queryClient.setQueryData<InfiniteData<FilesPage>>(explorerQueryKey, updater);
+    void queryClient.invalidateQueries({ queryKey: [queryKey] }).then(() => {
+      queryClient.setQueryData<InfiniteData<FilesPage>>(explorerQueryKey, updater);
+    });
   }
 
   function handleDeleteComplete() {
     const deletedIds = new Set(deleteFiles.map((file) => file.id));
     setSelected(new Set());
-    const filterDeleted = applyFileListFilter(deletedIds);
-    queryClient.setQueryData<FileMetadataWithAccount[]>(
-      [queryKey, fetchUrl],
-      filterDeleted
-    );
-    void queryClient
-      .invalidateQueries({ queryKey: [queryKey] })
-      .then(() => {
-        queryClient.setQueryData<FileMetadataWithAccount[]>(
-          [queryKey, fetchUrl],
-          filterDeleted
-        );
-      });
+    const updater = updateExplorerFilePages(deletedIds);
+    queryClient.setQueryData<InfiniteData<FilesPage>>(explorerQueryKey, updater);
+    void queryClient.invalidateQueries({ queryKey: [queryKey] }).then(() => {
+      queryClient.setQueryData<InfiniteData<FilesPage>>(explorerQueryKey, updater);
+    });
   }
 
   function handleRowClick(file: FileMetadata) {
@@ -595,9 +665,9 @@ export function FileExplorer({
               variant="outline"
               size="sm"
               onClick={() =>
-                openMoveDialog(
-                  sortedFiles.filter((file) => selected.has(file.id))
-                )
+              openMoveDialog(
+                files.filter((file) => selected.has(file.id))
+              )
               }
             >
               <FolderInput className="size-4 mr-1" />
@@ -607,9 +677,9 @@ export function FileExplorer({
               variant="destructive"
               size="sm"
               onClick={() =>
-                openDeleteDialog(
-                  sortedFiles.filter((file) => selected.has(file.id))
-                )
+              openDeleteDialog(
+                files.filter((file) => selected.has(file.id))
+              )
               }
             >
               <Trash2 className="size-4 mr-1" />
@@ -640,7 +710,7 @@ export function FileExplorer({
                   </TableCell>
                 </TableRow>
               )}
-              {!isPending && sortedFiles.length === 0 && (
+              {!isPending && files.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={columnCount} className="text-center py-8 text-muted-foreground">
                     {emptyMessage}
@@ -648,7 +718,7 @@ export function FileExplorer({
                 </TableRow>
               )}
               {!isPending &&
-                sortedFiles.map((file) => (
+                files.map((file) => (
                 <TableRow
                   key={file.id}
                   className="cursor-pointer"
@@ -729,19 +799,19 @@ export function FileExplorer({
       ) : (
         <div>
           {isPending && <GridLoadingSkeleton />}
-          {!isPending && sortedFiles.length === 0 && (
+          {!isPending && files.length === 0 && (
             <p className="py-10 text-center text-sm text-muted-foreground">
               {emptyMessage}
             </p>
           )}
-          {!isPending && sortedFiles.length > 0 && (
+          {!isPending && files.length > 0 && (
             <div
               className={cn(
                 "grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5",
-                isFetching && "opacity-70"
+                isFetching && !isFetchingNextPage && "opacity-80"
               )}
             >
-              {sortedFiles.map((file) => {
+              {files.map((file) => {
                 const isSelected = selected.has(file.id);
                 return (
                   <div
@@ -821,6 +891,27 @@ export function FileExplorer({
               })}
             </div>
           )}
+        </div>
+      )}
+
+      {!isPending && files.length > 0 && (
+        <div className="flex flex-col items-center gap-2 pt-2">
+          <p className="text-xs text-muted-foreground">
+            {t("files.showingCount")
+              .replace("{shown}", String(files.length))
+              .replace("{total}", String(totalFiles))}
+          </p>
+          {hasNextPage ? (
+            <>
+              <div ref={loadMoreRef} className="h-1 w-full" aria-hidden />
+              {isFetchingNextPage ? (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Loader2 className="size-4 animate-spin" />
+                  {t("files.loadingMore")}
+                </div>
+              ) : null}
+            </>
+          ) : null}
         </div>
       )}
 

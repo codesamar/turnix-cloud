@@ -299,5 +299,7 @@ export const id: Dictionary = {
   "files.selectedCount": "{count} dipilih",
   "files.unselectAll": "Batalkan pilihan",
   "files.loading": "Memuat file...",
+  "files.loadingMore": "Memuat file berikutnya...",
+  "files.showingCount": "Menampilkan {shown} dari {total}",
   "common.placeholder.name": "Nama Anda",
 };

@@ -299,5 +299,7 @@ export const en: Dictionary = {
   "files.selectedCount": "{count} selected",
   "files.unselectAll": "Unselect all",
   "files.loading": "Loading files...",
+  "files.loadingMore": "Loading more files...",
+  "files.showingCount": "Showing {shown} of {total}",
   "common.placeholder.name": "Your name",
 };
