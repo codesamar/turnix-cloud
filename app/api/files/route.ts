@@ -1,8 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getAccountCredentials } from "@/lib/services/accounts";
 import { deleteFiles } from "@/lib/services/delete";
 import { moveFiles } from "@/lib/services/move";
+import {
+  refreshFolderWithTimeout,
+  refreshProviderRoots,
+  BROWSE_REFRESH_MAX_PAGES,
+} from "@/lib/services/file-metadata";
 import { getAdapter } from "@/lib/adapters/registry";
 import { toAccountApiError } from "@/lib/utils/account-error";
 import {
@@ -34,6 +39,66 @@ export async function GET(request: Request) {
   const offset = parseFileListOffset(searchParams.get("offset"));
   const sort = parseFileListSort(searchParams.get("sort"));
   const isPaginated = limit !== undefined;
+  const refreshLive = searchParams.get("refresh") !== "0";
+  const shouldRefreshLive =
+    refreshLive && offset === 0 && !recent && !starred && !shared;
+
+  if (shouldRefreshLive && parentId) {
+    const { data: parent } = await supabase
+      .from("file_metadata")
+      .select("account_id")
+      .eq("id", parentId)
+      .eq("user_id", user.id)
+      .single();
+
+    if (parent?.account_id) {
+      const refreshAccountId = parent.account_id;
+      after(async () => {
+        try {
+          const bgSupabase = await createClient();
+          await refreshFolderWithTimeout(bgSupabase, user.id, {
+            parentId,
+            accountId: refreshAccountId,
+            maxListPages: BROWSE_REFRESH_MAX_PAGES,
+            removeStale: false,
+          });
+        } catch (err) {
+          console.error("[files] background folder refresh failed", err);
+        }
+      });
+    }
+  } else if (shouldRefreshLive && accountId) {
+    after(async () => {
+      try {
+        const bgSupabase = await createClient();
+        await refreshFolderWithTimeout(bgSupabase, user.id, {
+          parentId: null,
+          accountId,
+          maxListPages: BROWSE_REFRESH_MAX_PAGES,
+          removeStale: false,
+        });
+      } catch (err) {
+        console.error("[files] background account root refresh failed", err);
+      }
+    });
+  } else if (shouldRefreshLive && provider && !parentId && !accountId) {
+    after(async () => {
+      try {
+        const bgSupabase = await createClient();
+        await Promise.race([
+          refreshProviderRoots(bgSupabase, user.id, provider),
+          new Promise<void>((_, reject) => {
+            setTimeout(
+              () => reject(new Error("Provider refresh timed out")),
+              12_000
+            );
+          }),
+        ]);
+      } catch (err) {
+        console.error("[files] background provider root refresh failed", err);
+      }
+    });
+  }
 
   // Inner join when filtering by provider so PostgREST can match cloud_accounts.provider
   const select = provider

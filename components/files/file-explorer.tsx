@@ -106,8 +106,8 @@ interface FilesPage {
   hasMore: boolean;
 }
 
-async function fetchFilesPage(url: string): Promise<FilesPage> {
-  const response = await fetch(url);
+async function fetchFilesPage(url: string, signal?: AbortSignal): Promise<FilesPage> {
+  const response = await fetch(url, { signal });
   if (!response.ok) throw new Error("Failed to fetch files");
   const data = await response.json();
   return {
@@ -445,6 +445,7 @@ export function FileExplorer({
   const {
     data,
     isPending,
+    isError,
     isFetching,
     isFetchingNextPage,
     hasNextPage,
@@ -452,9 +453,10 @@ export function FileExplorer({
     refetch,
   } = useInfiniteQuery({
     queryKey: explorerQueryKey,
-    queryFn: ({ pageParam }) =>
+    queryFn: ({ pageParam, signal }) =>
       fetchFilesPage(
-        buildFilesPageUrl(fetchUrl, pageParam, pageSize, sortMode)
+        buildFilesPageUrl(fetchUrl, pageParam, pageSize, sortMode),
+        signal
       ),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
@@ -462,13 +464,39 @@ export function FileExplorer({
       return allPages.reduce((count, page) => count + page.files.length, 0);
     },
     staleTime: 0,
+    retry: 1,
   });
 
-  const files = useMemo(
-    () => data?.pages.flatMap((page) => page.files) ?? [],
-    [data]
-  );
+  const files = useMemo(() => {
+    const seen = new Set<string>();
+    const merged =
+      data?.pages.flatMap((page) => page.files) ?? [];
+    return merged.filter((file) => {
+      if (seen.has(file.id)) return false;
+      seen.add(file.id);
+      return true;
+    });
+  }, [data]);
   const totalFiles = data?.pages[0]?.total ?? files.length;
+  const isFolderListing = fetchUrl.includes("parentId=");
+
+  const emptyRefetchCountRef = useRef(0);
+
+  useEffect(() => {
+    emptyRefetchCountRef.current = 0;
+  }, [fetchUrl]);
+
+  useEffect(() => {
+    if (isPending || isError || files.length > 0 || !isFolderListing) return;
+    if (emptyRefetchCountRef.current >= 3) return;
+
+    const timer = window.setTimeout(() => {
+      emptyRefetchCountRef.current += 1;
+      void refetch();
+    }, 5000);
+
+    return () => window.clearTimeout(timer);
+  }, [isPending, isError, files.length, isFolderListing, refetch]);
 
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
@@ -710,14 +738,28 @@ export function FileExplorer({
                   </TableCell>
                 </TableRow>
               )}
-              {!isPending && files.length === 0 && (
+              {isError && !isPending && (
+                <TableRow>
+                  <TableCell colSpan={columnCount} className="text-center py-8 text-muted-foreground">
+                    Failed to load files.{" "}
+                    <button
+                      type="button"
+                      className="underline underline-offset-2"
+                      onClick={() => void refetch()}
+                    >
+                      Retry
+                    </button>
+                  </TableCell>
+                </TableRow>
+              )}
+              {!isPending && !isError && files.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={columnCount} className="text-center py-8 text-muted-foreground">
                     {emptyMessage}
                   </TableCell>
                 </TableRow>
               )}
-              {!isPending &&
+              {!isPending && !isError &&
                 files.map((file) => (
                 <TableRow
                   key={file.id}
@@ -799,12 +841,29 @@ export function FileExplorer({
       ) : (
         <div>
           {isPending && <GridLoadingSkeleton />}
-          {!isPending && files.length === 0 && (
+          {isError && !isPending && (
             <p className="py-10 text-center text-sm text-muted-foreground">
-              {emptyMessage}
+              Failed to load files.{" "}
+              <button
+                type="button"
+                className="underline underline-offset-2"
+                onClick={() => void refetch()}
+              >
+                Retry
+              </button>
             </p>
           )}
-          {!isPending && files.length > 0 && (
+          {!isPending && !isError && files.length === 0 && (
+            <p className="py-10 text-center text-sm text-muted-foreground">
+              {emptyMessage}
+              {isFolderListing && isFetching && (
+                <span className="mt-2 block text-xs">
+                  Syncing from cloud…
+                </span>
+              )}
+            </p>
+          )}
+          {!isPending && !isError && files.length > 0 && (
             <div
               className={cn(
                 "grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5",

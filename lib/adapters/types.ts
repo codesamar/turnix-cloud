@@ -27,11 +27,17 @@ export interface ProviderCredentials {
   extra?: Record<string, string>;
 }
 
+export interface ListFilesOptions {
+  /** Cap Graph/API pagination during folder browse (sync omits this for full tree walk). */
+  maxPages?: number;
+}
+
 export interface CloudAdapter {
   provider: CloudProvider;
   listFiles(
     credentials: ProviderCredentials,
-    path: string
+    path: string,
+    options?: ListFilesOptions
   ): Promise<NormalizedFile[]>;
   getFile(
     credentials: ProviderCredentials,

@@ -9,10 +9,11 @@ import {
   decryptCredentials,
   encryptCredentials,
 } from "@/lib/services/crypto";
-import type {
-  NormalizedFile,
-  ProviderCredentials,
-} from "@/lib/adapters/types";
+import {
+  refreshFolderFromProvider,
+  upsertFileMetadata,
+} from "@/lib/services/file-metadata";
+import type { ProviderCredentials } from "@/lib/adapters/types";
 import { OAUTH_PROVIDERS } from "@/lib/adapters/config";
 import { resolveOAuthConfig } from "@/lib/services/provider-config";
 import { classifyAccountError } from "@/lib/utils/account-error";
@@ -55,39 +56,6 @@ async function getValidCredentials(
   return credentials;
 }
 
-async function upsertFileRow(
-  supabase: Supabase,
-  userId: string,
-  accountId: string,
-  file: NormalizedFile,
-  parentId: string | null
-): Promise<string | null> {
-  const { data: upserted } = await supabase
-    .from("file_metadata")
-    .upsert(
-      {
-        user_id: userId,
-        account_id: accountId,
-        provider_file_id: file.providerFileId,
-        name: file.name,
-        path: file.path,
-        mime_type: file.mimeType,
-        size: file.size,
-        is_folder: file.isFolder,
-        is_starred: file.isStarred,
-        is_shared: file.isShared,
-        parent_id: parentId,
-        modified_at: file.modifiedAt?.toISOString() ?? null,
-        synced_at: new Date().toISOString(),
-      },
-      { onConflict: "account_id,provider_file_id" }
-    )
-    .select("id")
-    .single();
-
-  return upserted?.id ?? null;
-}
-
 async function syncAccountPath(
   supabase: Supabase,
   userId: string,
@@ -102,7 +70,7 @@ async function syncAccountPath(
   let count = 0;
 
   for (const file of files) {
-    const upsertedId = await upsertFileRow(
+    const upsertedId = await upsertFileMetadata(
       supabase,
       userId,
       accountId,
@@ -145,7 +113,7 @@ async function syncOneDriveSpecialFolders(
     const folder = await getOneDriveSpecialFolder(credentials, name);
     if (!folder) continue;
 
-    const folderId = await upsertFileRow(
+    const folderId = await upsertFileMetadata(
       supabase,
       userId,
       accountId,

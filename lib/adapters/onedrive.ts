@@ -76,7 +76,8 @@ async function graphFetch(
 
 async function listChildrenPaginated(
   credentials: ProviderCredentials,
-  firstPath: string
+  firstPath: string,
+  maxPages: number = MAX_LIST_PAGES
 ): Promise<NormalizedFile[]> {
   const items: NormalizedFile[] = [];
   let nextUrl: string | null = firstPath.startsWith("http")
@@ -84,7 +85,7 @@ async function listChildrenPaginated(
     : `${GRAPH_BASE}${firstPath}`;
   let pages = 0;
 
-  while (nextUrl && pages < MAX_LIST_PAGES) {
+  while (nextUrl && pages < maxPages) {
     const response = await graphFetch(credentials, nextUrl);
     const data = (await response.json()) as {
       value?: Record<string, unknown>[];
@@ -93,6 +94,12 @@ async function listChildrenPaginated(
     items.push(...(data.value ?? []).map(normalizeItem));
     nextUrl = data["@odata.nextLink"] ?? null;
     pages += 1;
+  }
+
+  if (pages >= maxPages && nextUrl) {
+    console.warn(
+      `[onedrive] listChildrenPaginated hit page cap (${maxPages}); some items may be missing`
+    );
   }
 
   return items;
@@ -219,12 +226,16 @@ export const oneDriveAdapter: CloudAdapter = {
     };
   },
 
-  async listFiles(credentials, path) {
+  async listFiles(credentials, path, options) {
     const endpoint =
       path === "/"
         ? "/me/drive/root/children"
         : `/me/drive/items/${path}/children`;
-    return listChildrenPaginated(credentials, endpoint);
+    return listChildrenPaginated(
+      credentials,
+      endpoint,
+      options?.maxPages ?? MAX_LIST_PAGES
+    );
   },
 
   async getFile(credentials, fileId) {
