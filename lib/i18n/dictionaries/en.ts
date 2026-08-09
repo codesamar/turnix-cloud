@@ -298,5 +298,6 @@ export const en: Dictionary = {
   "files.sortDateOldest": "Date (oldest)",
   "files.selectedCount": "{count} selected",
   "files.unselectAll": "Unselect all",
+  "files.loading": "Loading files...",
   "common.placeholder.name": "Your name",
 };

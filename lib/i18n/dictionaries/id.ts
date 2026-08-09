@@ -298,5 +298,6 @@ export const id: Dictionary = {
   "files.sortDateOldest": "Tanggal (terlama)",
   "files.selectedCount": "{count} dipilih",
   "files.unselectAll": "Batalkan pilihan",
+  "files.loading": "Memuat file...",
   "common.placeholder.name": "Nama Anda",
 };

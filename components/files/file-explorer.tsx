@@ -51,7 +51,6 @@ import { FilePreviewDialog } from "@/components/files/file-preview-dialog";
 import { DeleteFilesDialog } from "@/components/files/delete-files-dialog";
 import { MoveFileDialog } from "@/components/files/move-file-dialog";
 import { useLanguage } from "@/components/providers/language-provider";
-import { invalidateFileQueries } from "@/lib/utils/invalidate-file-queries";
 
 export type ViewMode = "list" | "grid";
 export type SortMode = "name-asc" | "name-desc" | "date-newest" | "date-oldest";
@@ -159,6 +158,22 @@ function sortFiles(
     });
   });
   return sorted;
+}
+
+function GridLoadingSkeleton() {
+  return (
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+      {Array.from({ length: 10 }, (_, index) => (
+        <div key={index} className="overflow-hidden rounded-lg border">
+          <div className="aspect-[4/3] w-full animate-pulse bg-muted" />
+          <div className="space-y-2 p-2.5">
+            <div className="h-4 w-3/4 animate-pulse rounded bg-muted" />
+            <div className="h-3 w-1/2 animate-pulse rounded bg-muted" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 function GridMediaLoading() {
@@ -391,9 +406,10 @@ export function FileExplorer({
     window.localStorage.setItem(SORT_STORAGE_KEY, next);
   }
 
-  const { data: files = [], isLoading, refetch } = useQuery({
+  const { data: files = [], isPending, isFetching, refetch } = useQuery({
     queryKey: [queryKey, fetchUrl],
     queryFn: () => fetchFiles(fetchUrl),
+    staleTime: 0,
   });
 
   const sortedFiles = useMemo(
@@ -433,24 +449,47 @@ export function FileExplorer({
     setMoveOpen(true);
   }
 
+  function applyFileListFilter(
+    filterIds: Set<string>
+  ): (current: FileMetadataWithAccount[] | undefined) => FileMetadataWithAccount[] {
+    return (current) =>
+      current?.filter((file) => !filterIds.has(file.id)) ?? [];
+  }
+
   function handleMoveComplete() {
     const movedIds = new Set(moveFiles.map((file) => file.id));
     setSelected(new Set());
+    const filterMoved = applyFileListFilter(movedIds);
     queryClient.setQueryData<FileMetadataWithAccount[]>(
       [queryKey, fetchUrl],
-      (current) => current?.filter((file) => !movedIds.has(file.id)) ?? []
+      filterMoved
     );
-    invalidateFileQueries(queryClient);
+    void queryClient
+      .invalidateQueries({ queryKey: [queryKey] })
+      .then(() => {
+        queryClient.setQueryData<FileMetadataWithAccount[]>(
+          [queryKey, fetchUrl],
+          filterMoved
+        );
+      });
   }
 
   function handleDeleteComplete() {
     const deletedIds = new Set(deleteFiles.map((file) => file.id));
     setSelected(new Set());
+    const filterDeleted = applyFileListFilter(deletedIds);
     queryClient.setQueryData<FileMetadataWithAccount[]>(
       [queryKey, fetchUrl],
-      (current) => current?.filter((file) => !deletedIds.has(file.id)) ?? []
+      filterDeleted
     );
-    invalidateFileQueries(queryClient);
+    void queryClient
+      .invalidateQueries({ queryKey: [queryKey] })
+      .then(() => {
+        queryClient.setQueryData<FileMetadataWithAccount[]>(
+          [queryKey, fetchUrl],
+          filterDeleted
+        );
+      });
   }
 
   function handleRowClick(file: FileMetadata) {
@@ -594,21 +633,22 @@ export function FileExplorer({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {isLoading && (
+              {isPending && (
                 <TableRow>
                   <TableCell colSpan={columnCount} className="text-center py-8 text-muted-foreground">
-                    Loading files...
+                    {t("files.loading")}
                   </TableCell>
                 </TableRow>
               )}
-              {!isLoading && sortedFiles.length === 0 && (
+              {!isPending && sortedFiles.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={columnCount} className="text-center py-8 text-muted-foreground">
                     {emptyMessage}
                   </TableCell>
                 </TableRow>
               )}
-              {sortedFiles.map((file) => (
+              {!isPending &&
+                sortedFiles.map((file) => (
                 <TableRow
                   key={file.id}
                   className="cursor-pointer"
@@ -688,18 +728,19 @@ export function FileExplorer({
         </div>
       ) : (
         <div>
-          {isLoading && (
-            <p className="py-10 text-center text-sm text-muted-foreground">
-              Loading files...
-            </p>
-          )}
-          {!isLoading && sortedFiles.length === 0 && (
+          {isPending && <GridLoadingSkeleton />}
+          {!isPending && sortedFiles.length === 0 && (
             <p className="py-10 text-center text-sm text-muted-foreground">
               {emptyMessage}
             </p>
           )}
-          {!isLoading && sortedFiles.length > 0 && (
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+          {!isPending && sortedFiles.length > 0 && (
+            <div
+              className={cn(
+                "grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5",
+                isFetching && "opacity-70"
+              )}
+            >
               {sortedFiles.map((file) => {
                 const isSelected = selected.has(file.id);
                 return (

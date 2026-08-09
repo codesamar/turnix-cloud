@@ -287,6 +287,7 @@ export type TranslationKey =
   | "files.sortDateOldest"
   | "files.selectedCount"
   | "files.unselectAll"
+  | "files.loading"
   | "common.placeholder.name";
 
 export type Dictionary = Record<TranslationKey, string>;
