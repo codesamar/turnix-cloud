@@ -530,37 +530,41 @@ export function FileExplorer({
       </div>
 
       {selected.size > 0 && (
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm text-muted-foreground">
-            {t("files.selectedCount").replace("{count}", String(selected.size))}
-          </span>
-          <Button variant="ghost" size="sm" onClick={clearSelection}>
-            {t("files.unselectAll")}
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() =>
-              openMoveDialog(
-                sortedFiles.filter((file) => selected.has(file.id))
-              )
-            }
-          >
-            <FolderInput className="size-4 mr-1" />
-            {moveLabel}
-          </Button>
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={() =>
-              openDeleteDialog(
-                sortedFiles.filter((file) => selected.has(file.id))
-              )
-            }
-          >
-            <Trash2 className="size-4 mr-1" />
-            {deleteLabel}
-          </Button>
+        <div className="sticky top-0 z-10 -mx-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b bg-background/95 px-4 py-2.5 backdrop-blur supports-[backdrop-filter]:bg-background/80 md:-mx-6 md:px-6">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-sm text-muted-foreground">
+              {t("files.selectedCount").replace("{count}", String(selected.size))}
+            </span>
+            <Button variant="ghost" size="sm" onClick={clearSelection}>
+              {t("files.unselectAll")}
+            </Button>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() =>
+                openMoveDialog(
+                  sortedFiles.filter((file) => selected.has(file.id))
+                )
+              }
+            >
+              <FolderInput className="size-4 mr-1" />
+              {moveLabel}
+            </Button>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={() =>
+                openDeleteDialog(
+                  sortedFiles.filter((file) => selected.has(file.id))
+                )
+              }
+            >
+              <Trash2 className="size-4 mr-1" />
+              {deleteLabel}
+            </Button>
+          </div>
         </div>
       )}
 
