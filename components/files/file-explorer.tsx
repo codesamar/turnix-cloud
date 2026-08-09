@@ -481,10 +481,17 @@ export function FileExplorer({
       return true;
     });
   }, [data]);
+  const emptyRefetchCountRef = useRef(0);
   const totalFiles = data?.pages[0]?.total ?? files.length;
   const isFolderListing = fetchUrl.includes("parentId=");
-
-  const emptyRefetchCountRef = useRef(0);
+  const isCloudBrowse =
+    isFolderListing || /[?&]provider=/.test(fetchUrl);
+  const isAwaitingCloudSync =
+    isCloudBrowse &&
+    !isPending &&
+    !isError &&
+    files.length === 0 &&
+    (isFetching || emptyRefetchCountRef.current < 3);
 
   useEffect(() => {
     emptyRefetchCountRef.current = 0;
@@ -756,7 +763,17 @@ export function FileExplorer({
                   </TableCell>
                 </TableRow>
               )}
-              {!isPending && !isError && files.length === 0 && (
+              {!isPending && !isError && files.length === 0 && isAwaitingCloudSync && (
+                <TableRow>
+                  <TableCell colSpan={columnCount} className="text-center py-8 text-muted-foreground">
+                    <span className="inline-flex items-center gap-2">
+                      <Loader2 className="size-4 animate-spin" />
+                      {t("files.syncingFromCloud")}
+                    </span>
+                  </TableCell>
+                </TableRow>
+              )}
+              {!isPending && !isError && files.length === 0 && !isAwaitingCloudSync && (
                 <TableRow>
                   <TableCell colSpan={columnCount} className="text-center py-8 text-muted-foreground">
                     {emptyMessage}
@@ -857,14 +874,17 @@ export function FileExplorer({
               </button>
             </p>
           )}
-          {!isPending && !isError && files.length === 0 && (
+          {!isPending && !isError && files.length === 0 && isAwaitingCloudSync && (
+            <p className="py-10 text-center text-sm text-muted-foreground">
+              <span className="inline-flex items-center justify-center gap-2">
+                <Loader2 className="size-4 animate-spin" />
+                {t("files.syncingFromCloud")}
+              </span>
+            </p>
+          )}
+          {!isPending && !isError && files.length === 0 && !isAwaitingCloudSync && (
             <p className="py-10 text-center text-sm text-muted-foreground">
               {emptyMessage}
-              {isFolderListing && isFetching && (
-                <span className="mt-2 block text-xs">
-                  Syncing from cloud…
-                </span>
-              )}
             </p>
           )}
           {!isPending && !isError && files.length > 0 && (

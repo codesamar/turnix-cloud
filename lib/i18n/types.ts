@@ -291,6 +291,7 @@ export type TranslationKey =
   | "files.loadingMore"
   | "files.showingCount"
   | "files.itemCount"
+  | "files.syncingFromCloud"
   | "common.placeholder.name";
 
 export type Dictionary = Record<TranslationKey, string>;

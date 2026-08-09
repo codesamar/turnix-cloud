@@ -12,7 +12,7 @@ import {
 
 type Supabase = SupabaseClient;
 
-const MOVE_LIST_MAX_PAGES = 80;
+const MOVE_LIST_MAX_PAGES = 0;
 
 async function loadFolderMetadata(
   supabase: Supabase,
@@ -204,6 +204,82 @@ async function findViaParentPagination(
   );
 }
 
+async function trySiblingProviderIds(
+  supabase: Supabase,
+  userId: string,
+  file: FileMetadata,
+  credentials: ProviderCredentials,
+  provider: CloudProvider,
+  accountId: string
+): Promise<FileMetadata | null> {
+  if (!file.parent_id) return null;
+
+  const { data: siblings } = await supabase
+    .from("file_metadata")
+    .select("provider_file_id")
+    .eq("user_id", userId)
+    .eq("parent_id", file.parent_id)
+    .eq("name", file.name)
+    .eq("is_folder", file.is_folder);
+
+  const providerIds = new Set(
+    [file.provider_file_id, ...(siblings ?? []).map((row) => row.provider_file_id)]
+  );
+
+  for (const providerFileId of providerIds) {
+    if (await providerItemExists(credentials, provider, providerFileId)) {
+      if (providerFileId === file.provider_file_id) return file;
+      return persistResolvedProviderFileId(
+        supabase,
+        userId,
+        file,
+        providerFileId,
+        accountId
+      );
+    }
+  }
+
+  return null;
+}
+
+async function tryDriveWideSearch(
+  supabase: Supabase,
+  userId: string,
+  file: FileMetadata,
+  credentials: ProviderCredentials,
+  provider: CloudProvider,
+  accountId: string
+): Promise<FileMetadata | null> {
+  const adapter = getAdapter(provider);
+  if (!adapter.searchByName || file.is_folder) return null;
+
+  try {
+    const results = await adapter.searchByName(credentials, file.name);
+    const exactMatches = results.filter(
+      (item) => item.name === file.name && item.isFolder === file.is_folder
+    );
+    if (exactMatches.length === 0) return null;
+
+    const match =
+      exactMatches.length === 1
+        ? exactMatches[0]!
+        : exactMatches.find(
+            (item) => item.providerFileId === file.provider_file_id
+          ) ?? exactMatches[0]!;
+
+    return persistResolvedProviderFileId(
+      supabase,
+      userId,
+      file,
+      match.providerFileId,
+      accountId
+    );
+  } catch (error) {
+    if (!isProviderItemNotFound(error)) throw error;
+    return null;
+  }
+}
+
 async function persistResolvedProviderFileId(
   supabase: Supabase,
   userId: string,
@@ -246,11 +322,20 @@ async function resolveOnProvider(
   provider: CloudProvider,
   accountId: string
 ): Promise<FileMetadata> {
+  const fromSibling = await trySiblingProviderIds(
+    supabase,
+    userId,
+    file,
+    credentials,
+    provider,
+    accountId
+  );
+  if (fromSibling) return fromSibling;
+
   if (await providerItemExists(credentials, provider, file.provider_file_id)) {
     return file;
   }
 
-  // Prefer listing the DB parent folder (same ID used by browse refresh).
   const byDbParent = await findChildInDbParent(
     supabase,
     userId,
@@ -315,40 +400,15 @@ async function resolveOnProvider(
     );
   }
 
-  const adapter = getAdapter(provider);
-  if (adapter.searchByName) {
-    try {
-      const results = await adapter.searchByName(credentials, file.name);
-      const exactMatches = results.filter(
-        (item) => item.name === file.name && item.isFolder === file.is_folder
-      );
-      if (parentProviderId && exactMatches.length > 1) {
-        const inParent = exactMatches.filter(
-          (item) => item.parentProviderId === parentProviderId
-        );
-        if (inParent.length === 1) {
-          return persistResolvedProviderFileId(
-            supabase,
-            userId,
-            file,
-            inParent[0]!.providerFileId,
-            accountId
-          );
-        }
-      }
-      if (exactMatches.length === 1) {
-        return persistResolvedProviderFileId(
-          supabase,
-          userId,
-          file,
-          exactMatches[0]!.providerFileId,
-          accountId
-        );
-      }
-    } catch (error) {
-      if (!isProviderItemNotFound(error)) throw error;
-    }
-  }
+  const fromSearch = await tryDriveWideSearch(
+    supabase,
+    userId,
+    file,
+    credentials,
+    provider,
+    accountId
+  );
+  if (fromSearch) return fromSearch;
 
   const parentLabel = parentRow?.name ?? "folder";
   throw new Error(

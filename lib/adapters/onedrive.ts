@@ -329,6 +329,7 @@ export const oneDriveAdapter: CloudAdapter = {
   async findChildByName(credentials, parentPath, childName, options) {
     const maxPages = options?.maxPages ?? 80;
     const isFolder = options?.isFolder ?? false;
+    const unlimited = maxPages <= 0;
     const endpoint =
       parentPath === "/"
         ? "/me/drive/root/children"
@@ -339,7 +340,7 @@ export const oneDriveAdapter: CloudAdapter = {
       : `${GRAPH_BASE}${endpoint}`;
     let pages = 0;
 
-    while (nextUrl && pages < maxPages) {
+    while (nextUrl && (unlimited || pages < maxPages)) {
       const response = await graphFetch(credentials, nextUrl);
       const data = (await response.json()) as {
         value?: Record<string, unknown>[];
