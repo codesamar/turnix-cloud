@@ -1,9 +1,10 @@
 import { Suspense } from "react";
 import { MyDriveView } from "@/components/files/my-drive-view";
+import DashboardLoading from "../loading";
 
 export default function MyDrivePage() {
   return (
-    <Suspense fallback={<p className="text-sm text-muted-foreground">Loading...</p>}>
+    <Suspense fallback={<DashboardLoading />}>
       <MyDriveView />
     </Suspense>
   );

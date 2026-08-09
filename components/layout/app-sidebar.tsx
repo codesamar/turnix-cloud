@@ -8,12 +8,14 @@ import {
   Cloud,
   HardDrive,
   Home,
+  Loader2,
   LogOut,
   Settings,
   Share2,
   Star,
   User,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -33,6 +35,7 @@ import { Button } from "@/components/ui/button";
 import { SamarLogo } from "@/components/brand/samar-logo";
 import { createClient } from "@/lib/supabase/client";
 import { useLanguage } from "@/components/providers/language-provider";
+import { cn } from "@/lib/utils";
 
 const navItems = [
   { titleKey: "nav.home" as const, href: "/", icon: Home },
@@ -52,24 +55,51 @@ type SidebarNavItem = (typeof navItems | typeof helpNavItems)[number];
 
 interface AppSidebarProps {
   userEmail?: string | null;
+  pendingHref: string | null;
+  onNavigate: (href: string) => void;
 }
 
-function AppSidebarNav({ items }: { items: SidebarNavItem[] }) {
+function AppSidebarNav({
+  items,
+  pendingHref,
+  onNavigate,
+}: {
+  items: SidebarNavItem[];
+  pendingHref: string | null;
+  onNavigate: (href: string) => void;
+}) {
   const pathname = usePathname();
   const { t } = useLanguage();
 
   return (
     <SidebarMenu>
-      {items.map((item) => (
-        <SidebarMenuItem key={item.href}>
-          <SidebarMenuButton asChild isActive={pathname === item.href}>
-            <Link href={item.href}>
-              <item.icon className="size-4" />
-              <span>{t(item.titleKey)}</span>
-            </Link>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-      ))}
+      {items.map((item) => {
+        const isActive = pathname === item.href;
+        const isPending = pendingHref === item.href && !isActive;
+
+        return (
+          <SidebarMenuItem key={item.href}>
+            <SidebarMenuButton asChild isActive={isActive || isPending}>
+              <Link
+                href={item.href}
+                onClick={() => {
+                  if (pathname !== item.href) onNavigate(item.href);
+                }}
+              >
+                <item.icon
+                  className={cn("size-4", isPending && "opacity-80")}
+                />
+                <span className={cn(isPending && "opacity-80")}>
+                  {t(item.titleKey)}
+                </span>
+                {isPending ? (
+                  <Loader2 className="ml-auto size-3.5 shrink-0 animate-spin opacity-80" />
+                ) : null}
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        );
+      })}
     </SidebarMenu>
   );
 }
@@ -91,13 +121,25 @@ function SignOutButton() {
   );
 }
 
-export function AppSidebar({ userEmail }: AppSidebarProps) {
+export function AppSidebar({
+  userEmail,
+  pendingHref,
+  onNavigate,
+}: AppSidebarProps) {
   const { t } = useLanguage();
+  const pathname = usePathname();
 
   return (
     <Sidebar>
       <SidebarHeader className="p-4">
-        <Link href="/" className="flex items-center" aria-label="SamarCloud">
+        <Link
+          href="/"
+          className="flex items-center"
+          aria-label="SamarCloud"
+          onClick={() => {
+            if (pathname !== "/") onNavigate("/");
+          }}
+        >
           <SamarLogo variant="lockup" height={32} className="max-w-full" />
         </Link>
       </SidebarHeader>
@@ -105,13 +147,21 @@ export function AppSidebar({ userEmail }: AppSidebarProps) {
         <SidebarGroup>
           <SidebarGroupLabel>{t("nav.workspace")}</SidebarGroupLabel>
           <SidebarGroupContent>
-            <AppSidebarNav items={navItems} />
+            <AppSidebarNav
+              items={navItems}
+              pendingHref={pendingHref}
+              onNavigate={onNavigate}
+            />
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarGroup>
           <SidebarGroupLabel>{t("nav.help")}</SidebarGroupLabel>
           <SidebarGroupContent>
-            <AppSidebarNav items={helpNavItems} />
+            <AppSidebarNav
+              items={helpNavItems}
+              pendingHref={pendingHref}
+              onNavigate={onNavigate}
+            />
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
@@ -135,15 +185,38 @@ interface DashboardShellProps {
 
 export function DashboardShell({ children, userEmail }: DashboardShellProps) {
   const { t } = useLanguage();
+  const pathname = usePathname();
+  const [pendingHref, setPendingHref] = useState<string | null>(null);
+
+  useEffect(() => {
+    setPendingHref(null);
+  }, [pathname]);
+
+  const isNavigating = pendingHref !== null && pendingHref !== pathname;
 
   return (
     <SidebarProvider>
-      <AppSidebar userEmail={userEmail} />
-      <main className="flex flex-1 flex-col min-h-screen">
+      <AppSidebar
+        userEmail={userEmail}
+        pendingHref={pendingHref}
+        onNavigate={setPendingHref}
+      />
+      <main className="relative flex min-h-screen flex-1 flex-col">
+        {isNavigating ? (
+          <div
+            className="pointer-events-none absolute inset-x-0 top-0 z-20 h-0.5 overflow-hidden bg-primary/15"
+            aria-hidden
+          >
+            <div className="h-full w-1/3 animate-navigation-progress bg-primary" />
+          </div>
+        ) : null}
         <header className="flex h-14 items-center gap-2 border-b px-4">
           <SidebarTrigger />
           <Separator orientation="vertical" className="h-4" />
           <span className="text-sm text-muted-foreground">{t("header.subtitle")}</span>
+          {isNavigating ? (
+            <Loader2 className="size-4 animate-spin text-muted-foreground" />
+          ) : null}
         </header>
         <div className="flex-1 p-4 md:p-6">{children}</div>
       </main>
