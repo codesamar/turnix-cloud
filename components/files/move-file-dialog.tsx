@@ -31,6 +31,7 @@ import {
   isTokenExpiredError,
 } from "@/lib/utils/account-error";
 import { getFileAccountLabel } from "@/lib/utils/account-display";
+import { invalidateFileQueries } from "@/lib/utils/invalidate-file-queries";
 
 interface MoveFileDialogProps {
   open: boolean;
@@ -273,6 +274,7 @@ export function MoveFileDialog({
           abortRef.current = null;
           setProgress(null);
           toast.success(t("move.success"));
+          invalidateFileQueries(queryClient);
           onOpenChange(false);
           onMoved();
         }
@@ -307,6 +309,7 @@ export function MoveFileDialog({
       finishedRef.current = false;
       setProgress(null);
       toast.success(t("move.success"));
+      invalidateFileQueries(queryClient);
       onOpenChange(false);
       onMoved();
     },

@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Download,
   Eye,
@@ -51,6 +51,7 @@ import { FilePreviewDialog } from "@/components/files/file-preview-dialog";
 import { DeleteFilesDialog } from "@/components/files/delete-files-dialog";
 import { MoveFileDialog } from "@/components/files/move-file-dialog";
 import { useLanguage } from "@/components/providers/language-provider";
+import { invalidateFileQueries } from "@/lib/utils/invalidate-file-queries";
 
 export type ViewMode = "list" | "grid";
 export type SortMode = "name-asc" | "name-desc" | "date-newest" | "date-oldest";
@@ -342,6 +343,7 @@ export function FileExplorer({
   onViewModeChange,
 }: FileExplorerProps) {
   const { t, language } = useLanguage();
+  const queryClient = useQueryClient();
   const [internalViewMode, setInternalViewMode] =
     useState<ViewMode>(DEFAULT_VIEW_MODE);
   const [internalSortMode, setInternalSortMode] =
@@ -432,13 +434,23 @@ export function FileExplorer({
   }
 
   function handleMoveComplete() {
+    const movedIds = new Set(moveFiles.map((file) => file.id));
     setSelected(new Set());
-    refetch();
+    queryClient.setQueryData<FileMetadataWithAccount[]>(
+      [queryKey, fetchUrl],
+      (current) => current?.filter((file) => !movedIds.has(file.id)) ?? []
+    );
+    invalidateFileQueries(queryClient);
   }
 
   function handleDeleteComplete() {
+    const deletedIds = new Set(deleteFiles.map((file) => file.id));
     setSelected(new Set());
-    refetch();
+    queryClient.setQueryData<FileMetadataWithAccount[]>(
+      [queryKey, fetchUrl],
+      (current) => current?.filter((file) => !deletedIds.has(file.id)) ?? []
+    );
+    invalidateFileQueries(queryClient);
   }
 
   function handleRowClick(file: FileMetadata) {

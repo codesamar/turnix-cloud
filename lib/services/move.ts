@@ -167,7 +167,7 @@ async function moveSameAccount(
     destination.parentProviderPath
   );
 
-  await supabase
+  const { error } = await supabase
     .from("file_metadata")
     .update({
       parent_id: destination.parentMetadataId,
@@ -180,6 +180,10 @@ async function moveSameAccount(
       synced_at: new Date().toISOString(),
     })
     .eq("id", file.id);
+
+  if (error) {
+    throw new Error(error.message);
+  }
 }
 
 async function transferCrossAccount(
